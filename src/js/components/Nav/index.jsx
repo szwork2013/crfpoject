@@ -34,12 +34,12 @@ export default class Nav extends Component {
 
   render() {
     let { stage, title,  from} = this.state;
-    let rootClass = '';
+    /*let rootClass = '';
     if (stage === 'home') {
       rootClass = styles.root;
     } else {
       rootClass = styles.child;
-    }
+    }*/
 
     let leftEle = null;
     if (from === 'loan') { //from loan show finish
@@ -49,7 +49,7 @@ export default class Nav extends Component {
       //if(contractNo) title = CONFIGS.billType[type] + '动态';
     }
     return (
-      <nav className={rootClass}>
+      <nav className={styles.root}>
         <div className={styles.navbarLeft}>
           {leftEle}
         </div>

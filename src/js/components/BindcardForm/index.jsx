@@ -33,10 +33,28 @@ class Form extends Component {
 
   }
 
+  sendBindCardFetch(){
+
+  }
+
+  checkCardFetch(val){
+    if(val!=='6214837552082046'){
+      this.refs.refSupportCard.classList.add('n');
+      this.refs.refBankError.classList.remove('n');
+    }else{
+      this.removeDisabled();
+    }
+
+  }
+
   handleSubmit(e){
+
     if(e.target.classList.contains(styles.btnDisabled)){
       return;
     }
+
+    this.sendBindCardFetch();
+
     if(this.refs.refBankCard.value===''){
       this.props.router.push('rebindcard');
       return;
@@ -49,30 +67,55 @@ class Form extends Component {
   }
 
   bankNumInput(e){
+    let timer=null;
+
+    let refBankName=this.refs.refBankName;
+    let refBankError=this.refs.refBankError;
+
+    let currentVal=e.target.value;
+
     if(e.keyCode!=8){
-      if(e.target.value.length>=8){
-        /*clearTimeout(this.timer);
-        this.timer = setTimeout(()=>{
-        }, 1000);*/
-        this.refs.refSupportCard.classList.remove('n');
-        this.removeDisabled();
+      if(currentVal.length===8){
+        if(currentVal==='62148375'){//去查本地的卡号，显示对应的银行，没有查到则不显示，并出现提示符合的银行卡页面
+          refBankName.classList.remove(styles.disabled);
+          refBankError.classList.add('n');
+          refBankName.value='招商银行';
+        }else{
+          refBankName.classList.add(styles.disabled);
+          refBankName.value='银行';
+          this.refs.refSupportCard.classList.remove('n');
+        }
+      }
+      if(currentVal.length>=12){//输入大于12位，然后停顿1.5秒，认为用户已经输入完，发请求到后端确认这个银行卡号是否正确
+        clearTimeout(timer);
+        timer=setTimeout(()=>{
+          this.checkCardFetch(currentVal);
+        },1500);
       }
     }
     if(e.target.value.length===0){
-      this.refs.refBankError.classList.add('n');
+      clearTimeout(timer);
+      refBankError.classList.add('n');
       this.refs.refSupportCard.classList.add('n');
-    }
 
+      refBankName.classList.add(styles.disabled);
+      refBankName.value='银行';
+    }
   }
 
   telRegex(e){
-    if(e.target.value.length===11&&!/^1[^7]\d{9}$/.test(e.target.value)){
-      this.refs.refTelErrorMsg.classList.remove('n');
-      this.removeDisabled();
-    }else{
-      if(!this.refs.refTelErrorMsg.classList.contains('n')){
-        this.refs.refTelErrorMsg.classList.add('n');
+    if(e.target.value.length===11){
+      if(/^1[^7]\d{9}$/.test(e.target.value)){
+        this.removeDisabled();
+        if(!this.refs.refTelErrorMsg.classList.contains('n')){
+          this.refs.refTelErrorMsg.classList.add('n');
+        }
+      }else{
+        this.refs.refTelErrorMsg.classList.remove('n');
+        this.refs.refFormNextBtn.classList.add(styles.btnDisabled);
       }
+    }else{
+      this.refs.refFormNextBtn.classList.add(styles.btnDisabled);
     }
   }
 
@@ -123,7 +166,7 @@ class Form extends Component {
           </div>
           <div className={styles.formInput}>
             <div className={styles.borderLine}>
-               <input type="text" className={styles.disabled+" "+styles.bank} value="银行" disabled="disabled" />
+               <input type="text" className={styles.disabled+" "+styles.bank} value="银行" disabled="disabled" ref="refBankName" />
             </div>
           </div>
           <div className={styles.formInput}>
