@@ -1,0 +1,24 @@
+{
+  "presets": [
+    ["env", {"modules": false}],
+    "react",
+    "stage-0"
+  ],
+  "plugins": [
+    "lodash",
+    ["import", { "style": "css", "libraryName": "antd-mobile" }],
+    ["transform-runtime", {
+      "helpers": false,
+      "polyfill": false,
+      "regenerator": true,
+      "moduleName": "babel-runtime"
+    }]
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        "react-hot-loader/babel"
+      ]
+    }
+  }
+}
