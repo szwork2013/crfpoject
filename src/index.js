@@ -1,7 +1,7 @@
 import {AppContainer as HotReloader} from 'react-hot-loader';
 import React from 'react';
 import {render} from 'react-dom';
-import {browserHistory} from 'react-router';
+import {hashHistory} from 'react-router';
 import {default as App} from './js/index';
 import RedBox from 'redbox-react';
 require('./js/utils/device/index.es6');
@@ -22,12 +22,12 @@ if (typeof Object.assign !== 'function') {
 if (process.env.NODE_ENV === 'development') {
   const renderRoot = () => render(
     <HotReloader errorReporter={RedBox}>
-      <App history={browserHistory}/>
+      <App history={hashHistory}/>
     </HotReloader>,
     doc.getElementById('app')
   );
   renderRoot();
   if (module.hot) {module.hot.accept('./js/containers/index', renderRoot);}
 } else {
-  render(<App history={browserHistory}/>, doc.getElementById('app'));
+  render(<App history={hashHistory}/>, doc.getElementById('app'));
 }
