@@ -11,7 +11,7 @@ import {
 } from './containers';
 
 export default (
-  <Route path="/credit_loan/" component={App}>
+  <Route path="/" component={App}>
     <IndexRoute component={Home} />
     <Route path="success" component={Success} />
     <Route path="rebindcard" component={ReBindCard} />
