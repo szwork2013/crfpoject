@@ -6,3 +6,4 @@ yarn.lock
 *-compiled.js
 *.xml
 src/styles/*.css
+.idea
