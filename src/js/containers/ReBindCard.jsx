@@ -13,16 +13,16 @@ export default class Rebind extends Component {
   render() {
     let props={ title:'绑卡结果'};
     return (
-      <div className="bindCardMain">
+      <div className="bind-card-main">
         <Nav data={props} />
-        <div className="bindCardWrap">
-          <div className="bindCardStatus">
+        <div className="bind-card-wrap">
+          <div className="bind-card-status">
               <div className="img fail"></div>
               <p>对不起，绑卡失败了</p>
               <p>请稍后再试</p>
           </div>
         </div>
-        <div className="nextPage">
+        <div className="next-page">
           <button onClick={this.handleClick.bind(this)}>重新绑定</button>
         </div>
       </div>

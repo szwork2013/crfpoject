@@ -23,7 +23,7 @@ class SelectCity extends React.Component {
   requireJson() {
     let allData = JSON.parse(localStorage.getItem('CRF_provinceData'));
 
-    if ((!allData) || cityDataVERSION != localStorage.getItem('CRF_cityDataVersion')) {
+    if ((!allData) || VERSION.cityDataVERSION != localStorage.getItem('CRF_cityDataVersion')) {
       require.ensure([], (require)=> {
         let data = require('../../../json/result.json');
         localStorage.setItem('CRF_provinceData', JSON.stringify(data));
@@ -31,7 +31,7 @@ class SelectCity extends React.Component {
           data: data
         });
       });
-      localStorage.setItem('CRF_cityDataVersion', cityDataVERSION);
+      localStorage.setItem('CRF_cityDataVersion', VERSION.cityDataVERSION);
     } else {
       this.setState({
         data: allData
