@@ -11,9 +11,14 @@ injectTapEventPlugin();
 global.CONFIGS = require('./js/config');
 global.CRFFetch = require('./js/utils/ajax/index.es6');
 global.HandleRegex = require('./js/utils/regex/index.es6');
-global.cityDataVERSION = '20170612';
-global.bankDataVERSION = '20170612';
-global.cardBinVERSION = '20170614';
+//global.cityDataVERSION = '20170612';
+//global.bankDataVERSION = '20170612';
+//global.cardBinVERSION = '20170614';
+global.VERSION={
+  cityDataVERSION : '20170612',
+  bankDataVERSION : '20170612',
+  cardBinVERSION  : '20170614',
+};
 global.doc = window.document;
 
 if (typeof Object.assign !== 'function') {

@@ -469,37 +469,37 @@ body{
   /*font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","\5FAE\8F6F\96C5\9ED1",Arial,sans-serif;*/
 }
 
-.colFA4548{
+.color-FA4548{
   color:#FA4548;
 }
 
-.col323232{
+.color-323232{
   color: #323232 !important;
 }
 
-.mapWrap{
+.map-wrap{
   display: flex;
   border-bottom: 1px solid #E6E7EC;
 }
-.supportWrap li:last-child .mapWrap{
+.bind-card-wrap li:last-child .map-wrap{
   border-bottom: 0;
 }
-.bindCardMain{
+.bind-card-main{
   background-color: #EFEFF4;
   height:100%;
 }
-.bindCardWrap{
+.bind-card-wrap{
   margin-top:.3rem;
   background-color: #ffffff;
 }
-.bankIcon{
+.bank-icon{
   flex:6;
   padding:.36rem 0 .34rem 1.5rem;
   font-size:.28rem;
   position: relative;
   color: #323232;
 }
-.bankIcon span{
+.bank-icon span{
   position: absolute;
   top:.15rem;
   left:.3rem;
@@ -552,22 +552,22 @@ body{
   background-position: .08rem -9.5rem;
 }
 
-.checkBankCard{
+.check-bank-card{
   flex:5;
   padding: .36rem 0 .34rem;
   font-size: .28rem;
   position: relative;
   color: #909090;
 }
-.hideSupportCardNum .supportBankCardNum{
+.hide-support-card-num .support-bank-card-num{
   display: none;
 }
-.supportBankCardNum{
+.support-bank-card-num{
   background-color: #EFEFF4;
   padding: .3rem;
 }
-.hideSupportCardNum{
-  .arrowDown{
+.hide-support-card-num{
+  .arrow-down{
     position: absolute;
     right: .2rem;
     top: .35rem;
@@ -586,7 +586,7 @@ body{
     }
   }
 }
-.arrowDown{
+.arrow-down{
   position: absolute;
   right: .2rem;
   top: .35rem;
@@ -605,7 +605,7 @@ body{
   }
 }
 /*
-.arrowDown:before{
+.arrow-down:before{
   top: 50%;
   width: .12rem;
   height: .12rem;
@@ -617,7 +617,7 @@ body{
 
 
 /*rebindcard*/
-.bindCardStatus{
+.bind-card-status{
   padding: 1rem 2rem;
   .fail{
     background: url(../images/error.png) no-repeat;
@@ -637,7 +637,7 @@ body{
     color: #323232;
   }
 }
-.nextPage{
+.next-page{
   padding: 0 0.3rem;
   margin-top: 35%;
   button{

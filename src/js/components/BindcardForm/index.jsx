@@ -16,6 +16,7 @@ class Form extends Component {
     };
     this.cityCode = '500';
     this.areaCode = '6530';
+    this.timer = null;
   }
 
   componentWillMount() {
@@ -30,7 +31,7 @@ class Form extends Component {
      },80);*/
     doc.onclick = function (e) {
       if (e.target.classList.contains('am-picker-popup-header-right')) {
-        doc.querySelector('.am-list-extra').classList.add('col323232');
+        doc.querySelector('.am-list-extra').classList.add('color-323232');
         this.removeDisabled();
         console.log(this.cityCode, this.areaCode);
       }
@@ -38,16 +39,76 @@ class Form extends Component {
 
   }
 
-  sendBindCardFetch() {
+  async sendBindCardFetch() {
+    let loginSrc = '/kisso_server/msg/15618910426';
 
+    let params = {
+      'phone': '15618910426',
+      'intent': '2',
+      'type':'0',
+      'picCode':null
+    };
+
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+
+    try {
+
+      let fetchPromise = CRFFetch.Put(loginSrc, JSON.stringify(params), headers);
+      // 获取数据
+      let result = await fetchPromise;
+
+      if (result && !result.response) {
+
+        console.log(result);
+
+      }
+    } catch (err) {
+      console.log(err);
+
+    }
   }
 
-  checkCardFetch(val) {
-    if (val !== '6214837552082046') {
+  async checkCardFetch(val) {
+
+    /*if (val !== '6214837552082046') {
       this.refs.refSupportCard.classList.add('n');
       this.refs.refBankError.classList.remove('n');
     } else {
       this.removeDisabled();
+    }*/
+
+    let cardNo=val;
+    let checkCardUrl = '/fcp/cardInfo/'+cardNo;
+    let refBankName = this.refs.refBankName;
+    try {
+
+      let fetchPromise = CRFFetch.Get(checkCardUrl);
+      // 获取数据
+      let result = await fetchPromise;
+
+      if (result && !result.response) {
+
+        console.log(result);
+
+        refBankName.value=result.bankName||'银行';
+        
+
+        /*
+        * bankCode:"CMB"
+         bankName:"招商银行"
+         cardType:"2"
+         consultationPhone:null
+         dayLimint:null
+         monthLimint:null
+         prcptcd:"0"
+         singleLimint:null
+         */
+      }
+    } catch (err) {
+      console.log(err);
+
     }
 
   }
@@ -72,7 +133,6 @@ class Form extends Component {
   }
 
   bankNumInput(e) {
-    let timer = null;
 
     let refBankName = this.refs.refBankName;
     let refBankError = this.refs.refBankError;
@@ -105,14 +165,14 @@ class Form extends Component {
 
       }
       if (currentVal.length >= 12) {//输入大于12位，然后停顿1.5秒，认为用户已经输入完，发请求到后端确认这个银行卡号是否正确
-        clearTimeout(timer);
-        timer = setTimeout(()=> {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(()=> {
           this.checkCardFetch(currentVal);
         }, 1500);
       }
     }
     if (e.target.value.length === 0) {
-      clearTimeout(timer);
+      clearTimeout(this.timer);
       refBankError.classList.add('n');//隐藏银行卡错误提示
       refSupportCard.classList.add('n');//隐藏支持银行div
 
@@ -163,7 +223,7 @@ class Form extends Component {
 
     let allData = JSON.parse(localStorage.getItem('CRF_' + storageName));
 
-    if ((!allData) || cardBinVERSION != localStorage.getItem('CRF_' + version)) {
+    if ((!allData) || VERSION.cardBinVERSION != localStorage.getItem('CRF_' + version)) {
       require.ensure([], (require)=> {
         let data = require('../../../json/cardBin.json');
         localStorage.setItem('CRF_' + storageName, JSON.stringify(data));
@@ -171,7 +231,7 @@ class Form extends Component {
           cardBinData: data
         });
       });
-      localStorage.setItem('CRF_' + version, cardBinVERSION);
+      localStorage.setItem('CRF_' + version, VERSION.cardBinVERSION);
       console.log('发了请求');
     } else {
       this.setState({
@@ -208,7 +268,7 @@ class Form extends Component {
             <div className={styles.errorInfo + " n"} ref="refSupportCard">
               暂不支持此卡, 请查看<a href="javascript:void(0);" onClick={this.checkSupport.bind(this)}>支持银行卡</a>
             </div>
-            <div className={styles.errorInfo + " colFA4548 n"} ref="refBankError">您输入的银行卡号有误</div>
+            <div className={styles.errorInfo + " color-FA4548 n"} ref="refBankError">您输入的银行卡号有误</div>
           </div>
           <div className={styles.formInput}>
             <div className={styles.borderLine}>
@@ -225,7 +285,7 @@ class Form extends Component {
         <div className={styles.infoForm + " " + styles.telInput}>
           <input type="text" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号"
                  onInput={this.telRegex.bind(this)} maxLength="11" ref="refTelInput"/>
-          <div className={styles.errorInfo + " colFA4548 n"} ref="refTelErrorMsg">请输入正确的手机号</div>
+          <div className={styles.errorInfo + " color-FA4548 n"} ref="refTelErrorMsg">请输入正确的手机号</div>
         </div>
 
         <div className={styles.infoForm}>
