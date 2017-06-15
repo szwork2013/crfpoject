@@ -82,6 +82,15 @@ class Form extends Component {
     let cardNo=val;
     let checkCardUrl = '/fcp/cardInfo/'+cardNo;
     let refBankName = this.refs.refBankName;
+
+    if(location.host==="m-ci.crfchina.com"){
+      checkCardUrl='https://app-ci.crfchina.com/app_dubbo/fcp/cardInfo/'+cardNo;
+    }
+    if(location.host==="m-uat.crfchina.com"){
+      checkCardUrl='https://app-uat.crfchina.com/app_dubbo/fcp/cardInfo/'+cardNo;
+    }
+
+
     try {
 
       let fetchPromise = CRFFetch.Get(checkCardUrl);
@@ -93,7 +102,7 @@ class Form extends Component {
         console.log(result);
 
         refBankName.value=result.bankName||'银行';
-        
+
 
         /*
         * bankCode:"CMB"
@@ -102,7 +111,7 @@ class Form extends Component {
          consultationPhone:null
          dayLimint:null
          monthLimint:null
-         prcptcd:"0"
+         prcptcd:"0" //为1 不支持
          singleLimint:null
          */
       }
