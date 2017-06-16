@@ -17,12 +17,16 @@ export default class Loading extends Component {
     const show = this.state.show;
     let showStyle = '';
     if (show) {
-      showStyle = styles.loader;
+      showStyle = styles.root;
     } else {
       showStyle = styles.hide;
     }
     return (
-      <div className={showStyle}></div>
+      <div className={showStyle}>
+        <div className={styles.mask}>
+          <div className={styles.loader}></div>
+        </div>
+      </div>
     );
   }
 }
