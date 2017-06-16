@@ -522,7 +522,7 @@ class Form extends Component {
         <div className={styles.infoForm}>
           <div className={styles.formInput}>
             <div className={styles.borderLine}>
-              <input type="text" className={styles.userName} value={userName} disabled="disabled"/>
+              <input type="button" className={styles.userName} value={userName} />
             </div>
           </div>
           <div className={styles.formInput}>
@@ -537,8 +537,7 @@ class Form extends Component {
           </div>
           <div className={styles.formInput}>
             <div className={styles.borderLine}>
-              <input type="text" className={styles.disabled + " " + styles.bank} value="银行"
-                     disabled="disabled" ref="refBankName"/>
+              <input type="button" className={styles.disabled + " " + styles.bank} value="银行" ref="refBankName"/>
             </div>
           </div>
           <div className={styles.formInput}>

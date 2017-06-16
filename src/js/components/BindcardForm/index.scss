@@ -4,6 +4,9 @@
     margin-top:0.3rem;
     padding:0.28rem 0.6rem 0;
 }
+.infoForm:first-child{
+    margin-top:0;
+}
 
 .formInput{
     position: relative;
@@ -15,6 +18,7 @@
         font-size: .28rem;
         background-size: 7%;
         background-position: .15rem .08rem;
+        text-align: left;
     }
 }
 
