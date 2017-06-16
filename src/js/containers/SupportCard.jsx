@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 
 import {Nav} from 'app/components';
+import { WhiteSpace } from 'antd-mobile';
 
 export default class Rebind extends Component {
   constructor(props) {
@@ -63,7 +64,8 @@ export default class Rebind extends Component {
 
     return (
       <section className="bind-card-main">
-        <Nav data={props}/>
+        {CONFIGS.isWeChat?'':<Nav data={props} />}
+        <WhiteSpace />
         <div className="bind-card-wrap">
           <ul>
             {

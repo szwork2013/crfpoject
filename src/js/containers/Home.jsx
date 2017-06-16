@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { Nav, BindcardForm, Loading } from 'app/components';
+import { WhiteSpace } from 'antd-mobile';
 
 class Home extends Component {
   constructor(props, context) {
@@ -26,6 +27,7 @@ class Home extends Component {
       <section className="wrap">
         <article>
           {CONFIGS.isWeChat?'':<Nav data={props} />}
+          <WhiteSpace />
           <BindcardForm setLoading={this.setLoading.bind(this)} />
         </article>
         <Loading show={this.state.loadingShowStatus} />

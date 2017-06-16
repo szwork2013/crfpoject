@@ -16,7 +16,7 @@ for(let i=0;i<paraArr.length;i++){
 }
 
 const ua = window.navigator.userAgent.toLowerCase();
-const isWeChat = ua.match(/MicroMessenger/i) === 'micromessenger';
+const isWeChat = ua.match(/MicroMessenger/i) == 'micromessenger';
 
 module.exports = {
   basePath: CurrentPath,
@@ -24,5 +24,6 @@ module.exports = {
   userName:'',
   idNo:'',
   ssoId:kissoId,
-  isWeChat:isWeChat
+  isWeChat:isWeChat,
+  referrerUrl:referrerUrl,
 };
