@@ -19,7 +19,7 @@ class Form extends Component {
       ],
       userName:'',
     };
-    this.cityCode = '500';
+    //this.cityCode = '500';
     this.areaCode = '6530';
     this.timer = null;
     this.switchStatus=true;
@@ -46,7 +46,7 @@ class Form extends Component {
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
-        console.log(result);
+
 
         CONFIGS.userId=result.crfUid;
         CONFIGS.userName=result.userName;
@@ -84,9 +84,13 @@ class Form extends Component {
         }*/
       }
     } catch (err) {
-
+      if(err.toString().indexOf('Unexpected')>-1){
+        Toast.info('用户kissoID不存在');
+        return;
+      }
       CRFFetch.handleError(err,()=>{
-
+        //Toast.loading('cuowule',10000);
+        //Toast.info('cuowule',10000);
         if(status==400){
           err.body.then(data => {
             if(/[\u0391-\uFFE5]+/.test(data.message)){
@@ -110,7 +114,7 @@ class Form extends Component {
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
-        console.log(result);
+
         /*
          {contractName:"网络交易资金账户第三方协议",contractUrl:"https://m-ci.crfchina.com/tripartite_agreement.html"}
          {contractName:"用户授权协议",contractUrl:"https://m-ci.crfchina.com/userLicense_agreement.html"}
@@ -160,7 +164,7 @@ class Form extends Component {
       'Content-Type': 'application/json'
     };
 
-    console.log(params);
+
 
     try {
 
@@ -189,8 +193,20 @@ class Form extends Component {
               break;
           }
         }
-      }).then((e)=>{
-        console.log(e);
+      }).then((err)=>{
+        CRFFetch.handleError(err,()=>{
+
+          if(status==400){
+            err.body.then(data => {
+              if(/[\u0391-\uFFE5]+/.test(data.message)){
+                Toast.info(data.message);
+              }else{
+                Toast.info('系统繁忙，请稍后再试！');
+              }
+            });
+          }
+
+        });
       });
     } catch (err) {
       CRFFetch.handleError(err,()=>{
@@ -221,7 +237,7 @@ class Form extends Component {
       let result = await fetchPromise;
 
       if (result && !result.response) {
-        console.log(result);
+
         switch (result.result){
           case 'ACCEPTED':
           case 'UNKNOWN':
@@ -284,8 +300,6 @@ class Form extends Component {
 
       if (result && !result.response) {
 
-        console.log(result);
-
         refBankName.value=result.bankName||'银行';
         this.bankCode=result.bankCode;
         if(result.prcptcd==='1'){
@@ -341,7 +355,6 @@ class Form extends Component {
         amListExtra.classList.add('color-323232');
         amListExtra.innerHTML=amListExtra.innerHTML.replace(/,/g,'&nbsp;');
         this.removeDisabled();
-        console.log(this.cityCode, this.areaCode);
       }
     }.bind(this);
 
@@ -366,7 +379,7 @@ class Form extends Component {
     this.props.router.push('supportcard');
   }
 
-  bankNumInput(e) {console.log(e.keyCode);
+  bankNumInput(e) {
     let refBankName = this.refs.refBankName;
     let refBankError = this.refs.refBankError;
     let refSupportCard = this.refs.refSupportCard;
@@ -377,9 +390,7 @@ class Form extends Component {
     let notCardNum=true;
 
     if (e.keyCode != 8) {
-      console.log(e);
       this.refs.refBankCard.value=currentVal.replace(/(\d{4})/g, '$1 ');
-      console.log(currentVal);
       if (currentVal.length === 6) {
 
         for(let i=0;i<cardBindArr.length;i++){
@@ -403,7 +414,6 @@ class Form extends Component {
       if (currentVal.length >= 12) {//输入大于12位，然后停顿1.5秒，认为用户已经输入完，发请求到后端确认这个银行卡号是否正确
         clearTimeout(this.timer);
         this.timer = setTimeout(()=> {
-          console.log(currentVal);
           this.checkCardFetch(currentVal);
         }, 1000);
       }
@@ -439,7 +449,6 @@ class Form extends Component {
   }
 
   removeDisabled() {
-    console.log(!this.refs.refAgree.classList.contains(styles['un-agree']));
     if (this.refs.refBankCard.value !== '' && this.refs.refTelInput.value !== '' && doc.querySelector('.am-list-extra').innerHTML !== '开户行所在地'&&(!this.refs.refAgree.classList.contains(styles['un-agree']))) {
       this.refs.refFormNextBtn.classList.remove(styles.btnDisabled);
     }else{
@@ -452,7 +461,7 @@ class Form extends Component {
      cityCode:val[0],
      areaCode:val[1],
      });*/
-    this.cityCode = val[0];
+    //this.cityCode = val[0];
     this.areaCode = val[1];
     this.removeDisabled();
 
@@ -488,12 +497,12 @@ class Form extends Component {
         });
       });
       localStorage.setItem('CRF_' + version, VERSION.cardBinVERSION);
-      console.log('发了请求');
+
     } else {
       this.setState({
         cardBinData: allData
       });
-      console.log('没发请求,使用本地localstorage');
+
     }
   }
 
@@ -507,7 +516,7 @@ class Form extends Component {
   render() {
     //let userName='*'+global.userName;
     let userName = '*'+this.state.userName.substring(1);
-    console.log(userName+'--userName ');
+
     return (
       <section>
         <div className={styles.infoForm}>
