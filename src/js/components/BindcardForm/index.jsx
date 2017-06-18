@@ -143,10 +143,11 @@ class Form extends Component {
   async sendBindCardFetch() {
     let word32=this.random32word();
     let submitFetchUrl=CONFIGS.basePath+'fts/borrower_open_account?kissoId='+CONFIGS.ssoId;
-
+    let bankNumber=this.refs.refBankCard.value.replace(/\s/g,'');
+    CONFIGS.bankNum=bankNumber;
     let params = {
       'autoDeduct': this.switchStatus,//代扣
-      'bankCardNo': this.refs.refBankCard.value.replace(/\s/g,''),//银行卡号
+      'bankCardNo': bankNumber,//银行卡号
       'bankCode': this.bankCode,
       'businessType': 'rcs',//业务类型
       'cityId': this.areaCode,//城市代码
@@ -163,8 +164,6 @@ class Form extends Component {
     let headers = {
       'Content-Type': 'application/json'
     };
-
-
 
     try {
 
@@ -254,9 +253,6 @@ class Form extends Component {
             this.props.router.push('rebindcard');
             break;
         }
-        //this.reCheckCardFetch();
-
-
       }
     } catch (err) {
       CRFFetch.handleError(err,()=>{
@@ -278,13 +274,6 @@ class Form extends Component {
 
   async checkCardFetch(val) {
 
-    /*if (val !== '6214837552082046') {
-      this.refs.refSupportCard.classList.add('n');
-      this.refs.refBankError.classList.remove('n');
-    } else {
-      this.removeDisabled();
-    }*/
-
     let cardNo=val.replace(/\s/g,'');
     let checkCardUrl = CONFIGS.basePath+'fcp/cardInfo/'+cardNo;
 
@@ -301,7 +290,10 @@ class Form extends Component {
       if (result && !result.response) {
 
         refBankName.value=result.bankName||'银行';
+        CONFIGS.bankName=result.bankName||'银行';
+
         this.bankCode=result.bankCode;
+
         if(result.prcptcd==='1'){
           if(result.bankCode===null){
             //卡号错误
@@ -316,6 +308,8 @@ class Form extends Component {
             refSupportCard.classList.remove('n');//显示支持银行div
           }
         }else if(result.prcptcd==='0'){
+          refBankError.classList.add('n');//隐藏银行卡号错误
+          refSupportCard.classList.add('n');//隐藏支持银行div
           this.removeDisabled();
         }
 
@@ -467,6 +461,12 @@ class Form extends Component {
 
   }
 
+  handleContractClick(item){
+    CONFIGS.contractName=item.contractName;
+    CONFIGS.contractUrl=item.contractUrl;
+    this.props.router.push('contract');
+  }
+
   setSwitchVal(val){
     this.switchStatus=val;
   }
@@ -506,13 +506,6 @@ class Form extends Component {
     }
   }
 
-  /*setElMethod(el){
-   console.log(el);
-   this.setState({
-   selectCityEl:el
-   });
-   }*/
-
   render() {
     //let userName='*'+global.userName;
     let userName = '*'+this.state.userName.substring(1);
@@ -541,7 +534,7 @@ class Form extends Component {
             </div>
           </div>
           <div className={styles.formInput}>
-            <CityWrapper getSelectVal={this.setCitySelect.bind(this)}/>{/* getElMethod={this.setElMethod.bind(this)} */}
+            <CityWrapper getSelectVal={this.setCitySelect.bind(this)}/>
           </div>
         </div>
 
@@ -567,7 +560,7 @@ class Form extends Component {
               {
                 this.state.contractData.map((item,index)=>{
                   return (
-                    <a href={item.contractUrl} key={index}>《{item.contractName}》</a>
+                    <a href="javascript:void(0)" key={index} onClick={this.handleContractClick.bind(this,item)}>《{item.contractName}》</a>
                   )
                 })
               }

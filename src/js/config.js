@@ -1,19 +1,13 @@
 let CurrentPath = '/h5_dubbo/';
 
-
 let localHref=location.href;
 let referrerUrl=localHref.substring(localHref.indexOf('?')+1);
+let referrerPara=referrerUrl?referrerUrl.substring(referrerUrl.indexOf('?')+1):'';
 
-let referrerPara=referrerUrl.substring(referrerUrl.indexOf('?')+1);
-let paraArr=referrerPara.split('&');
+let name = 'ssoId';
+let urlParaArr=referrerPara.match(new RegExp("(^|&)" + name + "=([^&]*)(&|$)"));
 
-let kissoId='';
-
-for(let i=0;i<paraArr.length;i++){
-  if(paraArr[i].split('=')[0]==='ssoId'){
-    kissoId=paraArr[i].split('=')[1];
-  }
-}
+let kissoId=urlParaArr&&urlParaArr[2];
 
 const ua = window.navigator.userAgent.toLowerCase();
 const isWeChat = ua.match(/MicroMessenger/i) == 'micromessenger';
@@ -23,7 +17,11 @@ module.exports = {
   userId: '',
   userName:'',
   idNo:'',
+  bankName:'',
+  bankNum:'',
   ssoId:kissoId,
   isWeChat:isWeChat,
   referrerUrl:referrerUrl,
+  contractName:'',
+  contractUrl:'',
 };
