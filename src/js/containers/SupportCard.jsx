@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 
 import {Nav} from 'app/components';
+
 import { WhiteSpace } from 'antd-mobile';
 
 export default class Rebind extends Component {
@@ -44,7 +45,6 @@ export default class Rebind extends Component {
   render() {
     let props = {title: '选择开户行'};
     let allData = this.state.bankJson;
-    console.log(1);
     let bankObj = {
       'ICBC': '工商银行',
       'CEB': '光大银行',
