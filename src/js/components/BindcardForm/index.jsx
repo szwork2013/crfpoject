@@ -24,6 +24,10 @@ class Form extends Component {
     this.timer = null;
     this.switchStatus=true;
     this.bankCode='';
+
+    this.bankCardNumStatus=false;
+    this.phoneNumStatus=false;
+
   }
 
   componentWillMount() {
@@ -301,15 +305,17 @@ class Form extends Component {
             refBankName.classList.add(styles.disabled);//所属银行字体变灰
             refSupportCard.classList.add('n');//隐藏支持银行div
             refBankError.classList.remove('n');//提示银行卡号错误
-
+            this.bankCardNumStatus=false;
           }else{
             //卡号不支持
             refBankError.classList.add('n');//隐藏银行卡号错误
             refSupportCard.classList.remove('n');//显示支持银行div
+            this.bankCardNumStatus=false;
           }
         }else if(result.prcptcd==='0'){
           refBankError.classList.add('n');//隐藏银行卡号错误
           refSupportCard.classList.add('n');//隐藏支持银行div
+          this.bankCardNumStatus=true;
           this.removeDisabled();
         }
 
@@ -363,10 +369,41 @@ class Form extends Component {
   handleSubmit(e) {
 
     if (e.target.classList.contains(styles.btnDisabled)) {
+      this.checkSubmitStatus();
       return;
     }
 
     this.sendBindCardFetch();
+  }
+
+  checkSubmitStatus(){
+
+    if(this.refs.refBankCard.value === ''){
+      Toast.info('银行卡号不能为空');
+      return;
+    }
+    if(!this.bankCardNumStatus){
+      Toast.info('请输入正确的银行卡号');
+      return;
+    }
+
+    if(this.refs.refTelInput.value === ''){
+      Toast.info('手机号码不能为空');
+      return;
+    }
+    if(!this.phoneNumStatus){
+      Toast.info('请输入正确的手机号码');
+      return;
+    }
+
+    if(doc.querySelector('.am-list-extra').innerHTML === '开户行所在地'){
+      Toast.info('请选择开户城市');
+      return;
+    }
+
+    if(this.refs.refAgree.classList.contains(styles['un-agree'])){
+      Toast.info('请勾选合同协议');
+    }
   }
 
   checkSupport() {
@@ -428,22 +465,26 @@ class Form extends Component {
     let refFormNextBtn=this.refs.refFormNextBtn;
     if (e.target.value.length === 11) {
       if (/^1[^7]\d{9}$/.test(e.target.value)) {
+        this.phoneNumStatus=true;
         this.removeDisabled();
         if (!refTelErrorMsg.classList.contains('n')) {
           refTelErrorMsg.classList.add('n');//隐藏手机号错误提示
         }
       } else {
+        this.phoneNumStatus=false;
         refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
         refTelErrorMsg.classList.remove('n');//显示手机号错误提示
       }
     } else {
+      this.phoneNumStatus=false;
       refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
       refTelErrorMsg.classList.add('n');//隐藏手机号错误提示
     }
   }
 
   removeDisabled() {
-    if (this.refs.refBankCard.value !== '' && this.refs.refTelInput.value !== '' && doc.querySelector('.am-list-extra').innerHTML !== '开户行所在地'&&(!this.refs.refAgree.classList.contains(styles['un-agree']))) {
+    // this.refs.refBankCard.value !== '' this.refs.refTelInput.value !== ''
+    if (this.bankCardNumStatus && this.phoneNumStatus && doc.querySelector('.am-list-extra').innerHTML !== '开户行所在地'&&(!this.refs.refAgree.classList.contains(styles['un-agree']))) {
       this.refs.refFormNextBtn.classList.remove(styles.btnDisabled);
     }else{
       this.refs.refFormNextBtn.classList.add(styles.btnDisabled);
