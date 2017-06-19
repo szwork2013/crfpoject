@@ -10,6 +10,9 @@ export { default as ReBindCard } from './ReBindCard.jsx';
 //SupportCard
 export { default as SupportCard } from './SupportCard.jsx';
 
+//Repay
+export { default as Repay } from './Repay.jsx';
+
 //Contract
 export { default as Contract } from './Contract.jsx';
 

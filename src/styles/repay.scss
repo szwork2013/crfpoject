@@ -1,0 +1,131 @@
+.crf-swipes {
+  width: 100%;
+  padding: .7rem 0 .25rem;
+  background: #fff;
+  border-bottom: 1px solid #D6D7DC;
+  font-size: 0.32rem;
+  text-align: center;
+  color: #323232;
+}
+
+.crf-swipes-title {
+  font-size: .28rem;
+}
+
+.crf-swipes-title-text, .crf-swipes-title-link {
+  vertical-align: middle;
+}
+
+.crf-swipes-title-link {
+  display: inline-block;
+  > a {
+    display: block;
+    width: .34rem;
+    height: .34rem;
+    margin-left: .08rem;
+    background: url(../images/reset-loan.png) no-repeat;
+    background-size: contain;
+  }
+}
+
+.crf-swipes-fees-text {
+  font-size: .9rem;
+  font-family: "SFUIDisplay-Light";
+  line-height: 1rem;
+  margin-right: .1rem;
+}
+
+.crf-swipes-fees-link {
+  font-size: .28rem;
+  text-decoration: underline;
+}
+
+.crf-swipes-fees {
+  padding: .1rem 0 .7rem;
+}
+
+.crf-swipes-content {
+  position: relative;
+  width: 100%;
+  height: 2.38rem;
+  border-bottom: 1px solid #909090;
+}
+
+.crf-swipes-rulers {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  overflow: hidden;
+  -webkit-transform: translateZ(0);
+}
+
+.crf-swipes-description {
+  padding: .2rem 0 0;
+  font-size: .22rem;
+  color: #646464;
+}
+
+.crf-swipes-axis {
+  position: relative;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 40%;
+  height: 100%;
+  border-top: 1px solid #E1E1E1;
+  .crf-swipes-axis-inner {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: .22rem;
+    height: calc(2.38rem - 1px);
+    background: url(../images/axis.png) no-repeat;
+    background-size: contain;
+  }
+}
+
+.crf-rulers {
+  height: 100%;
+  padding-top: 2rem;
+  margin-left: 187px;
+  margin-right: 187px;
+}
+
+.crf-rulers:after {
+  content: '';
+  display: block;
+  clear: both;
+  height: 0;
+}
+
+.crf-ruler {
+  position: relative;
+  width: 9px;
+  height: 10px;
+  text-align: center;
+  display: inline-block;
+  color: #666;
+  box-sizing: border-box;
+  &:before {
+    content: "";
+    position: absolute;
+    height: 10px;
+    width: 1px;
+    bottom: 0;
+    left: 4px;
+    background-color: #646464;
+  }
+  &:nth-of-type(10n), &:first-child {
+    &:before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 2px;
+      bottom: 0;
+      left: 4px;
+      background-color: #646464;
+    }
+  }
+}

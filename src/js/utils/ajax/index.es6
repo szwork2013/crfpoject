@@ -1,5 +1,3 @@
-/*import 'es6-promise/auto';
-import 'whatwg-fetch';*/
 require('es6-promise/auto');
 require('whatwg-fetch');
 const Toast = require('antd-mobile/lib/toast');
@@ -130,5 +128,3 @@ const FetchInterface = {
 }
 
 module.exports = FetchInterface;
-/*console.log(FetchInterface);
-export default FetchInterface;*/

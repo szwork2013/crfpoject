@@ -1,0 +1,192 @@
+html,body,#app{
+  height:100%;
+}
+
+body{
+  color: #323232;
+}
+
+.wrap{
+  height:100%;
+  background-color:#EFEFF4;
+  /*font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","\5FAE\8F6F\96C5\9ED1",Arial,sans-serif;*/
+}
+
+.colFA4548{
+  color:#FA4548;
+}
+
+.col323232{
+  color: #323232 !important;
+}
+
+.mapWrap{
+  display: flex;
+  border-bottom: 1px solid #E6E7EC;
+}
+.supportWrap li:last-child .mapWrap{
+  border-bottom: 0;
+}
+.bindCardMain{
+  background-color: #EFEFF4;
+  height:100%;
+}
+.bindCardWrap{
+  margin-top:.3rem;
+  background-color: #ffffff;
+}
+.bankIcon{
+  flex:6;
+  padding:.36rem 0 .34rem 1.5rem;
+  font-size:.28rem;
+  position: relative;
+  color: #323232;
+}
+.bankIcon span{
+  position: absolute;
+  top:.15rem;
+  left:.3rem;
+  width:.8rem;
+  height:.8rem;
+  background: url(https://m-static-ci.crfchina.com/images/result_bank.png) no-repeat .08rem .08rem;
+  background-size: 86%;
+}
+.CEB span{
+  background-position: .08rem -8rem;
+}
+.GDB span{
+  background-position: .08rem -5.05rem;
+}
+.ABC span{
+  background-position: .08rem -3.65rem;
+}
+.PAB span{
+  background-position: .08rem -6rem;
+  background-size: 90%;
+}
+.CIB span{
+  background-position: .08rem -4.58rem;
+  background-size: 90%;
+}
+.PSBC span{
+  background-position: .08rem -3.06rem;
+  background-size: 90%;
+}
+.CMB span{
+  background-position: .08rem -0.7rem;
+  background-size: 90%;
+}
+.BOC span{
+  background-position: .08rem -2.18rem;
+}
+.CITIC span{
+  background-position: .08rem -6.45rem;
+}
+.CCB span{
+  background-position: .08rem -1.45rem;
+}
+.HXB span{
+  background-position: .08rem -7.2rem;
+}
+.CMBC span{
+  background-position: .08rem -8.72rem;
+}
+.BCM span{
+  background-position: .08rem -9.5rem;
+}
+
+.checkBankCard{
+  flex:5;
+  padding: .36rem 0 .34rem;
+  font-size: .28rem;
+  position: relative;
+  color: #909090;
+}
+.hideSupportCardNum .supportBankCardNum{
+  display: none;
+}
+.supportBankCardNum{
+  background-color: #EFEFF4;
+  padding: .3rem;
+}
+.hideSupportCardNum{
+  .arrowDown{
+    position: absolute;
+    right: .2rem;
+    top: .35rem;
+    width: .5rem;
+    height: .5rem;
+    &:before{
+      top: 0;
+      right: .08rem;
+      width: .2rem;
+      height: .2rem;
+      transform: rotate(-135deg);
+      position: absolute;
+      border-left: 2px solid #646464;
+      border-top: 2px solid #646464;
+      content: '';
+    }
+  }
+}
+.arrowDown{
+  position: absolute;
+  right: .2rem;
+  top: .35rem;
+  width: .5rem;
+  height: .5rem;
+  &:before{
+    top: .2rem;
+    right: .08rem;
+    width: .2rem;
+    height: .2rem;
+    transform: rotate(45deg);
+    position: absolute;
+    border-left: 2px solid #909090;
+    border-top: 2px solid #909090;
+    content: '';
+  }
+}
+/*
+.arrowDown:before{
+  top: 50%;
+  width: .12rem;
+  height: .12rem;
+  transform: rotate(-135deg);
+}*/
+.n{
+  display: none !important;
+}
+
+
+/*rebindcard*/
+.bindCardStatus{
+  padding: 1rem 2rem;
+  .fail{
+    background: url(../images/error.png) no-repeat;
+  }
+  .success{
+    background: url(../images/success.png) no-repeat;
+  }
+  .img{
+    width:.8rem;
+    height:.8rem;
+    margin:0 auto .3rem;
+    background-size:100%;
+  }
+  p{
+    text-align: center;
+    font-size:.34rem;
+    color: #323232;
+  }
+}
+.nextPage{
+  padding: 0 0.3rem;
+  margin-top: 35%;
+  button{
+    width: 100%;
+    padding: .15rem 0;
+    border-radius: .5rem;
+    font-size: .32rem;
+  }
+}
