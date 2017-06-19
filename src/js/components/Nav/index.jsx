@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 import styles from './index.scss';
 
 export default class Nav extends Component {
@@ -22,14 +22,16 @@ export default class Nav extends Component {
       if (this.state.isApp === 'crfapp') {
         window.location = 'crfxjd://closeWindow';
       } else {
-        browserHistory.goBack();
+        //this.props.router.push('/');
+        //hashHistory.goBack();
+        hashHistory.push('/');
       }
     }
   }
 
   handleGoHome() {
     let path = '/?ssoId=' + CONFIGS.userId;
-    browserHistory.push(path);
+    hashHistory.push(path);
   }
 
   render() {

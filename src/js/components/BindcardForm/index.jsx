@@ -19,11 +19,13 @@ class Form extends Component {
       ],
       userName:'',
     };
-    //this.cityCode = '500';
-    this.areaCode = '6530';
     this.timer = null;
     this.switchStatus=true;
     this.bankCode='';
+
+    this.bankCardNumStatus=false;
+    this.phoneNumStatus=false;
+
   }
 
   componentWillMount() {
@@ -36,6 +38,12 @@ class Form extends Component {
 
     this.bindEvent();
 
+    //开户所在地
+    const amListExtra=doc.querySelector('.am-list-extra');
+    if (amListExtra.innerHTML!=='开户行所在地') {
+      amListExtra.classList.add('color-323232');
+      //this.removeDisabled();
+    }
   }
 
   async getUserInfo(){
@@ -141,7 +149,8 @@ class Form extends Component {
   }
 
   async sendBindCardFetch() {
-    let word32=this.random32word();
+    const word32=this.random32word();
+
     let submitFetchUrl=CONFIGS.basePath+'fts/borrower_open_account?kissoId='+CONFIGS.ssoId;
     let bankNumber=this.refs.refBankCard.value.replace(/\s/g,'');
     CONFIGS.bankNum=bankNumber;
@@ -150,7 +159,7 @@ class Form extends Component {
       'bankCardNo': bankNumber,//银行卡号
       'bankCode': this.bankCode,
       'businessType': 'rcs',//业务类型
-      'cityId': this.areaCode,//城市代码
+      'cityId': CONFIGS.areaCode,//城市代码
       'crfUserId': CONFIGS.userId,//信而富用户id
       'email': null,//邮箱 可不传
       'idNo': CONFIGS.idNo,//证件号码 身份证
@@ -168,10 +177,13 @@ class Form extends Component {
     try {
 
       let fetchPromise = CRFFetch.Put(submitFetchUrl, JSON.stringify(params), headers);
+
+      //显示loading图片
+      this.props.setLoading(true);
+
       // 获取数据
       let result = await fetchPromise;
 
-      this.props.setLoading(true);
       result=result.json();
       //没有.json
       result.then((data)=>{
@@ -183,11 +195,11 @@ class Form extends Component {
               },500);
               break;
             case 'SUCCESS':
-              this.props.setLoading(false);
+              this.props.setLoading(false);//隐藏loading图片
               this.props.router.push('success');//绑卡成功
               break;
             case 'FAIL':
-              this.props.setLoading(false);
+              this.props.setLoading(false);//隐藏loading图片
               this.props.router.push('rebindcard');
               break;
           }
@@ -284,34 +296,45 @@ class Form extends Component {
     try {
 
       let fetchPromise = CRFFetch.Get(checkCardUrl);
+
+      //显示loading图片
+      this.props.setLoading(true);
+
       // 获取数据
       let result = await fetchPromise;
 
       if (result && !result.response) {
 
-        refBankName.value=result.bankName||'银行';
-        CONFIGS.bankName=result.bankName||'银行';
+        //隐藏loading图片
+        this.props.setLoading(false);
 
         this.bankCode=result.bankCode;
 
         if(result.prcptcd==='1'){
           if(result.bankCode===null){
             //卡号错误
-            //refBankName.value = '银行';//所属银行名字变回‘银行’
             refBankName.classList.add(styles.disabled);//所属银行字体变灰
             refSupportCard.classList.add('n');//隐藏支持银行div
             refBankError.classList.remove('n');//提示银行卡号错误
-
+            this.bankCardNumStatus=false;
           }else{
             //卡号不支持
             refBankError.classList.add('n');//隐藏银行卡号错误
             refSupportCard.classList.remove('n');//显示支持银行div
+            this.bankCardNumStatus=false;
           }
+
+          this.refs.refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
+
         }else if(result.prcptcd==='0'){
           refBankError.classList.add('n');//隐藏银行卡号错误
           refSupportCard.classList.add('n');//隐藏支持银行div
+          this.bankCardNumStatus=true;
           this.removeDisabled();
         }
+
+        refBankName.value=result.bankName||'银行';
+        CONFIGS.bankName=result.bankName;
 
         /*
         * bankCode:"CMB"
@@ -343,6 +366,7 @@ class Form extends Component {
   }
 
   bindEvent(){
+    //select city
     const amListExtra=doc.querySelector('.am-list-extra');
     doc.onclick = function (e) {
       if (e.target.classList.contains('am-picker-popup-header-right')) {
@@ -352,21 +376,84 @@ class Form extends Component {
       }
     }.bind(this);
 
+
+    //勾选协议
     const refAgree=this.refs.refAgree;
     refAgree.onclick=()=>{
       refAgree.classList.toggle(styles['un-agree']);
       this.removeDisabled();
     };
 
+
+    //输入框 focus click
+    const refBankCard=this.refs.refBankCard;
+    const refTelInput=this.refs.refTelInput;
+    const refBankCardClear=this.refs.refBankCardClear;
+    const refPhoneClear=this.refs.refPhoneClear;
+
+    refBankCard.onfocus=()=>{
+      refBankCardClear.classList.remove('n');
+    };
+    refTelInput.onfocus=()=>{
+      refPhoneClear.classList.remove('n');
+    };
+
+    refBankCardClear.onclick=()=>{
+      refBankCard.value='';
+      refBankCardClear.classList.add('n');
+
+      this.refs.refBankError.classList.add('n');//隐藏银行卡错误提示
+      this.refs.refSupportCard.classList.add('n');//隐藏支持银行div
+
+      this.refs.refBankName.value = '银行';//所属银行名字变回‘银行’
+      this.refs.refBankName.classList.add(styles.disabled);//所属银行字体变灰
+    };
+    refPhoneClear.onclick=()=>{
+      refTelInput.value='';
+      refPhoneClear.classList.add('n');
+
+      this.refs.refTelErrorMsg.classList.add('n');//隐藏手机号错误提示
+    };
   }
 
   handleSubmit(e) {
 
     if (e.target.classList.contains(styles.btnDisabled)) {
+      this.checkSubmitStatus();
       return;
     }
 
     this.sendBindCardFetch();
+  }
+
+  checkSubmitStatus(){
+
+    if(this.refs.refBankCard.value === ''){
+      Toast.info('银行卡号不能为空');
+      return;
+    }
+    if(!this.bankCardNumStatus){
+      Toast.info('请输入正确的银行卡号');
+      return;
+    }
+
+    if(this.refs.refTelInput.value === ''){
+      Toast.info('手机号码不能为空');
+      return;
+    }
+    if(!this.phoneNumStatus){
+      Toast.info('请输入正确的手机号码');
+      return;
+    }
+
+    if(doc.querySelector('.am-list-extra').innerHTML === '开户行所在地'){
+      Toast.info('请选择开户城市');
+      return;
+    }
+
+    if(this.refs.refAgree.classList.contains(styles['un-agree'])){
+      Toast.info('请勾选合同协议');
+    }
   }
 
   checkSupport() {
@@ -377,19 +464,24 @@ class Form extends Component {
     let refBankName = this.refs.refBankName;
     let refBankError = this.refs.refBankError;
     let refSupportCard = this.refs.refSupportCard;
+    let refFormNextBtn = this.refs.refFormNextBtn;
+    let refBankCard = this.refs.refBankCard;
 
     let currentVal = e.target.value.replace(/\D/g,'');
     let cardBindArr = this.state.cardBinData;
 
     let notCardNum=true;
 
+    CONFIGS.bankNum=refBankCard.value;
+
     if (e.keyCode != 8) {
-      this.refs.refBankCard.value=currentVal.replace(/(\d{4})/g, '$1 ');
+      refBankCard.value=currentVal.replace(/(\d{4})/g, '$1 ');
       if (currentVal.length === 6) {
 
         for(let i=0;i<cardBindArr.length;i++){
           if(currentVal==cardBindArr[i][0]){
             refBankName.value=cardBindArr[i][2];
+            CONFIGS.bankName=cardBindArr[i][2];
             refBankName.classList.remove(styles.disabled);//所属银行字体变黑
             refBankError.classList.add('n');//隐藏银行卡错误提示
             notCardNum=false;//表示卡号不在卡bin里
@@ -413,37 +505,48 @@ class Form extends Component {
       }
 
     }
-    if (e.target.value.length === 0) {
+
+    if (e.target.value.length <= 6) {
       clearTimeout(this.timer);
       refBankError.classList.add('n');//隐藏银行卡错误提示
       refSupportCard.classList.add('n');//隐藏支持银行div
 
       refBankName.value = '银行';//所属银行名字变回‘银行’
       refBankName.classList.add(styles.disabled);//所属银行字体变灰
+
+      refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
     }
   }
 
   telRegex(e) {
     let refTelErrorMsg=this.refs.refTelErrorMsg;
     let refFormNextBtn=this.refs.refFormNextBtn;
-    if (e.target.value.length === 11) {
+
+    let currentVal=e.target.value;
+    CONFIGS.phoneNum=currentVal;
+    
+    if (currentVal.length === 11) {
       if (/^1[^7]\d{9}$/.test(e.target.value)) {
+        this.phoneNumStatus=true;
         this.removeDisabled();
         if (!refTelErrorMsg.classList.contains('n')) {
           refTelErrorMsg.classList.add('n');//隐藏手机号错误提示
         }
       } else {
+        this.phoneNumStatus=false;
         refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
         refTelErrorMsg.classList.remove('n');//显示手机号错误提示
       }
     } else {
+      this.phoneNumStatus=false;
       refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
       refTelErrorMsg.classList.add('n');//隐藏手机号错误提示
     }
   }
 
   removeDisabled() {
-    if (this.refs.refBankCard.value !== '' && this.refs.refTelInput.value !== '' && doc.querySelector('.am-list-extra').innerHTML !== '开户行所在地'&&(!this.refs.refAgree.classList.contains(styles['un-agree']))) {
+    // this.refs.refBankCard.value !== '' this.refs.refTelInput.value !== ''
+    if (this.bankCardNumStatus && this.phoneNumStatus && doc.querySelector('.am-list-extra').innerHTML !== '开户行所在地'&&(!this.refs.refAgree.classList.contains(styles['un-agree']))) {
       this.refs.refFormNextBtn.classList.remove(styles.btnDisabled);
     }else{
       this.refs.refFormNextBtn.classList.add(styles.btnDisabled);
@@ -456,7 +559,9 @@ class Form extends Component {
      areaCode:val[1],
      });*/
     //this.cityCode = val[0];
-    this.areaCode = val[1];
+    //this.areaCode = val[1];
+    CONFIGS.cityCode = val[0];
+    CONFIGS.areaCode = val[1];
     this.removeDisabled();
 
   }
@@ -488,10 +593,11 @@ class Form extends Component {
 
     let allData = JSON.parse(localStorage.getItem('CRF_' + storageName));
 
-    if ((!allData) || VERSION.cardBinVERSION != localStorage.getItem('CRF_' + version)) {
+    if (!(allData&&allData[0]) || VERSION.cardBinVERSION != localStorage.getItem('CRF_' + version) ) {
       require.ensure([], (require)=> {
         let data = require('../../../json/cardBin.json');
         localStorage.setItem('CRF_' + storageName, JSON.stringify(data));
+        alert(data[0]+'--send request');
         this.setState({
           cardBinData: data
         });
@@ -499,6 +605,7 @@ class Form extends Component {
       localStorage.setItem('CRF_' + version, VERSION.cardBinVERSION);
 
     } else {
+
       this.setState({
         cardBinData: allData
       });
@@ -508,8 +615,11 @@ class Form extends Component {
 
   render() {
     //let userName='*'+global.userName;
-    let userName = '*'+this.state.userName.substring(1);
+    const userName = '*'+this.state.userName.substring(1);
 
+    const isBankName=CONFIGS.bankName==='银行'||CONFIGS.bankName==='';
+
+    console.log(++CONFIGS.count+'render le me');
     return (
       <section>
         <div className={styles.infoForm}>
@@ -521,16 +631,17 @@ class Form extends Component {
           <div className={styles.formInput}>
             <div className={styles.borderLine}>
               <input type="text" className={styles.bankCard} placeholder="请输入银行卡号"
-                     onKeyUp={this.bankNumInput.bind(this)} maxLength="23" ref="refBankCard"/>
+                         onKeyUp={this.bankNumInput.bind(this)} defaultValue={CONFIGS.bankNum||""} maxLength="19" ref="refBankCard"/>
             </div>
             <div className={styles.errorInfo + " n"} ref="refSupportCard">
               暂不支持此卡, 请查看<a href="javascript:void(0);" onClick={this.checkSupport.bind(this)}>支持银行卡</a>
             </div>
             <div className={styles.errorInfo + " color-FA4548 n"} ref="refBankError">您输入的银行卡号有误</div>
+            <div className="clearPwd n" ref="refBankCardClear"><span className="closeBtn">x</span></div>
           </div>
           <div className={styles.formInput}>
             <div className={styles.borderLine}>
-              <input type="button" className={styles.disabled + " " + styles.bank} value="银行" ref="refBankName"/>
+              <input type="button" className={(isBankName?styles.disabled:"") + " " + styles.bank} defaultValue={CONFIGS.bankName||"银行"} ref="refBankName"/>
             </div>
           </div>
           <div className={styles.formInput}>
@@ -542,6 +653,7 @@ class Form extends Component {
           <input type="text" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号"
                  onInput={this.telRegex.bind(this)} maxLength="11" ref="refTelInput"/>
           <div className={styles.errorInfo + " color-FA4548 n"} ref="refTelErrorMsg">请输入正确的手机号</div>
+          <div className="telInput clearPwd n" ref="refPhoneClear"><span className="closeBtn">x</span></div>
         </div>
 
         <div className={styles.infoForm}>
