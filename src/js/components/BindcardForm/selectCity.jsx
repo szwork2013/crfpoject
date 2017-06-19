@@ -27,7 +27,7 @@ class SelectCity extends React.Component {
       require.ensure([], (require)=> {
         let data = require('../../../json/result.json');
         localStorage.setItem('CRF_provinceData', JSON.stringify(data));
-        alert(data[0]+'--send');
+        //alert(data[0]+'--send');
         this.setState({
           data: data
         });

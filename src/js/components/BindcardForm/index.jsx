@@ -524,7 +524,7 @@ class Form extends Component {
 
     let currentVal=e.target.value;
     CONFIGS.phoneNum=currentVal;
-    
+
     if (currentVal.length === 11) {
       if (/^1[^7]\d{9}$/.test(e.target.value)) {
         this.phoneNumStatus=true;
@@ -597,7 +597,7 @@ class Form extends Component {
       require.ensure([], (require)=> {
         let data = require('../../../json/cardBin.json');
         localStorage.setItem('CRF_' + storageName, JSON.stringify(data));
-        alert(data[0]+'--send request');
+        //alert(data[0]+'--send request');
         this.setState({
           cardBinData: data
         });
