@@ -476,7 +476,7 @@ class Form extends Component {
 
     if (e.keyCode != 8) {
       refBankCard.value=currentVal.replace(/(\d{4})/g, '$1 ');
-      if (currentVal.length === 6) {
+      if (currentVal.length >= 6) {
 
         for(let i=0;i<cardBindArr.length;i++){
           if(currentVal==cardBindArr[i][0]){
@@ -651,7 +651,7 @@ class Form extends Component {
 
         <div className={styles.infoForm + " " + styles.telInput}>
           <input type="text" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号"
-                 onInput={this.telRegex.bind(this)} maxLength="11" ref="refTelInput"/>
+                 onInput={this.telRegex.bind(this)} defaultValue={CONFIGS.phoneNum} maxLength="11" ref="refTelInput"/>
           <div className={styles.errorInfo + " color-FA4548 n"} ref="refTelErrorMsg">请输入正确的手机号</div>
           <div className="telInput clearPwd n" ref="refPhoneClear"><span className="closeBtn">x</span></div>
         </div>

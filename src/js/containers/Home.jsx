@@ -24,7 +24,7 @@ class Home extends Component {
   render() {
     let props = {title: '绑定银行卡', stage: 'home'};
     return (
-      <section className="wrap">
+      <section className="bind-card-wrap">
         <article>
           {CONFIGS.isWeChat?'':<Nav data={props} />}
           <WhiteSpace />

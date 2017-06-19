@@ -463,7 +463,7 @@ body{
   color: #323232;
 }
 
-.wrap{
+.bind-card-wrap{
   height:100%;
   background-color:#EFEFF4;
   /*font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","\5FAE\8F6F\96C5\9ED1",Arial,sans-serif;*/
@@ -484,10 +484,6 @@ body{
 .bind-card-wrap li:last-child .map-wrap{
   border-bottom: 0;
 }
-.bind-card-main{
-  background-color: #EFEFF4;
-  height:100%;
-}
 .bind-card-wrap{
   background-color: #ffffff;
 }
@@ -504,7 +500,7 @@ body{
   left:.3rem;
   width:.8rem;
   height:.8rem;
-  background: url(https://m-static-ci.crfchina.com/images/result_bank.png) no-repeat .08rem .08rem;
+  background: url(../images/result_bank.png) no-repeat .08rem .08rem;
   background-size: 86%;
 }
 .CEB span{
