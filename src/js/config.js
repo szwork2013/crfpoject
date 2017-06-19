@@ -14,14 +14,18 @@ const isWeChat = ua.match(/MicroMessenger/i) == 'micromessenger';
 
 module.exports = {
   basePath: CurrentPath,
-  userId: '',
-  userName:'',
-  idNo:'',
-  bankName:'',
-  bankNum:'',
+  userId: '',//用户ID
+  userName:'',//用户名
+  idNo:'',//身份证
+  bankName:'',//银行卡名字
+  bankNum:'',//银行卡号码
   ssoId:kissoId,
   isWeChat:isWeChat,
   referrerUrl:referrerUrl,
-  contractName:'',
-  contractUrl:'',
+  contractName:'',//协议名字
+  contractUrl:'',//协议地址
+  cityCode:'',//城市编号
+  areaCode:'',//区域编号
+  phoneNum:'',//手机号
+  count:0,
 };

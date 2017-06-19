@@ -613,13 +613,45 @@ body{
     content: '';
   }
 }
-/*
-.arrow-down:before{
-  top: 50%;
-  width: .12rem;
-  height: .12rem;
-  transform: rotate(-135deg);
-}*/
+
+
+
+
+.clearPwd{
+  position: absolute;
+  top: 0.2rem;
+  right: 0;
+  background-color: #ccc;
+  width: .36rem;
+  height: .36rem;
+  border-radius: 50%;
+  .closeBtn{
+    position: absolute;
+    line-height:0;
+    vertical-align:middle;
+    -webkit-transform: rotate(45deg);
+    top: .16rem;
+    right: .05rem;
+    width:.26rem;
+    height:.03rem;
+    background-color:#fff;
+    font-size: 0;
+  }
+  .closeBtn:after{
+    width:.26rem;
+    height:.03rem;
+    background-color:#fff;
+    content:'.';
+    display:block;
+    -webkit-transform: rotate(-90deg);
+  }
+}
+
+.telInput{
+  top:.45rem;
+  right:.6rem;
+}
+
 .n{
   display: none !important;
 }
@@ -656,3 +688,4 @@ body{
     font-size: .32rem;
   }
 }
+
