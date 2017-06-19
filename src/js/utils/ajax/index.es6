@@ -1,11 +1,12 @@
 require('es6-promise/auto');
 require('whatwg-fetch');
+const Toast = require('antd-mobile/lib/toast');
 
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   } else {
-    let error = new Error(response.statusText)
+    let error = new Error(response.statusText);
     error.response = response;
     error.body = response.json();
     throw error;
@@ -80,6 +81,7 @@ const FetchInterface = {
         mode: 'cors'
       })
       .then(checkStatus)
+      //.then(parseJSON)
       .then(returnResponse)
       .then(data => {
         resolve(data)
@@ -91,6 +93,37 @@ const FetchInterface = {
     });
 
     return defer;
+  },
+  handleError(err,fn){
+    let msg = err&&err.body;
+    let status = err&&err.response.status;
+
+    switch(status){
+        case 400:
+
+          break;
+        case 401:
+          if(location.hash!='#/login'){
+            location.href=CONFIGS.lnHref+'#/login';
+          }
+          break;
+        case 403:
+          Toast.info('您没有权限做此操作，请返回重试！');
+          break;
+        case 404:
+          Toast.info('资源已经移除，访问出错！');
+          break;
+        case 500:
+        case 502:
+        case 504:
+          Toast.info('网络连接失败，请稍后重试');//哎呀，服务器开小差了，请稍后再试吧!
+          break;
+        default:
+          msg&&msg.then(data=>{
+            Toast.info(data.message);
+          });
+    }
+    fn&&fn();
   }
 }
 

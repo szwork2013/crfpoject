@@ -4,6 +4,9 @@
     margin-top:0.3rem;
     padding:0.28rem 0.6rem 0;
 }
+.infoForm:first-child{
+    margin-top:0;
+}
 
 .formInput{
     position: relative;
@@ -15,6 +18,7 @@
         font-size: .28rem;
         background-size: 7%;
         background-position: .15rem .08rem;
+        text-align: left;
     }
 }
 
@@ -99,15 +103,27 @@
 
 .authorize{
     height:.7rem;
-    padding-left:.5rem;
-    background: url(../../../images/correct.png) no-repeat;
-    background-position: .08rem .02rem;
+    padding-left:.4rem;
+    /*background: url(../../../images/correct.png) no-repeat;
+    background-position: .08rem .02rem;*/
     background-size: 4.5%;
     display: flex;
     line-height: normal;
     margin-top: .2rem;
+    position: relative;
     .agree{
-        flex:1;
+        position: absolute;
+        top:.02rem;
+        left:0;
+        width:.28rem;
+        height:.28rem;
+        background: url(../../../images/correct.png) no-repeat;
+        background-size:100%;
+        font-size: 0;
+    }
+    .un-agree{
+        background: url(../../../images/un_correct.png) no-repeat;
+        background-size:100%;
     }
     .protocol{
         flex:1;

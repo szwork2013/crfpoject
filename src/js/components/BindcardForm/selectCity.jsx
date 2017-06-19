@@ -23,16 +23,18 @@ class SelectCity extends React.Component {
   requireJson() {
     let allData = JSON.parse(localStorage.getItem('CRF_provinceData'));
 
-    if ((!allData) || cityDataVERSION != localStorage.getItem('CRF_cityDataVersion')) {
+    if ((!allData) || VERSION.cityDataVERSION != localStorage.getItem('CRF_cityDataVersion')) {
       require.ensure([], (require)=> {
         let data = require('../../../json/result.json');
         localStorage.setItem('CRF_provinceData', JSON.stringify(data));
+        //alert(data[0]+'--send');
         this.setState({
           data: data
         });
       });
-      localStorage.setItem('CRF_cityDataVersion', cityDataVERSION);
+      localStorage.setItem('CRF_cityDataVersion', VERSION.cityDataVERSION);
     } else {
+      //alert(allData[0]+'--not send');
       this.setState({
         data: allData
       });
@@ -47,10 +49,14 @@ class SelectCity extends React.Component {
   render() {
     let district = this.state.data;
     const {getFieldProps} = this.props.form;
+
+    //默认位置
+    const defaultCode={initialValue: [CONFIGS.cityCode, CONFIGS.areaCode]};
+
     return (<div>
       <List className="picker-list">
         <Picker cols="2" extra="开户行所在地" data={district} title="选择地区"
-                onPickerChange={this.onPickerChange.bind(this)} {...getFieldProps('district')} >
+                onPickerChange={this.onPickerChange.bind(this)} {...getFieldProps('district',defaultCode)} >
           <List.Item arrow="horizontal">位置</List.Item>
         </Picker>
       </List>

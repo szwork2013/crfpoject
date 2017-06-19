@@ -3,6 +3,8 @@ import {Link} from 'react-router';
 
 import {Nav} from 'app/components';
 
+import { WhiteSpace } from 'antd-mobile';
+
 export default class Rebind extends Component {
   constructor(props) {
     super(props);
@@ -18,7 +20,7 @@ export default class Rebind extends Component {
   getBankJson() {
     let allData = JSON.parse(localStorage.getItem('CRF_bankData'));
 
-    if ((!allData) || bankDataVERSION != localStorage.getItem('CRF_bankDataVersion')) {
+    if ((!allData) || VERSION.bankDataVERSION != localStorage.getItem('CRF_bankDataVersion')) {
       require.ensure([], (require)=> {
         let data = require('../../json/bank.json');
         localStorage.setItem('CRF_bankData', JSON.stringify(data));
@@ -26,7 +28,7 @@ export default class Rebind extends Component {
           bankJson: data
         });
       });
-      localStorage.setItem('CRF_bankDataVersion', bankDataVERSION);
+      localStorage.setItem('CRF_bankDataVersion', VERSION.bankDataVERSION);
     } else {
       this.setState({
         bankJson: allData
@@ -37,13 +39,12 @@ export default class Rebind extends Component {
 
   liClick(e) {
     //console.log(e.currentTarget.classList);
-    e.currentTarget.classList.toggle('hideSupportCardNum');
+    e.currentTarget.classList.toggle('hide-support-card-num');
   }
 
   render() {
     let props = {title: '选择开户行'};
     let allData = this.state.bankJson;
-    console.log(1);
     let bankObj = {
       'ICBC': '工商银行',
       'CEB': '光大银行',
@@ -62,9 +63,10 @@ export default class Rebind extends Component {
     };
 
     return (
-      <section className="bindCardMain">
-        <Nav data={props}/>
-        <div className="bindCardWrap">
+      <section className="bind-card-main">
+        {CONFIGS.isWeChat?'':<Nav data={props} />}
+        <WhiteSpace />
+        <div className="bind-card-wrap">
           <ul>
             {
               allData && allData.map((item, index)=> {
@@ -73,12 +75,12 @@ export default class Rebind extends Component {
                 for (let i = 0; i < item[1].length; i++) {
                   str += item[1][i][0] + '; ';
                 }
-                return (<li key={index} className="hideSupportCardNum" onClick={this.liClick.bind(this)}>
-                  <div className="mapWrap">
-                    <div className={"bankIcon " + item[0]}>{bankObj[item[0]]}<span></span></div>
-                    {str ? <div className="checkBankCard">查看不支持卡种<span className="arrowDown"></span></div> : ''}
+                return (<li key={index} className="hide-support-card-num" onClick={this.liClick.bind(this)}>
+                  <div className="map-wrap">
+                    <div className={"bank-icon " + item[0]}>{bankObj[item[0]]}<span></span></div>
+                    {str ? <div className="check-bank-card">查看不支持卡种<span className="arrow-down"></span></div> : ''}
                   </div>
-                  {str ? <div className="supportBankCardNum"><p>暂不支持以下数字开头的卡种 :</p>{str}</div> : ''}
+                  {str ? <div className="support-bank-card-num"><p>暂不支持以下数字开头的卡种 :</p>{str}</div> : ''}
                 </li>);
               })
             }

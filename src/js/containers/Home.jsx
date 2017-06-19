@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { Nav, BindcardForm } from 'app/components';
+import { Nav, BindcardForm, Loading } from 'app/components';
+import { WhiteSpace } from 'antd-mobile';
 
 class Home extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-
+      loadingShowStatus:false
     };
   }
 
@@ -14,14 +15,22 @@ class Home extends Component {
 
   }
 
+  setLoading(status){
+    this.setState({
+      loadingShowStatus:status
+    });
+  }
+
   render() {
     let props = {title: '绑定银行卡', stage: 'home'};
     return (
-      <section className="wrap">
+      <section className="bind-card-wrap">
         <article>
-          <Nav data={props} />
-          <BindcardForm />
+          {CONFIGS.isWeChat?'':<Nav data={props} />}
+          <WhiteSpace />
+          <BindcardForm setLoading={this.setLoading.bind(this)} />
         </article>
+        <Loading show={this.state.loadingShowStatus} />
       </section>
     )
   }
