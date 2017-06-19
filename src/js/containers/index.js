@@ -10,6 +10,9 @@ export { default as ReBindCard } from './ReBindCard.jsx';
 //ReBindCard
 export { default as SupportCard } from './SupportCard.jsx';
 
+//Repay
+export { default as Repay } from './Repay.jsx';
+
 // 404
 export { default as NotFoundPage } from './404.jsx';
 

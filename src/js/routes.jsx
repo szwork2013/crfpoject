@@ -7,7 +7,8 @@ import {
   Success,
   ReBindCard,
   SupportCard,
-  NotFoundPage,
+  Repay,
+  NotFoundPage
 } from './containers';
 
 export default (
@@ -16,6 +17,7 @@ export default (
     <Route path="success" component={Success} />
     <Route path="rebindcard" component={ReBindCard} />
     <Route path="supportcard" component={SupportCard} />
+    <Route path="repay" component={Repay} />
     <Route path="*" component={NotFoundPage} />
   </Route>
 );

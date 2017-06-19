@@ -1,4 +1,4 @@
-let CurrentPath = '/consumptionLoan/';
+let CurrentPath = '/consumptionrepay/';
 
 module.exports = {
   basePath: CurrentPath,
@@ -26,5 +26,7 @@ module.exports = {
   mobileFormartRegx: /^(\d{3})(\d{4})(\d{4})$/,
   phoneFormartRegx: /^(\d{3})(\d{3})(\d{4})$/,
   mobileHiddenRegx: /^(\d{3})\d{4}(\d{4})$/,
-  iosRegx: /\(i[^;]+;( U;)? CPU.+Mac OS X/
+  iosRegx: /\(i[^;]+;( U;)? CPU.+Mac OS X/,
+  repayDefaultTitle: '应还金额(元)',
+  repayChangedTitle: '实还金款(元)'
 };

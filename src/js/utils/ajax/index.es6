@@ -1,5 +1,5 @@
-import 'es6-promise/auto'
-import 'whatwg-fetch';
+require('es6-promise/auto');
+require('whatwg-fetch');
 
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
@@ -94,5 +94,4 @@ const FetchInterface = {
   }
 }
 
-//module.exports = FetchInterface;
-export default FetchInterface;
+module.exports = FetchInterface;
