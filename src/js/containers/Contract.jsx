@@ -16,7 +16,7 @@ export default class Success extends Component {
       backgroundColor:'#fff'
     };
     return (
-      <div className="bind-card-main">
+      <div className="bind-card-main sub-page-wrap">
         {CONFIGS.isWeChat?'':<Nav data={props} />}
         <WhiteSpace />
         <iframe src={CONFIGS.contractUrl} style={frameStyle}></iframe>

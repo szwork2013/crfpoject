@@ -66,7 +66,7 @@ export default class Rebind extends Component {
       <section className="bind-card-main">
         {CONFIGS.isWeChat?'':<Nav data={props} />}
         <WhiteSpace />
-        <div className="bind-card-wrap">
+        <div className="bind-card-wrap sub-page-wrap">
           <ul>
             {
               allData && allData.map((item, index)=> {
