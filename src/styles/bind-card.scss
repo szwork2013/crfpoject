@@ -67,12 +67,16 @@ body{
   background-size: 95%;
 }
 .CIB span{
-  background-position: .08rem -4.58rem;
-  background-size: 90%;
+  /*background-position: .08rem -4.58rem;
+  background-size: 90%;*/
+  background-position: .08rem -4.7rem;
+  background-size: 92%;
 }
 .PSBC span{
-  background-position: .08rem -3.06rem;
-  background-size: 90%;
+  /*background-position: .08rem -3.06rem;
+  background-size: 90%;*/
+  background-position: .08rem -3.15rem;
+  background-size: 92%;
 }
 .CMB span{
   /*background-position: .08rem -0.7rem;
@@ -96,7 +100,9 @@ body{
   background-size: 90%;
 }
 .HXB span{
-  background-position: .08rem -7.2rem;
+  /*background-position: .08rem -7.2rem;*/
+  background-position: .08rem -7.7rem;
+  background-size: 92%;
 }
 .CMBC span{
   background-position: .08rem -8.72rem;
@@ -123,7 +129,7 @@ body{
   .arrow-down{
     position: absolute;
     right: .2rem;
-    top: .35rem;
+    top: .4rem;
     width: .5rem;
     height: .5rem;
     &:before{
