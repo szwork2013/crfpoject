@@ -1,0 +1,193 @@
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem 0.3rem;
+  button {
+    width: 100%;
+    font-size: .36rem;
+  }
+}
+
+.coupons-container {
+  position: absolute;
+  top: .88rem;
+  width: 100%;
+  height: calc(100vh - .88rem);
+  background: #EFEFF4;
+  z-index: 2;
+}
+
+.coupons-list {
+  position: relative;
+  height: 100%;
+}
+
+.coupons-list-content {
+  height: calc(100vh - 1.52rem);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.coupon-row {
+  position: relative;
+  height: 100px;
+  display: box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: -o-box;
+  margin-bottom: .2rem;
+}
+
+.coupon-left, .coupon-right {
+  position: relative;
+  background-color: #fff;
+}
+
+.coupon-left {
+  width: 100px;
+  height: 100%;
+  border-radius: .1rem 0 0 .1rem;
+}
+
+.coupon-right {
+  box-flex: 1;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -ms-box-flex: 1;
+  -o-box-flex: 1;
+  display: box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: -o-box;
+  margin-left: 2px;
+  padding-right: .1rem;
+  padding-left: .13rem;
+  border-radius: 0 .1rem .1rem 0;
+}
+
+.circular-top, .circular-bottom {
+  position: absolute;
+  left: -1px;
+  height: 12px;
+  width: 12px;
+  border-radius: 6px 6px 6px 6px;
+  background-color: #EFEFF4;
+  z-index: 2;
+}
+
+.triangle-border-right {
+  height: 100%;
+  width: 6px;
+  position: absolute;
+  left: -5px;
+  z-index: 1;
+  .circular-top {
+    top: -6px;
+  }
+  .circular-bottom {
+    bottom: -6px;
+  }
+  .border {
+    position: absolute;
+    left: 4px;
+    display: block;
+    border-right: 1px dashed #909090;
+    width: 0;
+    height: 100%;
+  }
+}
+
+.ball-clip-rotate > div {
+  width: .5rem;
+  height: .5rem;
+  border-radius: 100%;
+  margin: .02rem;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  border: .05rem solid #000;
+  border-bottom-color: transparent;
+  background: transparent;
+  display: inline-block;
+  animation: rotate 0.75s 0s linear infinite;
+}
+
+@-webkit-keyframes ball-spin-fade-loader {
+  50% {
+    opacity: 0.3;
+    -webkit-transform: scale(0.4);
+            transform: scale(0.4); }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1); } }
+
+@keyframes ball-spin-fade-loader {
+  50% {
+    opacity: 0.3;
+    -webkit-transform: scale(0.4);
+            transform: scale(0.4); }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1); } }
+
+.ball-spin-fade-loader {
+  position: absolute;
+  right: .8rem;
+  top: .4rem;
+}
+  .ball-spin-fade-loader > div:nth-child(1) {
+    top: .24rem;
+    left: 0;
+    -webkit-animation: ball-spin-fade-loader 1s 0s infinite linear;
+            animation: ball-spin-fade-loader 1s 0s infinite linear; }
+  .ball-spin-fade-loader > div:nth-child(2) {
+    top: .17rem;
+    left: .17rem;
+    -webkit-animation: ball-spin-fade-loader 1s 0.12s infinite linear;
+            animation: ball-spin-fade-loader 1s 0.12s infinite linear; }
+  .ball-spin-fade-loader > div:nth-child(3) {
+    top: 0;
+    left: .24rem;
+    -webkit-animation: ball-spin-fade-loader 1s 0.24s infinite linear;
+            animation: ball-spin-fade-loader 1s 0.24s infinite linear; }
+  .ball-spin-fade-loader > div:nth-child(4) {
+    top: -.17rem;
+    left: .17rem;
+    -webkit-animation: ball-spin-fade-loader 1s 0.36s infinite linear;
+            animation: ball-spin-fade-loader 1s 0.36s infinite linear; }
+  .ball-spin-fade-loader > div:nth-child(5) {
+    top: -.24rem;
+    left: 0;
+    -webkit-animation: ball-spin-fade-loader 1s 0.48s infinite linear;
+            animation: ball-spin-fade-loader 1s 0.48s infinite linear; }
+  .ball-spin-fade-loader > div:nth-child(6) {
+    top: -.17rem;
+    left: -.17rem;
+    -webkit-animation: ball-spin-fade-loader 1s 0.6s infinite linear;
+            animation: ball-spin-fade-loader 1s 0.6s infinite linear; }
+  .ball-spin-fade-loader > div:nth-child(7) {
+    top: 0;
+    left: -.24rem;
+    -webkit-animation: ball-spin-fade-loader 1s 0.72s infinite linear;
+            animation: ball-spin-fade-loader 1s 0.72s infinite linear; }
+  .ball-spin-fade-loader > div:nth-child(8) {
+    top: .17rem;
+    left: -.17rem;
+    -webkit-animation: ball-spin-fade-loader 1s 0.84s infinite linear;
+            animation: ball-spin-fade-loader 1s 0.84s infinite linear; }
+  .ball-spin-fade-loader > div {
+    background-color: #000;
+    width: .14rem;
+    height: .14rem;
+    border-radius: 100%;
+    margin: .02rem;
+    -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+    position: absolute; }

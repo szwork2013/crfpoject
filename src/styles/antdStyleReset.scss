@@ -1,3 +1,65 @@
+.am-list-item {
+  padding-left:.3rem;
+  min-height: .9rem;
+  .am-list-line {
+    padding-right: .3rem;
+    min-height: .9rem;
+    .am-list-content {
+      font-size: .34rem;
+      padding-top: .14rem;
+      padding-bottom: .14rem;
+    }
+    .am-list-extra {
+      font-size: .32rem;
+      padding-top: .14rem;
+      padding-bottom: .14rem;
+    }
+    .am-list-arrow {
+      width: .3rem;
+      height: .3rem;
+      margin-left: .16rem;
+    }
+  }
+  .am-input-label {
+    color: #646464;
+    font-size: 0.32rem;
+  }
+  .am-input-control {
+    font-size: 0.34rem;
+    input {
+      text-align: right;
+      color: #323232;
+      font-size: 0.32rem;
+    }
+  }
+  .am-input-extra {
+    color: #646464;
+    font-size: 0.2rem;
+    margin-left: 0.2rem;
+    line-height: normal;
+    max-height: 0.42rem;
+  }
+}
+
+.crf-list {
+  .am-list-item {
+    .am-list-line {
+      .am-list-content {
+        font-size: .28rem;
+        color: #323232;
+      }
+    }
+  }
+}
+
+.crf-present.am-list-item {
+  .am-list-line {
+    .am-list-extra {
+      color: #3693FD;
+    }
+  }
+}
+
 .bind-card-wrap{
   .am-list-item {
     min-height: 0.6rem;
@@ -121,4 +183,15 @@
 .am-whitespace.am-whitespace-md {
   background: #efeff4;
   height: 0.18rem;
+}
+
+.coupons-list-content {
+  .am-list-body {
+    margin: 0 .2rem;
+    background-color: transparent;
+    border-top: 0;
+    &:after {
+      border-bottom: 0;
+    }
+  }
 }
