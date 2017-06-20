@@ -15,15 +15,15 @@ export default class Success extends Component {
       <div className="bind-card-main">
         {CONFIGS.isWeChat?'':<Nav data={props} />}
         <WhiteSpace />
-        <div className="bind-card-wrap">
-            <div className="bind-card-status">
-              <div className="img success"></div>
-              <p>恭喜您成功绑定</p>
-              <p>{CONFIGS.bankName+"("+CONFIGS.bankNum.slice(-4)+")"}</p>
-            </div>
+        <div className="bind-card-wrap sub-page-wrap">
+          <div className="bind-card-status">
+            <div className="img success"></div>
+            <p>恭喜您成功绑定</p>
+            <p>{CONFIGS.bindCard.bankName+"("+CONFIGS.bindCard.bankNum.slice(-4)+")"}</p>
+          </div>
         </div>
         <div className="next-page">
-            <button onClick={this.handleClick.bind(this)}>下一步</button>
+            <button onClick={this.handleClick.bind(this)}>确定</button>
         </div>
       </div>
     )
