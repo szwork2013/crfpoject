@@ -29,8 +29,6 @@ class Form extends Component {
 
   componentWillMount() {
     this.getUserInfo();
-    this.requireJson();
-    this.getContractFetch();
   }
 
   componentDidMount() {
@@ -53,7 +51,7 @@ class Form extends Component {
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
-
+        console.log(result);
 
         CONFIGS.userId=result.crfUid;
         CONFIGS.userName=result.userName;
@@ -64,6 +62,10 @@ class Form extends Component {
           userName:result.userName,
           //idNo:result.idNo,
         });
+
+        //获取对应数据
+        this.requireJson();
+        this.getContractFetch();
         /*{
           "ctUserId": "3717add06dfd401e906359956b3f2a6f",
           "channel": null,
@@ -92,21 +94,25 @@ class Form extends Component {
       }
     } catch (err) {
       if(err.toString().indexOf('Unexpected')>-1){
+        console.log(err);
         Toast.info('用户kissoID不存在');
         return;
       }
       CRFFetch.handleError(err,()=>{
-        //Toast.loading('cuowule',10000);
-        //Toast.info('cuowule',10000);
-        if(err.response.status==400){
-          err.body.then(data => {
-            if(/[\u0391-\uFFE5]+/.test(data.message)){
-              Toast.info(data.message);
-            }else{
-              Toast.info('系统繁忙，请稍后再试！');
-            }
-          });
+        try{
+          if(err.response.status==400){
+            err.body.then(data => {
+              if(/[\u0391-\uFFE5]+/.test(data.message)){
+                Toast.info(data.message);
+              }else{
+                Toast.info('系统繁忙，请稍后再试！');
+              }
+            });
+          }
+        }catch(e){
+          Toast.info('系统繁忙，请稍后再试！');
         }
+
 
       });
     }
