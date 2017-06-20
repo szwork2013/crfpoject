@@ -29,11 +29,18 @@ body{
   display: flex;
   border-bottom: 1px solid #E6E7EC;
 }
+.sub-page-wrap ul{
+  background-color: #fff;
+}
 .sub-page-wrap li:last-child .map-wrap{
   border-bottom: 0;
 }
 .sub-page-wrap{
-  background-color: #ffffff;
+  background-color: #efeff4;
+  .bind-card-wrap{
+    height:auto;
+    background: #fff;
+  }
 }
 .bank-icon{
   flex:6;
@@ -139,8 +146,8 @@ body{
       height: .2rem;
       transform: rotate(-135deg);
       position: absolute;
-      border-left: 2px solid #646464;
-      border-top: 2px solid #646464;
+      border-left: 2px solid #909090;
+      border-top: 2px solid #909090;
       content: '';
     }
   }
@@ -224,7 +231,7 @@ body{
   }
   p{
     text-align: center;
-    font-size:.34rem;
+    font-size:.36rem;
     color: #323232;
   }
 }
@@ -235,6 +242,7 @@ body{
     width: 100%;
     padding: .15rem 0;
     border-radius: .5rem;
-    font-size: .32rem;
+    font-size: .36rem;
   }
 }
+

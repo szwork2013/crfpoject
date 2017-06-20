@@ -8,16 +8,16 @@ require('./js/utils/device/index.es6');
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
+global.doc = window.document;
+global.Common = require('./js/utils/common/index.es6');
 global.CONFIGS = require('./js/config');
 global.CRFFetch = require('./js/utils/ajax/index.es6');
 global.HandleRegex = require('./js/utils/regex/index.es6');
-
 global.VERSION={
   cityDataVERSION : '201706202',
   bankDataVERSION : '201706202',
   cardBinVERSION  : '201706202',
 };
-global.doc = window.document;
 
 if (typeof Object.assign !== 'function') {
   Object.assign = require('object-assign');

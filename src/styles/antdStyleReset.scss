@@ -154,8 +154,50 @@
 
 
 
+/*小屏幕*/
+.adapt .am-list-item{
+  padding-bottom: 0.12rem;
+}
+
+.adapt > div{
+  font-size: 0.28rem;
+  padding:0.28rem 0.4rem 0;
+}
+.adapt{
+  .borderLine{
+    margin-bottom: 0.12rem;
+    padding-bottom: 0.12rem;
+  }
+}
 
 
-
+.adapt{
+  .subInfoForm{
+    padding-top:.12rem;
+    input{
+      margin-bottom:.12rem;
+    }
+    span{
+      margin-bottom:.12rem;
+    }
+    .am-switch{
+      top:.12rem;
+    }
+  }
+  .submitBtn{
+    padding:0 .2rem;
+    margin-top:10%;
+    button{
+      font-size:.30rem;
+      padding: .12rem 0;
+    }
+    .text{
+      font-size:12px;
+    }
+    a{
+      font-size:12px;
+    }
+  }
+}
 
 
