@@ -95,8 +95,9 @@ const FetchInterface = {
     return defer;
   },
   handleError(err,fn){
+    console.log(err+'--handle err');
     let msg = err&&err.body;
-    let status = err.response&&err.response.status;
+    let status = err&&err.response&&err.response.status;
 
     switch(status){
         case 400:

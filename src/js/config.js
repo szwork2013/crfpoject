@@ -1,16 +1,9 @@
 let CurrentPath = '/h5_dubbo/';
 
-let localHref=location.href;
-let referrerUrl=localHref.substring(localHref.indexOf('?')+1);
-let referrerPara=referrerUrl?referrerUrl.substring(referrerUrl.indexOf('?')+1):'';
-
-let name = 'ssoId';
-let urlParaArr=referrerPara.match(new RegExp("(^|&)" + name + "=([^&]*)(&|$)"));
-
-let kissoId=urlParaArr&&urlParaArr[2];
-
-const ua = window.navigator.userAgent.toLowerCase();
-const isWeChat = ua.match(/MicroMessenger/i) == 'micromessenger';
+const isWeChat = Common.isWeChat();
+const kissoId = Common.returnKissoID();
+const referrerUrl = Common.returnReferrerUrl();
+const adapt = Common.isAdapt();
 
 module.exports = {
   basePath: CurrentPath,
@@ -20,6 +13,7 @@ module.exports = {
   ssoId:kissoId,
   isWeChat:isWeChat,
   referrerUrl:referrerUrl,
+  adapt:adapt,
   bindCard:{
     bankName:'',//银行卡名字
     bankNum:'',//银行卡号码
@@ -30,8 +24,8 @@ module.exports = {
     phoneNum:'',//手机号
     switchStatus:true,
     isAgree:true,
+    notSubmit:true,
   },
-  count:0,
   phone: null,
   csPhone: 4009699559,
   billStatus: {

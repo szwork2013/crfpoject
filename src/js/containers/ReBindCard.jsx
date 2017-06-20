@@ -8,7 +8,11 @@ export default class Rebind extends Component {
   constructor(props){
     super(props)
   }
+  componentDidMount(){
+    //_paq.push(['trackEvent', 'P_Fail', '绑卡失败页面']);
+  }
   handleClick(){
+    //_paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '失败页面按钮']);
     this.props.router.push('/');
   }
   render() {
