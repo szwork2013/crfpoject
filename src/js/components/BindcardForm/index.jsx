@@ -122,7 +122,7 @@ class Form extends Component {
     let type='OPEN_ACCOUNT';
     let getContractUrl=CONFIGS.basePath+'contract/?contractEnum='+type;
 
-    try {
+      try {
       let fetchPromise = CRFFetch.Get(getContractUrl);
       // 获取数据
       let result = await fetchPromise;
@@ -291,8 +291,8 @@ class Form extends Component {
 
   async checkCardFetch(val) {
 
-    let cardNo=val.replace(/\s/g,'');console.log(cardNo);
-    let checkCardUrl = CONFIGS.basePath+'fcp/cardInfo/'+cardNo+'&kissoId='+CONFIGS.ssoId;
+    let cardNo=val.replace(/\s/g,'');
+    let checkCardUrl = CONFIGS.basePath+'fcp/cardInfo/?cardNo='+cardNo+'&kissoId='+CONFIGS.ssoId;
 
     const refBankName = this.refs.refBankName;
     const refSupportCard = this.refs.refSupportCard;
@@ -549,7 +549,7 @@ class Form extends Component {
     CONFIGS.bindCard.phoneNum=currentVal;
 
     if (currentVal.length === 11) {
-      if (/^1[^7]\d{9}$/.test(e.target.value)) {
+      if (/^1([1-6]\d|7[^017]|[8-9]\d)\d{8}$/.test(e.target.value)) {
         this.phoneNumStatus=true;
         this.removeDisabled();
         if (!refTelErrorMsg.classList.contains('n')) {
