@@ -12,10 +12,10 @@ export default class Success extends Component {
     //let bankcard="交通银行储蓄卡(1234)";
     let props={ title:'成功' };
     return (
-      <div className="bind-card-main">
+      <div className="bind-card-main sub-page-wrap">
         {CONFIGS.isWeChat?'':<Nav data={props} />}
         <WhiteSpace />
-        <div className="bind-card-wrap sub-page-wrap">
+        <div className="bind-card-wrap">
           <div className="bind-card-status">
             <div className="img success"></div>
             <p>恭喜您成功绑定</p>
