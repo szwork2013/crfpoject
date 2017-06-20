@@ -1,4 +1,5 @@
 .bind-card-wrap{
+  /*选择城市*/
   .am-list-item {
     min-height: 0.6rem;
     padding-left:0;
@@ -12,7 +13,7 @@
       }
       .am-list-extra{
         flex:6;
-        font-size:0.32rem;
+        font-size:0.3rem;
         padding:0;
         text-align:left;
         padding-left: 1.1rem;
@@ -30,41 +31,12 @@
   }
 
 
-
-  .am-picker-popup-item{
-    font-size: 0.34rem;
-    padding: 0.18rem 0.3rem;
+  /*switch*/
+  .am-switch{
+    position: absolute;
+    top: .28rem;
+    right: .6rem;
   }
-
-  .am-picker-col {
-    height: 4.76rem;
-  }
-
-  .am-picker-col-content {
-    padding: 2.04rem 0;
-  }
-
-  .am-picker-col-item {
-    font-size: 0.32rem;
-    height: 0.68rem;
-    line-height: 0.68rem;
-  }
-
-  .am-picker-col-item-selected {
-    font-size: 0.34rem;
-  }
-
-  .am-picker-col-mask {
-    background-size: 100% 2.04rem;
-  }
-
-  .am-picker-col-indicator {
-    height: 0.68rem;
-    top: 2.04rem;
-  }
-
-
-
 
   .am-switch .checkbox {
     width: 1.02rem;
@@ -102,23 +74,88 @@
     border-bottom:0;
   }
 
-
   .am-switch input[type="checkbox"]:checked + .checkbox{
     background-color: #2BC693;
   }
 
-
-  /*toast*/
-  .am-toast {
-    font-size: .28rem;
-  }
-
-  .am-toast-notice-content .am-toast-text {
-    padding: .18rem .3rem;
-  }
 }
+
 
 .am-whitespace.am-whitespace-md {
   background: #efeff4;
   height: 0.18rem;
 }
+
+
+/*选择城市控件*/
+.am-picker-popup-item{
+  font-size: 0.34rem;
+  padding: 0.18rem 0.3rem;
+}
+
+.am-picker-col {
+  height: 4.76rem;
+}
+
+.am-picker-col-content {
+  padding: 2.04rem 0;
+}
+
+.am-picker-col-item {
+  font-size: 0.32rem;
+  height: 0.68rem;
+  line-height: 0.68rem;
+}
+
+.am-picker-col-item-selected {
+  font-size: 0.34rem;
+}
+
+.am-picker-col-mask {
+  background-size: 100% 2.04rem;
+}
+
+.am-picker-col-indicator {
+  height: 0.68rem;
+  top: 2.04rem;
+}
+
+
+
+/*toast*/
+.am-toast {
+  font-size: .28rem;
+}
+
+.am-toast-notice-content .am-toast-text {
+  padding: .18rem .3rem;
+}
+
+
+/*银行号码*/
+.am-list-item.am-input-item{
+  height: .7rem;
+  padding:0 0 0 1.1rem;
+}
+
+.am-list-item .am-input-control{
+  font-size: .34rem;
+}
+
+.am-list-item .am-input-control input{
+  font-size: .34rem;
+}
+
+.am-list-item.am-input-item:after{
+  border:0;
+}
+
+
+
+
+
+
+
+
+
+

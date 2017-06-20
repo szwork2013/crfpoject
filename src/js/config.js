@@ -17,16 +17,20 @@ module.exports = {
   userId: '',//用户ID
   userName:'',//用户名
   idNo:'',//身份证
-  bankName:'',//银行卡名字
-  bankNum:'',//银行卡号码
   ssoId:kissoId,
   isWeChat:isWeChat,
   referrerUrl:referrerUrl,
-  contractName:'',//协议名字
-  contractUrl:'',//协议地址
-  cityCode:'',//城市编号
-  areaCode:'',//区域编号
-  phoneNum:'',//手机号
+  bindCard:{
+    bankName:'',//银行卡名字
+    bankNum:'',//银行卡号码
+    contractName:'',//协议名字
+    contractUrl:'',//协议地址
+    cityCode:'',//城市编号
+    areaCode:'',//区域编号
+    phoneNum:'',//手机号
+    switchStatus:true,
+    isAgree:true,
+  },
   count:0,
   phone: null,
   csPhone: 4009699559,

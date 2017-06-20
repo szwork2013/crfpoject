@@ -13,9 +13,9 @@ global.CRFFetch = require('./js/utils/ajax/index.es6');
 global.HandleRegex = require('./js/utils/regex/index.es6');
 
 global.VERSION={
-  cityDataVERSION : '20170612',
-  bankDataVERSION : '20170612',
-  cardBinVERSION  : '20170614',
+  cityDataVERSION : '201706202',
+  bankDataVERSION : '201706202',
+  cardBinVERSION  : '201706202',
 };
 global.doc = window.document;
 

@@ -8,7 +8,7 @@ let SwitchTab = (props) => {
   return (
     <Switch
       {...getFieldProps('Switch1', {
-        initialValue: true,
+        initialValue: CONFIGS.bindCard.switchStatus,
         valuePropName: 'checked',
       })}
       onClick={(checked) => {

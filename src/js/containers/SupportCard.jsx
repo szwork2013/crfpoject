@@ -18,17 +18,21 @@ export default class Rebind extends Component {
   }
 
   getBankJson() {
-    let allData = JSON.parse(localStorage.getItem('CRF_bankData'));
+    let storageName='bankData';
+    let version='bankDataVersion';
 
-    if ((!allData) || VERSION.bankDataVERSION != localStorage.getItem('CRF_bankDataVersion')) {
-      require.ensure([], (require)=> {
+    let allData = JSON.parse(localStorage.getItem('CRF_'+storageName));
+
+    if ((!allData) || VERSION.bankDataVERSION != localStorage.getItem('CRF_'+version)) {
+      this.sendLocationFetch(storageName,version);
+      /*require.ensure([], (require)=> {
         let data = require('../../json/bank.json');
         localStorage.setItem('CRF_bankData', JSON.stringify(data));
         this.setState({
           bankJson: data
         });
       });
-      localStorage.setItem('CRF_bankDataVersion', VERSION.bankDataVERSION);
+      localStorage.setItem('CRF_bankDataVersion', VERSION.bankDataVERSION);*/
     } else {
       this.setState({
         bankJson: allData
@@ -36,6 +40,32 @@ export default class Rebind extends Component {
     }
 
   }
+
+  async sendLocationFetch(storageName,version){
+
+    let getJsonUrl=location.origin+'/credit_loan/json/bank.json';
+
+    try {
+
+      let fetchPromise = CRFFetch.Get(getJsonUrl);
+
+      // 获取数据
+      let result = await fetchPromise;
+      console.log(result);
+      if (result && !result.response) {
+        localStorage.setItem('CRF_' + storageName, JSON.stringify(result));
+
+        this.setState({
+          bankJson: result
+        });
+
+        localStorage.setItem('CRF_' + version, VERSION.bankDataVERSION);
+      }
+    } catch (err) {
+      CRFFetch.handleError(err);
+    }
+  }
+
 
   liClick(e) {
     //console.log(e.currentTarget.classList);
