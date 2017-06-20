@@ -286,11 +286,11 @@ class Form extends Component {
   async checkCardFetch(val) {
 
     let cardNo=val.replace(/\s/g,'');console.log(cardNo);
-    let checkCardUrl = CONFIGS.basePath+'fcp/cardInfo/'+cardNo;
+    let checkCardUrl = CONFIGS.basePath+'fcp/cardInfo/'+cardNo+'&kissoId='+CONFIGS.ssoId;
 
-    let refBankName = this.refs.refBankName;
-    let refSupportCard = this.refs.refSupportCard;
-    let refBankError = this.refs.refBankError;
+    const refBankName = this.refs.refBankName;
+    const refSupportCard = this.refs.refSupportCard;
+    const refBankError = this.refs.refBankError;
 
     try {
 
@@ -477,11 +477,11 @@ class Form extends Component {
   }
 
   bankNumInput(e) {
-    let refBankName = this.refs.refBankName;
-    let refBankError = this.refs.refBankError;
-    let refSupportCard = this.refs.refSupportCard;
-    let refFormNextBtn = this.refs.refFormNextBtn;
-    let refBankCard = this.refs.refBankCard;
+    const refBankName = this.refs.refBankName;
+    const refBankError = this.refs.refBankError;
+    const refSupportCard = this.refs.refSupportCard;
+    const refFormNextBtn = this.refs.refFormNextBtn;
+    const refBankCard = this.refs.refBankCard;
 
     let currentVal = e.target.value.replace(/\D/g,'');
     let cardBindArr = this.state.cardBinData;
