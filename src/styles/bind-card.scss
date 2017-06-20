@@ -6,49 +6,49 @@ body{
   color: #323232;
 }
 
-.wrap{
+
+.bind-card-main{
+  height:100%;
+}
+
+.bind-card-wrap{
   height:100%;
   background-color:#EFEFF4;
   /*font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","\5FAE\8F6F\96C5\9ED1",Arial,sans-serif;*/
 }
 
-.colFA4548{
+.color-FA4548{
   color:#FA4548;
 }
 
-.col323232{
+.color-323232{
   color: #323232 !important;
 }
 
-.mapWrap{
+.map-wrap{
   display: flex;
   border-bottom: 1px solid #E6E7EC;
 }
-.supportWrap li:last-child .mapWrap{
+.sub-page-wrap li:last-child .map-wrap{
   border-bottom: 0;
 }
-.bindCardMain{
-  background-color: #EFEFF4;
-  height:100%;
-}
-.bindCardWrap{
-  margin-top:.3rem;
+.sub-page-wrap{
   background-color: #ffffff;
 }
-.bankIcon{
+.bank-icon{
   flex:6;
   padding:.36rem 0 .34rem 1.5rem;
-  font-size:.28rem;
+  font-size:.3rem;
   position: relative;
   color: #323232;
 }
-.bankIcon span{
+.bank-icon span{
   position: absolute;
   top:.15rem;
   left:.3rem;
   width:.8rem;
   height:.8rem;
-  background: url(https://m-static-ci.crfchina.com/images/result_bank.png) no-repeat .08rem .08rem;
+  background: url(../images/result_bank.png) no-repeat .08rem .08rem;
   background-size: 86%;
 }
 .CEB span{
@@ -61,8 +61,10 @@ body{
   background-position: .08rem -3.65rem;
 }
 .PAB span{
-  background-position: .08rem -6rem;
-  background-size: 90%;
+  /*background-position: .08rem -6rem;
+  background-size: 90%;*/
+  background-position: .02rem -6.37rem;
+  background-size: 95%;
 }
 .CIB span{
   background-position: .08rem -4.58rem;
@@ -73,17 +75,25 @@ body{
   background-size: 90%;
 }
 .CMB span{
-  background-position: .08rem -0.7rem;
-  background-size: 90%;
+  /*background-position: .08rem -0.7rem;
+  background-size: 90%;*/
+  background-position: .06rem -0.75rem;
+  background-size: 92%;
 }
 .BOC span{
-  background-position: .08rem -2.18rem;
+  /*background-position: .08rem -2.18rem;*/
+  background-position: .06rem -2.3rem;
+  background-size: 90%;
 }
 .CITIC span{
-  background-position: .08rem -6.45rem;
+  /*background-position: .08rem -6.45rem;*/
+  background-position: .06rem -6.75rem;
+  background-size: 90%;
 }
 .CCB span{
-  background-position: .08rem -1.45rem;
+  /*background-position: .08rem -1.45rem;*/
+  background-position: .06rem -1.54rem;
+  background-size: 90%;
 }
 .HXB span{
   background-position: .08rem -7.2rem;
@@ -95,22 +105,22 @@ body{
   background-position: .08rem -9.5rem;
 }
 
-.checkBankCard{
+.check-bank-card{
   flex:5;
   padding: .36rem 0 .34rem;
-  font-size: .28rem;
+  font-size: .3rem;
   position: relative;
   color: #909090;
 }
-.hideSupportCardNum .supportBankCardNum{
+.hide-support-card-num .support-bank-card-num{
   display: none;
 }
-.supportBankCardNum{
+.support-bank-card-num{
   background-color: #EFEFF4;
   padding: .3rem;
 }
-.hideSupportCardNum{
-  .arrowDown{
+.hide-support-card-num{
+  .arrow-down{
     position: absolute;
     right: .2rem;
     top: .35rem;
@@ -129,7 +139,7 @@ body{
     }
   }
 }
-.arrowDown{
+.arrow-down{
   position: absolute;
   right: .2rem;
   top: .35rem;
@@ -147,20 +157,52 @@ body{
     content: '';
   }
 }
-/*
-.arrowDown:before{
-  top: 50%;
-  width: .12rem;
-  height: .12rem;
-  transform: rotate(-135deg);
-}*/
+
+
+
+
+.clearPwd{
+  position: absolute;
+  top: 0.2rem;
+  right: 0;
+  background-color: #ccc;
+  width: .36rem;
+  height: .36rem;
+  border-radius: 50%;
+  .closeBtn{
+    position: absolute;
+    line-height:0;
+    vertical-align:middle;
+    -webkit-transform: rotate(45deg);
+    top: .16rem;
+    right: .05rem;
+    width:.26rem;
+    height:.03rem;
+    background-color:#fff;
+    font-size: 0;
+  }
+  .closeBtn:after{
+    width:.26rem;
+    height:.03rem;
+    background-color:#fff;
+    content:'.';
+    display:block;
+    -webkit-transform: rotate(-90deg);
+  }
+}
+
+.telInput{
+  top:.45rem;
+  right:.6rem;
+}
+
 .n{
   display: none !important;
 }
 
 
 /*rebindcard*/
-.bindCardStatus{
+.bind-card-status{
   padding: 1rem 2rem;
   .fail{
     background: url(../images/error.png) no-repeat;
@@ -180,7 +222,7 @@ body{
     color: #323232;
   }
 }
-.nextPage{
+.next-page{
   padding: 0 0.3rem;
   margin-top: 35%;
   button{

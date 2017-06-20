@@ -21,23 +21,44 @@ class SelectCity extends React.Component {
   }
 
   requireJson() {
-    let allData = JSON.parse(localStorage.getItem('CRF_provinceData'));
+    let storageName='provinceData';
+    let version='cityDataVersion';
+    let allData = JSON.parse(localStorage.getItem('CRF_'+storageName));
 
-    if ((!allData) || VERSION.cityDataVERSION != localStorage.getItem('CRF_cityDataVersion')) {
-      require.ensure([], (require)=> {
-        let data = require('../../../json/result.json');
-        localStorage.setItem('CRF_provinceData', JSON.stringify(data));
-        //alert(data[0]+'--send');
-        this.setState({
-          data: data
-        });
-      });
-      localStorage.setItem('CRF_cityDataVersion', VERSION.cityDataVERSION);
+    if ((!allData) || VERSION.cityDataVERSION != localStorage.getItem('CRF_'+version)) {
+
+      this.sendLocationFetch(storageName,version);
+
     } else {
-      //alert(allData[0]+'--not send');
+
       this.setState({
         data: allData
       });
+    }
+  }
+
+  async sendLocationFetch(storageName,version){
+    //let getContractUrl='../../../json/cardBin.json';
+    let getJsonUrl=location.origin+'/credit_loan/json/result.json';
+
+    try {
+
+      let fetchPromise = CRFFetch.Get(getJsonUrl);
+
+      // 获取数据
+      let result = await fetchPromise;
+      console.log(result);
+      if (result && !result.response) {
+        localStorage.setItem('CRF_' + storageName, JSON.stringify(result));
+
+        this.setState({
+          data: result
+        });
+
+        localStorage.setItem('CRF_' + version, VERSION.cityDataVERSION);
+      }
+    } catch (err) {
+      CRFFetch.handleError(err);
     }
   }
 
@@ -51,7 +72,15 @@ class SelectCity extends React.Component {
     const {getFieldProps} = this.props.form;
 
     //默认位置
-    const defaultCode={initialValue: [CONFIGS.cityCode, CONFIGS.areaCode]};
+    //const defaultCode={initialValue: [CONFIGS.bindCard.cityCode, CONFIGS.bindCard.areaCode]};
+    let defaultCode;
+    if(CONFIGS.bindCard.cityCode===''&&CONFIGS.bindCard.areaCode===''){
+      defaultCode={initialValue: []};
+    }else{
+      defaultCode={initialValue: [CONFIGS.bindCard.cityCode, CONFIGS.bindCard.areaCode]};
+    }
+
+
 
     return (<div>
       <List className="picker-list">

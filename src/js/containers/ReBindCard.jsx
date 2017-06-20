@@ -14,7 +14,7 @@ export default class Rebind extends Component {
   render() {
     let props={ title:'绑卡结果'};
     return (
-      <div className="bind-card-main">
+      <div className="bind-card-main sub-page-wrap">
         {CONFIGS.isWeChat?'':<Nav data={props} />}
         <WhiteSpace />
         <div className="bind-card-wrap">
