@@ -26,8 +26,8 @@ class Home extends Component {
     return (
       <section className="bind-card-wrap">
         <article>
-          {CONFIGS.isWeChat?'':<Nav data={props} />}
-          <WhiteSpace />
+          <Nav data={props} />
+          {CONFIGS.showTopTips?<div className="topTips"><span>提交申请成功, 但未绑卡, 请先绑定银行卡。</span></div>:<WhiteSpace />}
           <BindcardForm setLoading={this.setLoading.bind(this)} />
         </article>
         <Loading show={this.state.loadingShowStatus} />

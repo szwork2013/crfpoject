@@ -9,17 +9,17 @@ export default class Rebind extends Component {
     super(props)
   }
   componentDidMount(){
-    //_paq.push(['trackEvent', 'P_Fail', '绑卡失败页面']);
+    _paq.push(['trackEvent', 'P_Fail', '绑卡失败页面']);
   }
   handleClick(){
-    //_paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '失败页面按钮']);
+    _paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '失败页面按钮']);
     this.props.router.push('/');
   }
   render() {
     let props={ title:'绑卡结果'};
     return (
       <div className="bind-card-main sub-page-wrap">
-        {CONFIGS.isWeChat?'':<Nav data={props} />}
+        <Nav data={props} />
         <WhiteSpace />
         <div className="bind-card-wrap">
           <div className="bind-card-status">
