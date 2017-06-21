@@ -166,10 +166,15 @@ body{
 /*清除按钮*/
 .clearVal{
   position: absolute;
-  top: 0.2rem;
+  top: 0;
   right: 0;
+  width: 32px;
+  height: 32px;
   .clearInput{
     background-color: #ccc;
+    position: absolute;
+    top: .2rem;
+    right: 0;
     width: 18px;
     height: 18px;
     border-radius: 50%;
@@ -199,6 +204,9 @@ body{
 .telInput{
   top:.45rem;
   right:.6rem;
+  .clearInput{
+    top:0;
+  }
 }
 
 .n{
