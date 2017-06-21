@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import routes from './routes.jsx';
 import {Router} from 'react-router';
 
@@ -9,8 +10,8 @@ import '../styles/bind-card.scss';
 import '../styles/repay.scss';
 import '../styles/antdStyleReset.scss';
 
-const Root = ({history}) => (
-  <Router history={history} routes={routes}/>
+const Root = ({ history }) => (
+  <Router history={history} routes={routes} />
 );
 
 export default Root;

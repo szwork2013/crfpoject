@@ -49,5 +49,6 @@ module.exports = {
   mobileHiddenRegx: /^(\d{3})\d{4}(\d{4})$/,
   iosRegx: /\(i[^;]+;( U;)? CPU.+Mac OS X/,
   repayDefaultTitle: '应还金额(元)',
-  repayChangedTitle: '实还金款(元)'
+  repayChangedTitle: '实还金款(元)',
+  rulerData: []
 };

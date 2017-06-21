@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactSwipes from 'react-swipes';
+import {WhiteSpace} from 'antd-mobile';
 import Numeral from 'numeral';
+import PubSub from 'pubsub-js';
 
 export default class Rulers extends Component {
   constructor(props, context) {
@@ -55,7 +57,7 @@ export default class Rulers extends Component {
       fees: this.state.data[currentPoint],
       title: CONFIGS.repayDefaultTitle,
       isDefault: true
-    })
+    });
   }
 
   render() {
@@ -73,7 +75,8 @@ export default class Rulers extends Component {
           fees: this.state.data[ev.newPoint],
           title: CONFIGS.repayChangedTitle,
           isDefault: false
-        })
+        });
+        PubSub.publish('present:init', this.state.data[ev.newPoint]);
       }
     };
 
