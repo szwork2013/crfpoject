@@ -51,12 +51,16 @@ export default class Nav extends Component {
       //if(contractNo) title = CONFIGS.billType[type] + '动态';
     }
     return (
-      <nav className={styles.root}>
+      CONFIGS.isWeChat
+      ?
+      (<div></div>)
+      :
+      (<nav className={styles.root}>
         <div className={styles.navbarLeft}>
           {leftEle}
         </div>
         <div className={styles.navbarTitle}>{title}</div>
-      </nav>
+      </nav>)
     )
   }
 }

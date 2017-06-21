@@ -4,6 +4,7 @@ const isWeChat = Common.isWeChat();
 const kissoId = Common.returnKissoID();
 const referrerUrl = Common.returnReferrerUrl();
 const adapt = Common.isAdapt();
+const showTopTips = Common.showTopTips();
 
 module.exports = {
   basePath: CurrentPath,
@@ -14,6 +15,7 @@ module.exports = {
   isWeChat:isWeChat,
   referrerUrl:referrerUrl,
   adapt:adapt,
+  showTopTips:showTopTips,
   bindCard:{
     bankName:'',//银行卡名字
     bankNum:'',//银行卡号码
@@ -25,6 +27,7 @@ module.exports = {
     switchStatus:true,
     isAgree:true,
     notSubmit:true,
+    bankCode:'',//银行代码 如：PAB
   },
   phone: null,
   csPhone: 4009699559,
@@ -40,6 +43,8 @@ module.exports = {
     s: '借款',
     r: '还款'
   },
+  userWritePhoneRegx:/^1([1-6]\d|7[^017]|[8-9]\d)\d{8}$/,
+  chineseCharRegx:/[\u0391-\uFFE5]+/,
   chinaMobileRegx: /^1(3[4-9]|5[012789]|8[23478]|4[7]|7[8])\d{8}$/, //中国移动
   chinaUnionRegx: /^1(3[0-2]|5[56]|8[56]|4[5]|7[6])\d{8}$/, //中国联通
   chinaTelcomRegx: /^1(3[3])|(8[019])\d{8}$/, //中国电信

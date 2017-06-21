@@ -1,6 +1,5 @@
 require('es6-promise/auto');
 require('whatwg-fetch');
-const Toast = require('antd-mobile/lib/toast');
 
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
@@ -94,8 +93,8 @@ const FetchInterface = {
 
     return defer;
   },
-  handleError(err,fn){
-    console.log(err+'--handle err');
+  handleError(err,Toast,fn){
+
     let msg = err&&err.body;
     let status = err&&err.response&&err.response.status;
 
@@ -107,7 +106,6 @@ const FetchInterface = {
           CRFLogin.initialize(()=>location.reload());
           break;
         case 403:
-          //CRFLogin.initialize();
           Toast.info('您没有权限做此操作，请返回重试！');
           break;
         case 404:
@@ -123,7 +121,8 @@ const FetchInterface = {
             Toast.info(data.message);
           });
     }
-    fn&&fn();
+    typeof fn==='function'&&fn();
+
   }
 }
 
