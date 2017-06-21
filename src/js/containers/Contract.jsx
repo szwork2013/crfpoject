@@ -8,6 +8,9 @@ export default class Success extends Component {
   constructor(props){
     super(props);
   }
+  componentDidMount(){
+    //_paq.push(['trackEvent', 'P_Contract', '合同页面']);
+  }
   render() {
     let props={ title:'合同' };
     let frameStyle={

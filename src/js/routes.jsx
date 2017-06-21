@@ -9,6 +9,7 @@ import {
   SupportCard,
   Repay,
   Contract,
+  RepayConfirm,
   NotFoundPage,
 } from './containers';
 
@@ -19,6 +20,7 @@ export default (
     <Route path="rebindcard" component={ReBindCard} />
     <Route path="supportcard" component={SupportCard} />
     <Route path="repay" component={Repay} />
+    <Route path="repayconfirm" component={RepayConfirm} />
     <Route path="contract" component={Contract} />
     <Route path="*" component={NotFoundPage} />
   </Route>

@@ -29,12 +29,12 @@ class Form extends Component {
 
   componentWillMount() {
     this.getUserInfo();
-    this.requireJson();
-    this.getContractFetch();
   }
 
   componentDidMount() {
+    //_paq.push(['trackEvent', 'P_BindCard', '绑卡页面']);
 
+    //绑定事件
     this.bindEvent();
 
     //开户所在地
@@ -48,12 +48,15 @@ class Form extends Component {
   async getUserInfo(){
     let getContractUrl=CONFIGS.basePath+'api/user?kissoId='+CONFIGS.ssoId;
 
+    //显示loading图片
+    this.props.setLoading(true);
+
     try {
       let fetchPromise = CRFFetch.Get(getContractUrl);
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
-
+        console.log(result);
 
         CONFIGS.userId=result.crfUid;
         CONFIGS.userName=result.userName;
@@ -64,6 +67,13 @@ class Form extends Component {
           userName:result.userName,
           //idNo:result.idNo,
         });
+
+        //隐藏loading图片
+        this.props.setLoading(false);
+
+        //获取对应数据
+        this.requireJson();
+        this.getContractFetch();
         /*{
           "ctUserId": "3717add06dfd401e906359956b3f2a6f",
           "channel": null,
@@ -91,21 +101,27 @@ class Form extends Component {
         }*/
       }
     } catch (err) {
+      //隐藏loading图片
+      this.props.setLoading(false);
+
       if(err.toString().indexOf('Unexpected')>-1){
+        console.log(err);
         Toast.info('用户kissoID不存在');
         return;
       }
       CRFFetch.handleError(err,()=>{
-        //Toast.loading('cuowule',10000);
-        //Toast.info('cuowule',10000);
-        if(err.response.status==400){
-          err.body.then(data => {
-            if(/[\u0391-\uFFE5]+/.test(data.message)){
-              Toast.info(data.message);
-            }else{
-              Toast.info('系统繁忙，请稍后再试！');
-            }
-          });
+        try{
+          if(err.response.status==400){
+            err.body.then(data => {
+              if(/[\u0391-\uFFE5]+/.test(data.message)){
+                Toast.info(data.message);
+              }else{
+                Toast.info('系统繁忙，请稍后再试！');
+              }
+            });
+          }
+        }catch(e){
+          Toast.info('系统繁忙，请稍后再试！');
         }
 
       });
@@ -116,7 +132,7 @@ class Form extends Component {
     let type='OPEN_ACCOUNT';
     let getContractUrl=CONFIGS.basePath+'contract/?contractEnum='+type;
 
-    try {
+      try {
       let fetchPromise = CRFFetch.Get(getContractUrl);
       // 获取数据
       let result = await fetchPromise;
@@ -203,9 +219,16 @@ class Form extends Component {
               break;
           }
         }
-      }).then((err)=>{
-        CRFFetch.handleError(err,()=>{
+      });
+        /*.then((err)=>{
+        //隐藏loading图片
+        this.props.setLoading(false);
 
+        CRFFetch.handleError(err,()=>{
+          if(!err){
+            Toast.info('未知错误，请重新登录');
+            return;
+          }
           if(err.response.status==400){
             err.body.then(data => {
               if(/[\u0391-\uFFE5]+/.test(data.message)){
@@ -217,8 +240,11 @@ class Form extends Component {
           }
 
         });
-      });
+      });*/
     } catch (err) {
+      //隐藏loading图片
+      this.props.setLoading(false);
+
       CRFFetch.handleError(err,()=>{
 
         if(err.response.status==400){
@@ -256,16 +282,19 @@ class Form extends Component {
             },1000);
             break;
           case 'SUCCESS':
-            this.props.setLoading(false);
+            this.props.setLoading(false);//隐藏loading图片
             this.props.router.push('success');//绑卡成功
             break;
           case 'FAIL':
-            this.props.setLoading(false);
+            this.props.setLoading(false);//隐藏loading图片
             this.props.router.push('rebindcard');
             break;
         }
       }
     } catch (err) {
+      //隐藏loading图片
+      this.props.setLoading(false);
+
       CRFFetch.handleError(err,()=>{
 
         if(err.response.status==400){
@@ -285,8 +314,8 @@ class Form extends Component {
 
   async checkCardFetch(val) {
 
-    let cardNo=val.replace(/\s/g,'');console.log(cardNo);
-    let checkCardUrl = CONFIGS.basePath+'fcp/cardInfo/'+cardNo+'&kissoId='+CONFIGS.ssoId;
+    let cardNo=val.replace(/\s/g,'');
+    let checkCardUrl = CONFIGS.basePath+'fcp/cardInfo/?cardNo='+cardNo+'&kissoId='+CONFIGS.ssoId;
 
     const refBankName = this.refs.refBankName;
     const refSupportCard = this.refs.refSupportCard;
@@ -307,6 +336,7 @@ class Form extends Component {
         //隐藏loading图片
         this.props.setLoading(false);
 
+        console.log(result.bankCode);
         this.bankCode=result.bankCode;
 
         if(result.prcptcd==='1'){
@@ -387,6 +417,10 @@ class Form extends Component {
       if (e.target.classList.contains('am-picker-popup-header-right')) {
         amListExtra.classList.add('color-323232');
         amListExtra.innerHTML=amListExtra.innerHTML.replace(/,/g,'&nbsp;');
+        if(CONFIGS.bindCard.cityCode===''||CONFIGS.bindCard.areaCode===''){
+          CONFIGS.bindCard.cityCode='500';
+          CONFIGS.bindCard.areaCode='6530';
+        }
         this.removeDisabled();
       }
     }.bind(this);
@@ -434,6 +468,10 @@ class Form extends Component {
 
   handleSubmit(e) {
 
+    //_paq.push(['trackEvent', 'C_BindCard', 'E_BindCard_submit', '确认提交按钮']);
+
+
+
     if (e.target.classList.contains(styles.btnDisabled)) {
       this.checkSubmitStatus();
       return;
@@ -473,6 +511,7 @@ class Form extends Component {
   }
 
   checkSupport() {
+    //_paq.push(['trackEvent', 'C_BindCard', 'E_BindCard_checkCard', '查看支持银行卡']);
     this.props.router.push('supportcard');
   }
 
@@ -543,7 +582,7 @@ class Form extends Component {
     CONFIGS.bindCard.phoneNum=currentVal;
 
     if (currentVal.length === 11) {
-      if (/^1[^7]\d{9}$/.test(e.target.value)) {
+      if (/^1([1-6]\d|7[^017]|[8-9]\d)\d{8}$/.test(e.target.value)) {
         this.phoneNumStatus=true;
         this.removeDisabled();
         if (!refTelErrorMsg.classList.contains('n')) {
@@ -565,8 +604,10 @@ class Form extends Component {
     // this.refs.refBankCard.value !== '' this.refs.refTelInput.value !== ''
     if (this.bankCardNumStatus && this.phoneNumStatus && doc.querySelector('.am-list-extra').innerHTML !== '开户行所在地'&&(!this.refs.refAgree.classList.contains(styles['un-agree']))) {
       this.refs.refFormNextBtn.classList.remove(styles.btnDisabled);
+      CONFIGS.bindCard.notSubmit=false;
     }else{
       this.refs.refFormNextBtn.classList.add(styles.btnDisabled);
+      CONFIGS.bindCard.notSubmit=true;
     }
   }
 
@@ -586,6 +627,9 @@ class Form extends Component {
   handleContractClick(item){
     CONFIGS.bindCard.contractName=item.contractName;
     CONFIGS.bindCard.contractUrl=item.contractUrl;
+
+    //_paq.push(['trackEvent', 'C_BindCard', 'E_BindCard_contract', item.contractName]);
+
     this.props.router.push('contract');
   }
 
@@ -656,17 +700,17 @@ class Form extends Component {
 
     const isAgree=CONFIGS.bindCard.isAgree;
 
-    console.log(++CONFIGS.count+'render le me');
+    //console.log(++CONFIGS.count+'render le me');
     return (
-      <section>
+      <section className={CONFIGS.adapt?'adapt':''}>
         <div className={styles.infoForm}>
           <div className={styles.formInput}>
-            <div className={styles.borderLine}>
+            <div className={styles.borderLine+' borderLine'}>
               <input type="button" className={styles.userName} value={userName} />
             </div>
           </div>
           <div className={styles.formInput}>
-            <div className={styles.borderLine}>
+            <div className={styles.borderLine+' borderLine'}>
               <input type="tel" className={styles.bankCard} placeholder="请输入银行卡号" onKeyUp={this.bankNumInput.bind(this)} defaultValue={CONFIGS.bindCard.bankNum||""} maxLength="19" ref="refBankCard"/>
               {/*<InputItem placeholder="请输入银行卡号" maxLength="19" type="bankCard"></InputItem>*/}
             </div>
@@ -677,7 +721,7 @@ class Form extends Component {
             <div className="clearPwd n" ref="refBankCardClear"><span className="closeBtn">x</span></div>
           </div>
           <div className={styles.formInput}>
-            <div className={styles.borderLine}>
+            <div className={styles.borderLine+' borderLine'}>
               <input type="button" className={(isBankName?styles.disabled:"") + " " + styles.bank} defaultValue={CONFIGS.bindCard.bankName||"银行"} ref="refBankName"/>
             </div>
           </div>
@@ -686,25 +730,25 @@ class Form extends Component {
           </div>
         </div>
 
-        <div className={styles.infoForm + " " + styles.telInput}>
+        <div className={styles.infoForm + " subInfoForm " + styles.telInput}>
           <input type="tel" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号"
                  onInput={this.telRegex.bind(this)} defaultValue={CONFIGS.bindCard.phoneNum} maxLength="11" ref="refTelInput"/>
           <div className={styles.errorInfo + " color-FA4548 n"} ref="refTelErrorMsg">请输入正确的手机号</div>
           <div className="telInput clearPwd n" ref="refPhoneClear"><span className="closeBtn">x</span></div>
         </div>
 
-        <div className={styles.infoForm + " " + styles.switchForm}>
+        <div className={styles.infoForm + " subInfoForm " + styles.switchForm}>
           <span className={styles.infoInput + ' ' + styles.repayBtn}>开通自动还款</span>
           <SwitchBtn getSwitchVal={this.setSwitchVal.bind(this)} />
         </div>
 
-        <div className={styles.submitBtn}>
-          <button className={styles.formNextButton + " " + styles.btnDisabled}
+        <div className={styles.submitBtn+' submitBtn'}>
+          <button className={styles.formNextButton + " " + (CONFIGS.bindCard.notSubmit?styles.btnDisabled:'')}
                   onClick={this.handleSubmit.bind(this)} ref="refFormNextBtn">确认提交
           </button>
           <div className={styles.authorize}>
             <span className={styles.agree+" "+(isAgree?"":styles['un-agree'])} ref="refAgree">勾选</span>
-            <span>我已阅读并同意</span>
+            <span className="text">我已阅读并同意</span>
             <p className={styles.protocol}>
               {
                 this.state.contractData.map((item,index)=>{

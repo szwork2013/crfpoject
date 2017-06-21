@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Nav, Rulers, Present, Coupons } from 'app/components';
 import { Toast, WhiteSpace } from 'antd-mobile';
-import { connect } from 'react-redux';
+import { hashHistory } from 'react-router';
 
 class Repay extends Component {
   constructor(props){
@@ -24,7 +24,13 @@ class Repay extends Component {
   }
 
   handleClick() {
-
+    let path = 'repayconfirm';
+    hashHistory.push({
+      pathname: path,
+      query: {
+        ssoId: CONFIGS.userId
+      }
+    });
   }
 
   render() {

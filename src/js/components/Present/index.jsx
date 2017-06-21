@@ -10,7 +10,8 @@ export default class Present extends Component {
     super(props, context);
     this.state = {
       presentNum: 0,
-      getPresent: false
+      getPresent: false,
+      coupon: 0
     };
   }
 
@@ -24,7 +25,13 @@ export default class Present extends Component {
     this.pubsub_token = PubSub.subscribe('present:init', function(topic, val) {
       // 更新组件
       this.setState({
-        presentNum: 2
+        presentNum: 2, coupon: 0
+      });
+    }.bind(this));
+    this.pubsub_token = PubSub.subscribe('coupons:value', function(topic, val) {
+      // 更新组件
+      this.setState({
+        coupon: val
       });
     }.bind(this));
     // setTimeout(() => {
@@ -45,17 +52,22 @@ export default class Present extends Component {
   render() {
     let item = null;
     let loadingItem = <LoadingIcon />;
-    let {presentNum, getPresent} = this.state;
-    if (getPresent) {
-      item = <Item extra={loadingItem}>抵扣红包</Item>;
+    let {presentNum, getPresent, coupon} = this.state;
+    if (coupon !== 0) {
+      let formatCoupon = Numeral(coupon).format('0, 0.00');
+      item = <Item arrow="horizontal" extra={`-${formatCoupon}元`} onClick={this.handlePresent.bind(this)}>抵扣红包</Item>;
     } else {
-      if (presentNum > 0) {
-        item = <Item arrow="horizontal" className='crf-present' extra={`${presentNum}个红包`} onClick={this.handlePresent.bind(this)}>抵扣红包</Item>;
+      if (getPresent) {
+        item = <Item extra={loadingItem}>抵扣红包</Item>;
       } else {
-        item = <Item extra={`${presentNum}个红包`}>抵扣红包</Item>;
+        if (presentNum > 0) {
+          item = <Item arrow="horizontal" className='crf-present' extra={`${presentNum}个红包`} onClick={this.handlePresent.bind(this)}>抵扣红包</Item>;
+        } else {
+          item = <Item extra={`${presentNum}个红包`}>抵扣红包</Item>;
+        }
       }
     }
-    //const formatFees = Numeral(fees).format('0, 0.00');
+
     return (
       <List className="crf-list">
         {item}

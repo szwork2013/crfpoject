@@ -95,19 +95,19 @@ const FetchInterface = {
     return defer;
   },
   handleError(err,fn){
+    console.log(err+'--handle err');
     let msg = err&&err.body;
-    let status = err.response&&err.response.status;
+    let status = err&&err.response&&err.response.status;
 
     switch(status){
         case 400:
 
           break;
         case 401:
-          if(location.hash!='#/login'){
-            location.href=CONFIGS.lnHref+'#/login';
-          }
+          CRFLogin.initialize(()=>location.reload());
           break;
         case 403:
+          //CRFLogin.initialize();
           Toast.info('您没有权限做此操作，请返回重试！');
           break;
         case 404:
@@ -116,7 +116,7 @@ const FetchInterface = {
         case 500:
         case 502:
         case 504:
-          Toast.info('网络连接失败，请稍后重试');//哎呀，服务器开小差了，请稍后再试吧!
+          Toast.info('哎呀，服务器开小差了，请稍后再试吧!');
           break;
         default:
           msg&&msg.then(data=>{

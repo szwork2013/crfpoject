@@ -8,7 +8,11 @@ export default class Rebind extends Component {
   constructor(props){
     super(props)
   }
+  componentDidMount(){
+    //_paq.push(['trackEvent', 'P_Fail', '绑卡失败页面']);
+  }
   handleClick(){
+    //_paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '失败页面按钮']);
     this.props.router.push('/');
   }
   render() {
@@ -20,7 +24,7 @@ export default class Rebind extends Component {
         <div className="bind-card-wrap">
           <div className="bind-card-status">
               <div className="img fail"></div>
-              <p>对不起，绑卡失败了</p>
+              <p>对不起,绑卡失败了</p>
               <p>请稍后再试</p>
           </div>
         </div>
