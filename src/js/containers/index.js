@@ -16,6 +16,9 @@ export { default as Repay } from './Repay.jsx';
 //Contract
 export { default as Contract } from './Contract.jsx';
 
+//RepayConfirm
+export { default as RepayConfirm } from './RepayConfirm.jsx';
+
 // 404
 export { default as NotFoundPage } from './404.jsx';
 
