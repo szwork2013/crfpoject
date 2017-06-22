@@ -10,9 +10,11 @@
       padding-bottom: .14rem;
     }
     .am-list-extra {
-      font-size: .32rem;
+      font-size: .28rem;
       padding-top: .14rem;
       padding-bottom: .14rem;
+      flex-basis: 45%;
+      color: #323232;
     }
     .am-list-arrow {
       width: .3rem;
@@ -182,7 +184,40 @@
   top: 2.04rem;
 }
 
+.am-modal-header {
+  padding: 0.12rem 0.3rem 0.12rem;
+}
 
+.am-modal.am-modal-transparent .am-modal-content {
+  padding-top: 0.3rem;
+  border-radius: 0.14rem;
+}
+
+.am-modal-title {
+  font-size: 0.36rem;
+}
+
+.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
+  padding: 0 0.3rem 0.3rem;
+  font-size: 0.28rem;
+}
+
+.am-modal-button-group-h .am-modal-button {
+  font-size: 0.32rem;
+  height: 1rem;
+  line-height: 1rem;
+}
+
+.am-modal-close {
+  right: 10px;
+  width: 13px;
+  height: 13px;
+}
+
+.am-modal-close-x {
+  width: 13px;
+  height: 13px;
+}
 
 /*toast*/
 .am-toast {

@@ -129,3 +129,20 @@
     }
   }
 }
+
+.crf-repay-modal {
+  &.am-modal-transparent {
+    .am-modal-content {
+      padding-top: .2rem;
+      .am-modal-body {
+        padding: 0 0 .3rem;
+      }
+    }
+  }
+  .am-modal-header {
+    padding: 0;
+    font-family: "Helvetica Neue";
+    color: #323232;
+    padding: 0 0 .2rem;
+  }
+}

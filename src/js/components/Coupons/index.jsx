@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Toast, ListView, Accordion } from 'antd-mobile';
-import Numeral from 'numeral';
 import PubSub from 'pubsub-js';
 
 export default class Coupons extends Component {

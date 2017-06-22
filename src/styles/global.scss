@@ -9,6 +9,10 @@ footer {
   }
 }
 
+.number {
+  font-family: "Helvetica Neue";
+}
+
 .coupons-container {
   display: none;
   position: absolute;
@@ -143,10 +147,14 @@ footer {
 
 .normal-btn {
   width: 100%;
-  padding: .05rem .1rem;
   background-color: #fff;
   border: 1px solid #3693FD;
   color: #3693FD;
+  font-size: .36rem;
+  .coupon-button & {
+    padding: .05rem .1rem;
+    font-size: .22rem;
+  }
   &:active {
     background: #3693FD;
     color: #fff;
@@ -193,7 +201,172 @@ footer {
   }
 }
 
+.tooltip-icon {
+  display: inline-block;
+  width: .3rem;
+  height: .3rem;
+  background: url(../images/tips.png) no-repeat;
+  background-size: cover;
+}
 
+.crf-tooltips {
+  padding: .02rem .40rem !important;
+  font-size: .22rem !important;
+  color: #646464 !important;
+  background-color: #E8F3FE !important;
+  box-shadow: .04rem .04rem .07rem 0 rgba(154, 175, 195, 0.50);
+  &.place-bottom {
+    &:after {
+      margin-left: -4px !important;
+      border-left-width: 4px !important;
+      border-right-width: 4px !important;
+      border-bottom-color: #E8F3FE !important;
+      border-bottom-style: solid !important;
+      border-bottom-width: 6px !important;
+    }
+  }
+}
+
+.result-content {
+  height: calc(100vh - 0.92rem);
+  background: #EFEFF4;
+  .am-icon-md {
+    display: none;
+  }
+  .am-steps {
+    width: 80%;
+    margin: 0.2rem auto 0;
+  }
+  .am-steps-item.am-steps-status-finish {
+    .am-steps-tail > i {
+      width: 1px;
+      background-color: #459BFE;
+    }
+  }
+  .am-steps-main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-size: 0.28rem;
+    margin-bottom: 0;
+  }
+  .am-steps-item.am-steps-status-finish {
+    .am-steps-title {
+      color: #459BFE;
+      font-size: 0.28rem;
+      font-weight: normal;
+      margin-bottom: 0;
+      flex: 1;
+    }
+  }
+  .am-steps-item.am-steps-status-finish {
+    .am-steps-head-inner {
+      margin-left: 5px;
+      border: 0;
+    }
+  }
+
+  .am-steps-vertical {
+    .am-steps-head {
+      margin: 0.4rem 0.1rem 0 0;
+    }
+    .am-steps-status-process {
+      .am-steps-head {
+        margin-top: .28rem;
+      }
+    }
+    .am-steps-main {
+      min-height: 1rem;
+      border-bottom: 1px solid #E1E1E1;
+      .am-steps-description {
+        padding-bottom: 0;
+        font-size: 0.22rem;
+        color: #646464;
+        flex: 1;
+        text-align: right;
+      }
+    }
+    .am-steps-tail {
+      left: 9px;
+      top: 0.46rem;
+      width: 1px;
+    }
+    .am-steps-item:last-child {
+      .am-steps-main {
+        border: 0;
+      }
+    }
+    .am-steps-head-inner {
+      margin-right: 0.3rem;
+    }
+  }
+  .am-steps-item.am-steps-custom {
+    .am-steps-head-inner > .am-steps-icon {
+      width: 9px;
+      height: 9px;
+      background: #459BFE;
+    }
+  }
+  .am-steps-item.am-steps-status-process {
+    .am-steps-title {
+      color: #459BFE;
+      font-size: 0.28rem;
+      font-weight: normal;
+      margin-bottom: 0;
+      flex: 1;
+    }
+    .am-steps-head-inner > .am-steps-icon {
+      line-height: 0;
+      font-size: 0;
+      overflow: hidden;
+    }
+  }
+  .am-steps-item.am-steps-status-process.finish {
+    .am-steps-head-inner {
+      width: 19px;
+      height: 19px;
+      background: url(../images/success-small-icon.png) no-repeat 0 0;
+      background-size: contain;
+      margin-right: 0.2rem;
+    }
+  }
+  .am-steps-item.am-steps-status-process.error {
+    .am-steps-head-inner {
+      width: 19px;
+      height: 19px;
+      background: url(../images/failed-small-icon.png) no-repeat 0 0;
+      background-size: contain;
+      margin-right: 0.2rem;
+    }
+    .am-steps-title {
+      color: #FA4548;
+    }
+  }
+}
+
+.crf-result-modal {
+  width: 80%;
+  &.am-modal-transparent {
+    .am-modal-content {
+      padding-top: .18rem;
+    }
+  }
+  .am-modal-header {
+    padding: .12rem 0 .2rem;
+    border-bottom: 1px solid #D6D7DC;
+  }
+}
+
+.crf-result-modal-body {
+  padding: .4rem 0 0;
+  p {
+    padding-bottom: .2rem;
+  }
+  button {
+    width: 100%;
+  }
+}
 
 .ball-clip-rotate > div {
   width: .5rem;

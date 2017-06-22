@@ -5,3 +5,8 @@ export { default as Rulers } from './Rulers/index.jsx';
 export { default as LoadingIcon } from './LoadingIcon/index.jsx';
 export { default as Present } from './Present/index.jsx';
 export { default as Coupons } from './Coupons/index.jsx';
+export { default as SendSms } from './SendSms/index.jsx';
+export { default as Result } from './Result/index.jsx';
+export { default as ResultSteps } from './ResultSteps/index.jsx';
+export { default as Phone } from './Phone/index.jsx';
+export { default as RepayDetail } from './RepayDetail/index.jsx';

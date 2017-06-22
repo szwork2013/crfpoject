@@ -37,7 +37,7 @@ class Repay extends Component {
     let props = { title: this.state.title};
 
     return (
-      <div className="bindCardMain">
+      <div>
         <Nav data={props} />
         <WhiteSpace />
         <Rulers list={this.state.data} />
