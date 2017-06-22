@@ -23,8 +23,8 @@ export default class Nav extends Component {
         window.location = 'crfxjd://closeWindow';
       } else {
         //this.props.router.push('/');
-        //hashHistory.goBack();
-        hashHistory.push('/');
+        hashHistory.goBack();
+        //hashHistory.push('/');
       }
     }
   }

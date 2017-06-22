@@ -28,6 +28,8 @@ module.exports = {
     isAgree:true,
     notSubmit:true,
     bankCode:'',//银行代码 如：PAB
+    bankCardNumStatus:false,//判断银行卡是否正确
+    phoneNumStatus:false,//判断手机号是否正确
   },
   phone: null,
   csPhone: 4009699559,
