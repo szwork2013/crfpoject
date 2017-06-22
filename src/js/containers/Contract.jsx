@@ -9,7 +9,7 @@ export default class Success extends Component {
     super(props);
   }
   componentDidMount(){
-    //_paq.push(['trackEvent', 'P_Contract', '合同页面']);
+    _paq.push(['trackEvent', 'C_Page', 'E_P_Contract']);
   }
   render() {
     let props={ title:'合同' };
@@ -20,7 +20,7 @@ export default class Success extends Component {
     };
     return (
       <div className="bind-card-main sub-page-wrap">
-        {CONFIGS.isWeChat?'':<Nav data={props} />}
+        <Nav data={props} />
         <WhiteSpace />
         <iframe src={CONFIGS.bindCard.contractUrl} style={frameStyle}></iframe>
       </div>

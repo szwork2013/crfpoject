@@ -42,6 +42,8 @@ body{
     background: #fff;
   }
 }
+
+/*support card*/
 .bank-icon{
   flex:6;
   padding:.36rem 0 .34rem 1.5rem;
@@ -68,48 +70,36 @@ body{
   background-position: .08rem -3.65rem;
 }
 .PAB span{
-  /*background-position: .08rem -6rem;
-  background-size: 90%;*/
-  background-position: .02rem -6.37rem;
-  background-size: 95%;
+  background-position: .02rem -6.5rem;
+  background-size: 97%;
 }
 .CIB span{
-  /*background-position: .08rem -4.58rem;
-  background-size: 90%;*/
-  background-position: .08rem -4.7rem;
-  background-size: 92%;
+  background-position: .06rem -4.8rem;
+  background-size: 94%;
 }
 .PSBC span{
-  /*background-position: .08rem -3.06rem;
-  background-size: 90%;*/
-  background-position: .08rem -3.15rem;
-  background-size: 92%;
+  background-position: .08rem -3.2rem;
+  background-size: 94%;
 }
 .CMB span{
-  /*background-position: .08rem -0.7rem;
-  background-size: 90%;*/
   background-position: .06rem -0.75rem;
   background-size: 92%;
 }
 .BOC span{
-  /*background-position: .08rem -2.18rem;*/
   background-position: .06rem -2.3rem;
   background-size: 90%;
 }
 .CITIC span{
-  /*background-position: .08rem -6.45rem;*/
   background-position: .06rem -6.75rem;
   background-size: 90%;
 }
 .CCB span{
-  /*background-position: .08rem -1.45rem;*/
   background-position: .06rem -1.54rem;
   background-size: 90%;
 }
 .HXB span{
-  /*background-position: .08rem -7.2rem;*/
-  background-position: .08rem -7.7rem;
-  background-size: 92%;
+  background-position: .06rem -7.9rem;
+  background-size: 94%;
 }
 .CMBC span{
   background-position: .08rem -8.72rem;
@@ -119,7 +109,7 @@ body{
 }
 
 .check-bank-card{
-  flex:5;
+  flex:6;
   padding: .36rem 0 .34rem;
   font-size: .3rem;
   position: relative;
@@ -135,7 +125,7 @@ body{
 .hide-support-card-num{
   .arrow-down{
     position: absolute;
-    right: .2rem;
+    right: .3rem;
     top: .4rem;
     width: .5rem;
     height: .5rem;
@@ -152,9 +142,11 @@ body{
     }
   }
 }
+
+
 .arrow-down{
   position: absolute;
-  right: .2rem;
+  right: .3rem;
   top: .35rem;
   width: .5rem;
   height: .5rem;
@@ -171,32 +163,37 @@ body{
   }
 }
 
-
-
-
-.clearPwd{
+/*清除按钮*/
+.clearVal{
   position: absolute;
-  top: 0.2rem;
+  top: 0;
   right: 0;
-  background-color: #ccc;
-  width: .36rem;
-  height: .36rem;
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  .clearInput{
+    background-color: #ccc;
+    position: absolute;
+    top: .2rem;
+    right: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+  }
   .closeBtn{
     position: absolute;
     line-height:0;
     vertical-align:middle;
     -webkit-transform: rotate(45deg);
     top: .16rem;
-    right: .05rem;
-    width:.26rem;
-    height:.03rem;
+    right: 3px;
+    width:11px;
+    height:2px;
     background-color:#fff;
     font-size: 0;
   }
   .closeBtn:after{
-    width:.26rem;
-    height:.03rem;
+    width:11px;
+    height:2px;
     background-color:#fff;
     content:'.';
     display:block;
@@ -207,6 +204,9 @@ body{
 .telInput{
   top:.45rem;
   right:.6rem;
+  .clearInput{
+    top:0;
+  }
 }
 
 .n{
@@ -245,4 +245,193 @@ body{
     font-size: .36rem;
   }
 }
+
+/*antd mobile*/
+.bind-card-wrap{
+  /*选择城市*/
+  .am-list-item {
+    min-height: 0.6rem;
+    padding-left:0;
+    padding-bottom: 0.3rem;
+    .am-list-line {
+      min-height: 0.6rem;
+      padding-right: 0;
+      .am-list-content {
+        font-size: 0;
+        flex: 0;
+      }
+      .am-list-extra{
+        flex:6;
+        font-size:0.3rem;
+        padding:0;
+        text-align:left;
+        padding-left: 1.1rem;
+        height: .7rem;
+        line-height: .7rem;
+        background: url(../images/user_location.png) no-repeat;
+        background-size: 7%;
+        background-position: .15rem .08rem;
+      }
+      .am-list-arrow{
+        width:0.3rem;
+        height:0.3rem;
+      }
+    }
+  }
+
+
+  /*switch*/
+  .am-switch{
+    position: absolute;
+    top: .28rem;
+    right: .6rem;
+  }
+
+  .am-switch .checkbox {
+    width: 1.02rem;
+    height: 0.62rem;
+    border-radius: 0.62rem;
+  }
+  .am-switch .checkbox:before {
+    left: 0.03rem;
+    top: 0.03rem;
+    width: 0.96rem;
+    height: 0.56rem;
+    border-radius: 0.56rem;
+  }
+  .am-switch .checkbox:after {
+    height: 0.56rem;
+    width: 0.56rem;
+    border-radius: 0.56rem;
+    left: 0.03rem;
+    top: 0.03rem;
+    -webkit-transform: translateX(0rem);
+    -ms-transform: translateX(0rem);
+    transform: translateX(0rem);
+    box-shadow: 0.04rem 0.04rem 0.08rem rgba(0, 0, 0, 0.21);
+  }
+  .am-switch input[type="checkbox"]:checked + .checkbox:after {
+    -webkit-transform: translateX(0.4rem);
+    -ms-transform: translateX(0.4rem);
+    transform: translateX(0.4rem);
+  }
+
+  .am-list-body{
+    border-top:0;
+  }
+  .am-list-body:after{
+    border-bottom:0;
+  }
+
+  .am-switch input[type="checkbox"]:checked + .checkbox{
+    background-color: #2BC693;
+  }
+
+}
+
+
+/*小屏幕*/
+.adapt > div{
+  font-size: 0.28rem;
+  padding:0.28rem 0.4rem 0;
+}
+
+.adapt{
+  .bind-card-wrap{
+    padding:0;
+  }
+  .am-list-item{
+    padding-bottom: 0.12rem;
+  }
+  .borderLine{
+    margin-bottom: 0.12rem;
+    padding-bottom: 0.12rem;
+  }
+  .subInfoForm{
+    padding-top:.12rem;
+    input{
+      margin-bottom:.12rem;
+    }
+    span{
+      margin-bottom:.12rem;
+    }
+    .am-switch{
+      top:.12rem;
+    }
+  }
+  .submitBtn{
+    padding:0 .2rem;
+    margin-top:10%;
+    button{
+      font-size:.30rem;
+      padding: .12rem 0;
+    }
+    .text{
+      font-size:12px;
+    }
+    a{
+      font-size:12px;
+    }
+  }
+  .check-bank-card{
+    flex:7;
+    font-size:.26rem;
+  }
+}
+
+/*tips*/
+.topTips{
+  text-align: center;
+  height:1rem;
+  span{
+    display: inline-block;
+    margin-top: .35rem;
+    padding-left:.6rem;
+    color: #646464;
+    background: url(../images/tips.png) no-repeat;
+    background-size: 7%;
+  }
+}
+
+
+
+
+/*contract*/
+.authorize{
+  height:.7rem;
+  padding-left:.4rem;
+  background-size: 4.5%;
+  display: flex;
+  line-height: normal;
+  margin-top: .2rem;
+  position: relative;
+  .agree{
+    position: absolute;
+    top:.02rem;
+    left:0;
+    width:.28rem;
+    height:.28rem;
+    background: url(../images/correct.png) no-repeat;
+    background-size:100%;
+    font-size: 0;
+  }
+  .un-agree{
+    background: url(../images/un_correct.png) no-repeat;
+    background-size:100%;
+  }
+  .protocol{
+    flex:1;
+    a{
+      display: inline-block;
+      margin-right:.2rem;
+      line-height:.4rem;
+    }
+  }
+}
+
+
+
+
+
+
 

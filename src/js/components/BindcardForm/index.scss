@@ -95,7 +95,7 @@
 
 .submitBtn{
     padding:0 0.3rem;
-    margin-top: 20%;
+    margin-top: 18%;
 }
 
 .formNextButton{
@@ -104,39 +104,3 @@
     border-radius: .5rem;
     font-size: .36rem;
 }
-
-.authorize{
-    height:.7rem;
-    padding-left:.4rem;
-    /*background: url(../../../images/correct.png) no-repeat;
-    background-position: .08rem .02rem;*/
-    background-size: 4.5%;
-    display: flex;
-    line-height: normal;
-    margin-top: .2rem;
-    position: relative;
-    .agree{
-        position: absolute;
-        top:.02rem;
-        left:0;
-        width:.28rem;
-        height:.28rem;
-        background: url(../../../images/correct.png) no-repeat;
-        background-size:100%;
-        font-size: 0;
-    }
-    .un-agree{
-        background: url(../../../images/un_correct.png) no-repeat;
-        background-size:100%;
-    }
-    .protocol{
-        flex:1;
-        a{
-            display: inline-block;
-            margin-right:.2rem;
-            line-height:.4rem;
-        }
-    }
-}
-
-

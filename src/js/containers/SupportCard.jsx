@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 
 import {Nav} from 'app/components';
 
-import { WhiteSpace } from 'antd-mobile';
+import { Toast,WhiteSpace } from 'antd-mobile';
 
 export default class Rebind extends Component {
   constructor(props) {
@@ -14,8 +14,33 @@ export default class Rebind extends Component {
   }
 
   componentWillMount() {
-    //_paq.push(['trackEvent', 'P_SupportCard', '支持银行卡']);
+    _paq.push(['trackEvent', 'C_Page', 'E_P_SupportCard']);
     this.getBankJson();
+  }
+
+  async sendLocationFetch(storageName,version){
+
+    let getJsonUrl=location.origin+'/credit_loan/json/bank.json';
+
+    try {
+
+      let fetchPromise = CRFFetch.Get(getJsonUrl);
+
+      // 获取数据
+      let result = await fetchPromise;
+      console.log(result);
+      if (result && !result.response) {
+        localStorage.setItem('CRF_' + storageName, JSON.stringify(result));
+
+        this.setState({
+          bankJson: result
+        });
+
+        localStorage.setItem('CRF_' + version, VERSION.bankDataVERSION);
+      }
+    } catch (err) {
+      CRFFetch.handleError(err,Toast);
+    }
   }
 
   getBankJson() {
@@ -40,31 +65,6 @@ export default class Rebind extends Component {
       });
     }
 
-  }
-
-  async sendLocationFetch(storageName,version){
-
-    let getJsonUrl=location.origin+'/credit_loan/json/bank.json';
-
-    try {
-
-      let fetchPromise = CRFFetch.Get(getJsonUrl);
-
-      // 获取数据
-      let result = await fetchPromise;
-      console.log(result);
-      if (result && !result.response) {
-        localStorage.setItem('CRF_' + storageName, JSON.stringify(result));
-
-        this.setState({
-          bankJson: result
-        });
-
-        localStorage.setItem('CRF_' + version, VERSION.bankDataVERSION);
-      }
-    } catch (err) {
-      CRFFetch.handleError(err);
-    }
   }
 
 
@@ -92,10 +92,9 @@ export default class Rebind extends Component {
       'CMBC': '民生银行',
       'BCM': '交通银行',
     };
-
     return (
-      <section className="bind-card-main">
-        {CONFIGS.isWeChat?'':<Nav data={props} />}
+      <section className={CONFIGS.adapt?'adapt bind-card-main':'bind-card-main'}>
+        <Nav data={props} />
         <WhiteSpace />
         <div className="bind-card-wrap sub-page-wrap">
           <ul>

@@ -23,6 +23,26 @@ let Common={
       adapt=true;
     }
     return adapt;
+  },
+  showTopTips:function(){
+    let referrerUrl=this.returnReferrerUrl();
+    let localHash=referrerUrl.substring(referrerUrl.indexOf('consumption/#/')+13,referrerUrl.indexOf('?'));
+    switch (localHash){
+      case '/':
+        return false;
+      case '/recharge':
+        return true;
+    }
+  },
+  random32word:function(){
+    let str = '';
+    let arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
+    for(let i=0;i<32;i++){
+      str+=arr[parseInt(Math.random()*arr.length)];
+    }
+
+    return str;
   }
 };
 

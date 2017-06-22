@@ -31,8 +31,8 @@ export default class Nav extends Component {
         window.location = 'crfxjd://closeWindow';
       } else {
         //this.props.router.push('/');
-        //hashHistory.goBack();
-        hashHistory.push('/');
+        hashHistory.goBack();
+        //hashHistory.push('/');
       }
     }
   }
@@ -75,7 +75,11 @@ export default class Nav extends Component {
       //if(contractNo) title = CONFIGS.billType[type] + '动态';
     }
     return (
-      <nav className={styles.root}>
+      CONFIGS.isWeChat
+      ?
+      (<div></div>)
+      :
+      (<nav className={styles.root}>
         <div className={styles.navbarLeft}>
           {leftEle}
         </div>
@@ -83,7 +87,7 @@ export default class Nav extends Component {
         <div className={styles.navbarRight}>
           {rightEle}
         </div>
-      </nav>
+      </nav>)
     )
   }
 }
