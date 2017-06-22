@@ -6,12 +6,15 @@ import { WhiteSpace } from 'antd-mobile';
 
 export default class Success extends Component {
   componentDidMount(){
-    _paq.push(['trackEvent', 'P_Success', '绑卡成功页面']);
+    _paq.push(['trackEvent', 'C_Page', 'E_P_Success']);
 
     //回退
     window.addEventListener("popstate", function() {
       let refUrl=CONFIGS.referrerUrl;//首页点击绑卡过来返回首页 产品页过来返回产品页面（点击确认跳转支付页面）
       console.log(refUrl);
+      if(refUrl.indexOf('#/loan?')>-1){
+        refUrl=CONFIGS.referrerUrl.replace('#/loan?','#/recharge?');
+      }
       location.href=refUrl;
     }, false);
     !function() {

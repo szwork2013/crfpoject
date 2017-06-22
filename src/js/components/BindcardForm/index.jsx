@@ -4,8 +4,10 @@ import styles from './index.scss';
 
 import {Toast,InputItem} from 'antd-mobile';
 
-import CityWrapper from './selectCity.jsx';
-import SwitchBtn from './switchBtn.jsx';
+import CityWrapper from '../selectCity/index.jsx';
+import SwitchBtn from '../switchBtn/index.jsx';
+import Contract from '../setContract/index.jsx';
+import WritePhone from './writePhone.jsx';
 
 
 class Form extends Component {
@@ -13,17 +15,11 @@ class Form extends Component {
     super(props, context);
     this.state = {
       cardBinData:null,
-      contractData:[
-        {contractName:'网络交易资金账号三方协议',contractUrl:location.origin+'contract/tripartite_agreement.html'},
-        {contractName:'第三方协议',contractUrl:location.origin+'contract/userLicense_agreement.html'}
-      ],
       userName:'',
+      refAgree:{},
+      refTelInput:{},
     };
     this.timer = null;
-
-    this.bankCardNumStatus=false;
-    this.phoneNumStatus=false;
-
   }
 
   componentWillMount() {
@@ -31,16 +27,15 @@ class Form extends Component {
   }
 
   componentDidMount() {
-    _paq.push(['trackEvent', 'P_BindCard', '绑卡页面']);
+    _paq.push(['trackEvent', 'C_Page', 'E_P_BindCard']);
 
-    //绑定事件
+      //绑定事件
     this.bindEvent();
 
     //开户所在地
     const amListExtra=doc.querySelector('.am-list-extra');
     if (amListExtra.innerHTML!=='开户行所在地') {
       amListExtra.classList.add('color-323232');
-      //this.removeDisabled();
     }
   }
 
@@ -96,7 +91,6 @@ class Form extends Component {
 
         //获取对应数据
         this.requireJson();
-        this.getContractFetch();
         /*{
           "ctUserId": "3717add06dfd401e906359956b3f2a6f",
           "channel": null,
@@ -151,43 +145,8 @@ class Form extends Component {
     }
   }
 
-  async getContractFetch(){
-    let type='OPEN_ACCOUNT';
-    let getContractUrl=CONFIGS.basePath+'contract/?contractEnum='+type;
-
-      try {
-      let fetchPromise = CRFFetch.Get(getContractUrl);
-      // 获取数据
-      let result = await fetchPromise;
-      if (result && !result.response) {
-
-        /*
-         {contractName:"网络交易资金账户第三方协议",contractUrl:"https://m-ci.crfchina.com/tripartite_agreement.html"}
-         {contractName:"用户授权协议",contractUrl:"https://m-ci.crfchina.com/userLicense_agreement.html"}
-        * */
-        this.setState({
-          contractData:result
-        });
-      }
-    } catch (err) {
-      CRFFetch.handleError(err,Toast,()=>{
-
-        if(err.response.status==400){
-          err.body.then(data => {
-            if(CONFIGS.chineseCharRegx.test(data.message)){
-              Toast.info(data.message);
-            }else{
-              Toast.info('系统繁忙，请稍后再试！');
-            }
-          });
-        }
-
-      });
-    }
-  }
-
   async sendBindCardFetch() {
-    const word32=this.random32word();
+    const word32=Common.random32word();
 
     let submitFetchUrl=CONFIGS.basePath+'fts/borrower_open_account?kissoId='+CONFIGS.ssoId;
     let bankNumber=this.refs.refBankCard.value.replace(/\s/g,'');
@@ -202,7 +161,7 @@ class Form extends Component {
       'email': null,//邮箱 可不传
       'idNo': CONFIGS.idNo,//证件号码 身份证
       'idType': "0",//证件类型
-      'mobile': this.refs.refTelInput.value,//手机号
+      'mobile': this.state.refTelInput.value,//手机号
       'realName': CONFIGS.userName,//用户姓名
       'requestRefNo': word32,
       'systemNo': "rcs"//系统编号 未定
@@ -367,12 +326,12 @@ class Form extends Component {
             refBankName.classList.add(styles.disabled);//所属银行字体变灰
             refSupportCard.classList.add('n');//隐藏支持银行div
             refBankError.classList.remove('n');//提示银行卡号错误
-            this.bankCardNumStatus=false;
+            CONFIGS.bindCard.bankCardNumStatus=false;
           }else{
             //卡号不支持
             refBankError.classList.add('n');//隐藏银行卡号错误
             refSupportCard.classList.remove('n');//显示支持银行div
-            this.bankCardNumStatus=false;
+            CONFIGS.bindCard.bankCardNumStatus=false;
           }
 
           this.refs.refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
@@ -380,7 +339,7 @@ class Form extends Component {
         }else if(result.prcptcd==='0'){
           refBankError.classList.add('n');//隐藏银行卡号错误
           refSupportCard.classList.add('n');//隐藏支持银行div
-          this.bankCardNumStatus=true;
+          CONFIGS.bindCard.bankCardNumStatus=true;
           this.removeDisabled();
         }
 
@@ -414,7 +373,7 @@ class Form extends Component {
             refBankName.classList.add(styles.disabled);//所属银行字体变灰
             refSupportCard.classList.add('n');//隐藏支持银行div
             refBankError.classList.remove('n');//提示银行卡号错误
-            this.bankCardNumStatus=false;
+            CONFIGS.bindCard.bankCardNumStatus=false;
           });
         }
 
@@ -439,20 +398,9 @@ class Form extends Component {
     }.bind(this);
 
 
-    //勾选协议
-    const refAgree=this.refs.refAgree;
-    refAgree.onclick=()=>{
-      refAgree.classList.toggle(styles['un-agree']);
-      CONFIGS.bindCard.isAgree=!CONFIGS.bindCard.isAgree;
-      this.removeDisabled();
-    };
-
-
-    //输入银行卡号、手机号码
+    //输入银行卡号
     const refBankCard=this.refs.refBankCard;
-    const refTelInput=this.refs.refTelInput;
     const refBankCardClear=this.refs.refBankCardClear;
-    const refPhoneClear=this.refs.refPhoneClear;
     const refBankName=this.refs.refBankName;
 
     //银行卡号
@@ -476,27 +424,6 @@ class Form extends Component {
       },80);
     };
 
-    //输入手机号码
-    refTelInput.oninput=()=>{
-      if(refTelInput.value.length>0){
-        refPhoneClear.classList.remove('n');
-      }else{
-        refPhoneClear.classList.add('n');
-      }
-    };
-
-    refTelInput.onblur=()=>{
-      setTimeout(()=>{//解决与click冲突问题
-        refPhoneClear.classList.add('n');
-      },80);
-    };
-
-    refTelInput.onfocus=()=>{
-      if(refTelInput.value.length>0){
-        refPhoneClear.classList.remove('n');
-      }
-    };
-
     refBankCardClear.onclick=()=>{
       refBankCard.value='';
       refBankCardClear.classList.add('n');
@@ -506,12 +433,6 @@ class Form extends Component {
 
       refBankName.value = '银行';//所属银行名字变回‘银行’
       refBankName.classList.add(styles.disabled);//所属银行字体变灰
-    };
-    refPhoneClear.onclick=()=>{
-      refTelInput.value='';
-      refPhoneClear.classList.add('n');
-
-      this.refs.refTelErrorMsg.classList.add('n');//隐藏手机号错误提示
     };
   }
 
@@ -533,16 +454,16 @@ class Form extends Component {
       Toast.info('银行卡号不能为空');
       return;
     }
-    if(!this.bankCardNumStatus){
+    if(!CONFIGS.bindCard.bankCardNumStatus){
       Toast.info('请输入正确的银行卡号');
       return;
     }
 
-    if(this.refs.refTelInput.value === ''){
+    if(this.state.refTelInput.value === ''){
       Toast.info('手机号码不能为空');
       return;
     }
-    if(!this.phoneNumStatus){
+    if(!CONFIGS.bindCard.phoneNumStatus){
       Toast.info('请输入正确的手机号码');
       return;
     }
@@ -552,7 +473,7 @@ class Form extends Component {
       return;
     }
 
-    if(this.refs.refAgree.classList.contains(styles['un-agree'])){
+    if(this.state.refAgree.classList.contains('un-agree')){
       Toast.info('请勾选合同协议');
     }
   }
@@ -621,35 +542,11 @@ class Form extends Component {
     }
   }
 
-  telRegex(e) {
-    let refTelErrorMsg=this.refs.refTelErrorMsg;
-    let refFormNextBtn=this.refs.refFormNextBtn;
-
-    let currentVal=e.target.value;
-    CONFIGS.bindCard.phoneNum=currentVal;
-
-    if (currentVal.length === 11) {
-      if (CONFIGS.userWritePhoneRegx.test(e.target.value)) {
-        this.phoneNumStatus=true;
-        this.removeDisabled();
-        if (!refTelErrorMsg.classList.contains('n')) {
-          refTelErrorMsg.classList.add('n');//隐藏手机号错误提示
-        }
-      } else {
-        this.phoneNumStatus=false;
-        refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
-        refTelErrorMsg.classList.remove('n');//显示手机号错误提示
-      }
-    } else {
-      this.phoneNumStatus=false;
-      refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
-      refTelErrorMsg.classList.add('n');//隐藏手机号错误提示
-    }
-  }
-
   removeDisabled() {
-    // this.refs.refBankCard.value !== '' this.refs.refTelInput.value !== ''
-    if (this.bankCardNumStatus && this.phoneNumStatus && doc.querySelector('.am-list-extra').innerHTML !== '开户行所在地'&&(!this.refs.refAgree.classList.contains(styles['un-agree']))) {
+
+    console.log(CONFIGS.bindCard.phoneNumStatus);
+
+    if (CONFIGS.bindCard.bankCardNumStatus && CONFIGS.bindCard.phoneNumStatus && doc.querySelector('.am-list-extra').innerHTML !== '开户行所在地'&&(!this.state.refAgree.classList.contains('un-agree'))) {
       this.refs.refFormNextBtn.classList.remove(styles.btnDisabled);
       CONFIGS.bindCard.notSubmit=false;
     }else{
@@ -659,40 +556,25 @@ class Form extends Component {
   }
 
   setCitySelect(val) {
-    /*this.setState({
-     cityCode:val[0],
-     areaCode:val[1],
-     });*/
-    //this.cityCode = val[0];
-    //this.areaCode = val[1];
     CONFIGS.bindCard.cityCode = val[0];
     CONFIGS.bindCard.areaCode = val[1];
     this.removeDisabled();
-
-  }
-
-  handleContractClick(item){
-    CONFIGS.bindCard.contractName=item.contractName;
-    CONFIGS.bindCard.contractUrl=item.contractUrl;
-
-    _paq.push(['trackEvent', 'C_BindCard', 'E_BindCard_contract', item.contractName]);
-
-    this.props.router.push('contract');
   }
 
   setSwitchVal(val){
     CONFIGS.bindCard.switchStatus=val;
   }
 
-  random32word(){
-    let str = '';
-    let arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  setContractEle(el){
+    this.setState({
+      refAgree:el
+    });
+  }
 
-    for(let i=0;i<32;i++){
-      str+=arr[parseInt(Math.random()*arr.length)];
-    }
-
-    return str;
+  setWritePhoneEle(el){
+    this.setState({
+      refTelInput:el,
+    });
   }
 
   requireJson() {
@@ -719,8 +601,6 @@ class Form extends Component {
     const userName = '*'+this.state.userName.substring(1);
 
     const isBankName=CONFIGS.bindCard.bankName==='银行'||CONFIGS.bindCard.bankName==='';
-
-    const isAgree=CONFIGS.bindCard.isAgree;
 
     return (
       <section className={CONFIGS.adapt?'adapt':''}>
@@ -750,35 +630,15 @@ class Form extends Component {
           </div>
         </div>
 
-        <div className={styles.infoForm + " subInfoForm " + styles.telInput}>
-          <input type="tel" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号"
-                 onInput={this.telRegex.bind(this)} defaultValue={CONFIGS.bindCard.phoneNum} maxLength="11" ref="refTelInput"/>
-          <div className={styles.errorInfo + " color-FA4548 n"} ref="refTelErrorMsg">请输入正确的手机号</div>
-          <div className="telInput clearVal n" ref="refPhoneClear"><div className="clearInput"><span className="closeBtn">x</span></div></div>
-        </div>
+        <WritePhone getWritePhoneEle={this.setWritePhoneEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)} />
 
-        <div className={styles.infoForm + " subInfoForm " + styles.switchForm}>
-          <span className={styles.infoInput + ' ' + styles.repayBtn}>开通自动还款</span>
-          <SwitchBtn getSwitchVal={this.setSwitchVal.bind(this)} />
-        </div>
+        <SwitchBtn getSwitchVal={this.setSwitchVal.bind(this)} />
 
         <div className={styles.submitBtn+' submitBtn'}>
           <button className={styles.formNextButton + " " + (CONFIGS.bindCard.notSubmit?styles.btnDisabled:'')}
                   onClick={this.handleSubmit.bind(this)} ref="refFormNextBtn">确认提交
           </button>
-          <div className={styles.authorize}>
-            <span className={styles.agree+" "+(isAgree?"":styles['un-agree'])} ref="refAgree">勾选</span>
-            <span className="text">我已阅读并同意</span>
-            <p className={styles.protocol}>
-              {
-                this.state.contractData.map((item,index)=>{
-                  return (
-                    <a href="javascript:void(0)" key={index} onClick={this.handleContractClick.bind(this,item)}>《{item.contractName}》</a>
-                  )
-                })
-              }
-            </p>
-          </div>
+          <Contract getContractEle={this.setContractEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)}/>
         </div>
 
       </section>
