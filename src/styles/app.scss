@@ -22,7 +22,7 @@ $gradient-start: #005FCF;
 $gradient-end: #3692FD;
 
 // 字体
-$font-family-zh: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+$font-family-zh: "Helvetica Neue", "PingFang SC";
 $font-family-en: Arial, sans-serif !default;
 
 // 盒子模型
@@ -450,8 +450,10 @@ footer {
 
 button {
   @mixin btn;
+  span {
+    vertical-align: middle;
+  }
   &.disabled {
     background-color: #96aac1;
   }
 }
-

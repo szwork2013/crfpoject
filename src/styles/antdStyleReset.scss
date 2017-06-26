@@ -64,7 +64,7 @@
 
 .am-whitespace.am-whitespace-md {
   background: #efeff4;
-  height: 0.18rem;
+  height: 8px;
 }
 
 
@@ -164,8 +164,6 @@
   border:0;
 }
 
-
-
 .coupons-list-content {
   .am-list-body {
     margin: 0 .2rem;
@@ -175,4 +173,37 @@
       border-bottom: 0;
     }
   }
+}
+
+.am-table th, .am-table td {
+  padding: .1rem .2rem;
+  font-size: .28rem;
+  color: #646464;
+  line-height: 0.46rem;
+  text-align: right;
+  font-weight: normal;
+  &:first-child {
+    text-align: left;
+  }
+  border: 0;
+}
+
+.am-table th, .am-table td {
+  background: #fff;
+  border-bottom: 1px solid #e1e1e1;
+  &:first-child {
+    text-align: right;
+  }
+}
+
+.am-table td {
+  font-size: .22rem;
+}
+
+.am-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.am-table td.status {
+  color: #3693FD;
 }

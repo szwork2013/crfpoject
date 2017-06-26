@@ -16,6 +16,7 @@ export default class SendSms extends Component {
       maxLength: 6,
       val: ''
     };
+    this.sendFlag = true;
     this.getVerificationNum = this.getVerificationNum.bind(this);
     this.handleSendSMS = this.handleSendSMS.bind(this);
     this.sendSound = this.sendSound.bind(this);
@@ -136,11 +137,15 @@ export default class SendSms extends Component {
     if (currentStr.length >= maxLength) {
       this.refs.smsNum.blur();
       currentValue = currentStr.substring(0, 6);
-      this.submitLoan(currentValue);
+      setTimeout(() => {
+        this.submitLoan(currentValue);
+      }, 200);
     }
   }
 
   async submitLoan(value) {
+    if (!this.sendFlag) return;
+    this.sendFlag = false;
     this.setState({
       isLoading: true
     });
@@ -159,6 +164,7 @@ export default class SendSms extends Component {
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
+        this.sendFlag = true;
         this.setState({
           isLoading: false
         });
@@ -177,6 +183,7 @@ export default class SendSms extends Component {
         });
       }
     } catch (error) {
+      this.sendFlag = true;
       this.setState({
         isLoading: false
       });
@@ -200,7 +207,7 @@ export default class SendSms extends Component {
   }
 
   componentDidMount() {
-    
+
   }
 
   componentWillUnmount() {

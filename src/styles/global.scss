@@ -16,9 +16,9 @@ footer {
 .coupons-container {
   display: none;
   position: absolute;
-  top: .88rem;
+  top: 44px;
   width: 100%;
-  height: calc(100vh - .88rem);
+  height: calc(100vh - 44px);
   background: #EFEFF4;
   z-index: 2;
   &.show {
@@ -32,7 +32,7 @@ footer {
 }
 
 .coupons-list-content {
-  height: calc(100vh - 1.52rem);
+  height: calc(100vh - 50px);
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -171,7 +171,7 @@ footer {
   }
   .accordion-inner {
     position: absolute;
-    top: 1px;
+    top: 4px;
     right: 0;
     width: .26rem;
     height: .26rem;
@@ -227,8 +227,39 @@ footer {
   }
 }
 
+.main-content {
+  height: calc(100vh - 44px);
+}
+
+.gray-bg {
+  background: #EFEFF4;
+}
+
+.crf-common-container {
+  width: 100%;
+  padding: .7rem 0 1rem;
+  background: #fff;
+  font-size: 0.32rem;
+  text-align: center;
+  color: #323232;
+}
+
+.crf-common-title {
+  font-size: .28rem;
+}
+
+.crf-common-amount {
+  padding: .1rem 0 .3rem;
+}
+
+.crf-common-amount-text {
+  font-size: .9rem;
+  line-height: 1rem;
+  margin-right: .1rem;
+}
+
 .result-content {
-  height: calc(100vh - 0.92rem);
+  height: calc(100vh - 44px);
   background: #EFEFF4;
   .am-icon-md {
     display: none;
@@ -366,6 +397,31 @@ footer {
   button {
     width: 100%;
   }
+}
+
+.crf-channel-footer {
+  height: 35%;
+  padding-bottom: .2rem;
+  button {
+    margin-bottom: 15px;
+  }
+  .crf-channel-details {
+    position: absolute;
+    bottom: .2rem;
+    left: 50%;
+    transform: translate(-50%,0);
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.weixin-icon {
+  display: inline-block;
+  width: .42rem;
+  height: .36rem;
+  background: url(../images/weixin-icon.png) no-repeat;
+  background-size: cover;
+  margin-right: .15rem;
 }
 
 .ball-clip-rotate > div {
