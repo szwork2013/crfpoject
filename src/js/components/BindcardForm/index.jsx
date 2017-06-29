@@ -307,7 +307,7 @@ class Form extends Component {
 
   }
 
-  handleSubmit(e) {
+  handleSubmit(e) {//this.props.router.push('success');//绑卡成功 mock
 
     _paq.push(['trackEvent', 'C_BindCard', 'E_BindCard_submit', '确认提交按钮']);
 
