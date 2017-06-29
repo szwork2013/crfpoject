@@ -15,7 +15,8 @@ let SwitchTab = (props) => {
           valuePropName: 'checked',
         })}
         onClick={(checked) => {
-          props.getSwitchVal(checked);
+          //props.getSwitchVal(checked);
+          CONFIGS.bindCard.switchStatus=checked;
         }}
       />
     </div>

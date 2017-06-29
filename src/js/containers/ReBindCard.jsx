@@ -17,6 +17,15 @@ export default class Rebind extends Component {
   }
   render() {
     let props={ title:'绑卡结果'};
+    console.log(this.props.location.state);
+    let failReason='';//暂时不展示错误原因
+    /*if(this.props.location.state){
+      failReason = this.props.location.state.failReason;
+    }else{
+      failReason = '';
+    }*/
+
+
     return (
       <div className="bind-card-main sub-page-wrap">
         <Nav data={props} />
@@ -26,6 +35,7 @@ export default class Rebind extends Component {
               <div className="img fail"></div>
               <p>对不起,绑卡失败了</p>
               <p>请稍后再试</p>
+              {failReason?<p className="fail-msg">({failReason})</p>:""}
           </div>
         </div>
         <div className="next-page">
