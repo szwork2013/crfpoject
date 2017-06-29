@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 
 import {withRouter} from 'react-router';
+import {Toast} from 'antd-mobile';
 
 class Contract extends React.Component {
   constructor(props) {

@@ -28,7 +28,7 @@ export default class Rebind extends Component {
 
       // 获取数据
       let result = await fetchPromise;
-      console.log(result);
+      //console.log(result);
       if (result && !result.response) {
         localStorage.setItem('CRF_' + storageName, JSON.stringify(result));
 
@@ -92,6 +92,7 @@ export default class Rebind extends Component {
       'CMBC': '民生银行',
       'BCM': '交通银行',
     };
+
     return (
       <section className={CONFIGS.adapt?'adapt bind-card-main':'bind-card-main'}>
         <Nav data={props} />
