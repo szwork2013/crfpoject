@@ -93,17 +93,22 @@ const FetchInterface = {
 
     return defer;
   },
-  handleError(err,Toast,fn){
+  handleError(err,Toast,callback,fn){
 
     let msg = err&&err.body;
     let status = err&&err.response&&err.response.status;
+
+    if(!fn){
+      fn=()=>location.reload();
+      console.log(fn);
+    }
 
     switch(status){
         case 400:
 
           break;
         case 401:
-          CRFLogin.initialize(()=>location.reload());
+          CRFLogin.initialize(fn);
           break;
         case 403:
           Toast.info('您没有权限做此操作，请返回重试！');
@@ -121,7 +126,7 @@ const FetchInterface = {
             Toast.info(data.message);
           });
     }
-    typeof fn==='function'&&fn();
+    typeof callback==='function'&&callback();
 
   }
 }

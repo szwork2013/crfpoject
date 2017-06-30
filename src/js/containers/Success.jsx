@@ -6,8 +6,9 @@ import { WhiteSpace } from 'antd-mobile';
 
 export default class Success extends Component {
   componentDidMount(){
-    this.customPopState();
     _paq.push(['trackEvent', 'C_Page', 'E_P_Success']);
+
+    this.customPopState();
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Success', 'E_Success_button', '成功页面按钮']);
@@ -34,7 +35,7 @@ export default class Success extends Component {
   }
   render() {
 
-    let props={ title:'成功' };
+    let props={ title:'绑定结果' };
     return (
       <div className="bind-card-main sub-page-wrap">
         <Nav data={props} />
