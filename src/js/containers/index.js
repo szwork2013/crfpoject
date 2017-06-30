@@ -19,6 +19,12 @@ export { default as Contract } from './Contract.jsx';
 //RepayConfirm
 export { default as RepayConfirm } from './RepayConfirm.jsx';
 
+//Result
+export { default as Result } from './Result.jsx';
+
+//Channel
+export { default as Channel } from './Channel.jsx';
+
 // 404
 export { default as NotFoundPage } from './404.jsx';
 

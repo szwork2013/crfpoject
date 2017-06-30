@@ -56,12 +56,13 @@ class FormWrap extends React.Component {
     this.props.getFormEle(refBankCard);
 
     //银行卡号
-    refBankCard.oninput=()=>{
+    refBankCard.onkeyup=(e)=>{
       if(refBankCard.value.length>0){
         refBankCardClear.classList.remove('n');
       }else{
         refBankCardClear.classList.add('n');
       }
+      this.bankNumInput(e);
     };
 
     refBankCard.onfocus=()=>{
@@ -71,13 +72,15 @@ class FormWrap extends React.Component {
     };
 
     refBankCard.onblur=(e)=>{
-      this.bankNumBlur(e);
       setTimeout(()=>{//解决与click冲突问题
+        console.log(new Date().getTime()+'--blur');
         refBankCardClear.classList.add('n');
-      },80);
+        this.bankNumBlur(e);
+      },100);
     };
 
     refBankCardClear.onclick=()=>{
+      console.log(new Date().getTime()+'--click');
       refBankCard.value='';
       refBankCardClear.classList.add('n');
 
@@ -331,7 +334,7 @@ class FormWrap extends React.Component {
         </div>
         <div className={styles.formInput}>
           <div className={styles.borderLine+' borderLine'}>
-            <input type="tel" className={styles.bankCard} placeholder="请输入银行卡号" defaultValue={CONFIGS.bindCard.bankNum||""} maxLength="23" onKeyUp={this.bankNumInput.bind(this)} ref="refBankCard"/>
+            <input type="tel" className={styles.bankCard} placeholder="请输入银行卡号" defaultValue={CONFIGS.bindCard.bankNum||""} maxLength="23" ref="refBankCard"/>
           </div>
           <div className={styles.errorInfo + " "+hideClass} ref="refSupportCard">
             暂不支持此卡, 请查看<a href="javascript:void(0);" onClick={this.checkSupport.bind(this)}>支持银行卡</a>

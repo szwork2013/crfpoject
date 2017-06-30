@@ -1,4 +1,4 @@
-let CurrentPath = '/h5_dubbo/';
+const CurrentPath = '/h5_dubbo/';
 
 const isWeChat = Common.isWeChat();
 const kissoId = Common.returnKissoID();
@@ -8,6 +8,7 @@ const showTopTips = Common.showTopTips();
 
 module.exports = {
   basePath: CurrentPath,
+  repayPath: CurrentPath + 'repayment',
   userId: '',//用户ID
   userName:'',//用户名
   idNo:'',//身份证
@@ -19,7 +20,7 @@ module.exports = {
   isReload:false,
   bindCard:{
     bankName:'',//银行卡名字
-    bankNum:'',//银行卡号码
+    bankNum:'',//银行卡号码basePath
     contractName:'',//协议名字
     contractUrl:'',//协议地址
     cityCode:'',//城市编号
@@ -34,6 +35,11 @@ module.exports = {
     showSupportCard:false,
     showErrorMsg:false,
     showTelErrMsg:false,
+  },
+  sendSmsType: null,
+  type: {
+    s: 4,
+    r: 5
   },
   phone: null,
   csPhone: 4009699559,
@@ -62,5 +68,27 @@ module.exports = {
   iosRegx: /\(i[^;]+;( U;)? CPU.+Mac OS X/,
   repayDefaultTitle: '应还金额(元)',
   repayChangedTitle: '实还金款(元)',
-  rulerData: []
+  rulerData: [],
+  couponData: [],
+  repayData: {},
+  currentAmount: 0,
+  account: {},
+  method: {},
+  repayStatus: {
+    Y: '可结清',
+    N: '部分结清'
+  },
+  resultDetail: {
+    s: {
+      default: '话费充值一般2小时内到账（月初月末高峰期，24小时内到账均属正常情况），请耐心等待。如有疑问，请联系客服。',
+      success: '话费充值一般2小时内到账（月初月末高峰期，24小时内到账均属正常情况），请耐心等待。如有疑问，请联系客服。',
+      failed: '对不起, 借款失败了, 请您稍后重试'
+    },
+    r: {
+      default: '还款当日到账(最晚24:00), 部分银行可能出现延迟, 最终以银行到账时间为准',
+      success: '还款当日到账(最晚24:00), 部分银行可能出现延迟, 最终以银行到账时间为准',
+      failed: '对不起, 还款失败了, 请您稍后重试'
+    }
+  },
+  defaultScale: 5000
 };

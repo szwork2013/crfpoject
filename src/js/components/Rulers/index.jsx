@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactSwipes from 'react-swipes';
+import {RepayDetail} from 'app/components';
 import {WhiteSpace} from 'antd-mobile';
 import Numeral from 'numeral';
 import PubSub from 'pubsub-js';
@@ -9,7 +10,8 @@ export default class Rulers extends Component {
     super(props, context);
     this.state = {
       title: CONFIGS.repayDefaultTitle,
-      fees: 0,
+      amount: 0,
+      defaultAmount: 0,
       data: [],
       rulerWidth: 9,
       isDefault: true
@@ -17,47 +19,51 @@ export default class Rulers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let currentPoint = this.getCurrentPoint(nextProps.list);
-    this.setState({data: nextProps.list, fees: nextProps.list[currentPoint]});
+    this.setState({data: nextProps.list.data, amount: nextProps.list.currentAmount, defaultAmount: nextProps.list.currentAmount});
   }
 
   componentDidUpdate() {
     this.resetContainer();
-    // setTimeout(() => {
-    //   let currentPoint = this.getCurrentPoint();
-    //   this.refs.rulers.swipes.moveToPoint(currentPoint);
-    // }, 3000);
   }
 
   resetContainer() {
     let totalWidth = this.state.data.length * this.state.rulerWidth;
+    let currentPoint = this.getCurrentPoint();
+    let rulerOffsetWidth = currentPoint * this.state.rulerWidth;
     let rulerContainer = document.getElementsByClassName('crf-rulers')[0];
-    let offsetValue = (totalWidth/2) - 10.5;
-    rulerContainer.style.width = totalWidth + 'px';
-    rulerContainer.style.marginLeft = offsetValue + 'px';
-    rulerContainer.style.marginRight = offsetValue + 'px';
-    rulerContainer.style.transform = `translate3d(-${totalWidth/2}px, 0, 0)`;
+    let offsetWidth = (screen.width / 2 - 3.5);
+    CONFIGS.currentAmount = this.state.defaultAmount;
+    if (rulerContainer) {
+      rulerContainer.style.width = totalWidth + 'px';
+      rulerContainer.style.marginLeft = offsetWidth + 'px';
+      rulerContainer.style.marginRight = offsetWidth + 'px';
+      rulerContainer.style.transform = `translate3d(-${rulerOffsetWidth}px, 0, 0)`;
+      if (this.state.amount === this.state.defaultAmount) PubSub.publish('present:init', this.state.data[currentPoint]);
+    }
   }
 
-  getCurrentPoint(data) {
-    let currentData = data || this.state.data;
-    let currentPoint = currentData.length / 2;
-    (currentPoint < 1) && (currentPoint === 0);
-    currentPoint = parseInt(currentPoint);
+  getCurrentPoint() {
+    let currentPoint = 0;
+    if (this.state.data.length === 0) {
+
+    } else {
+      let currentData = this.state.data;
+      currentPoint = this.state.data.indexOf(this.state.defaultAmount);
+    }
     return currentPoint;
-  }
-
-  handleDetails() {
-
   }
 
   handleReset() {
     let currentPoint = this.getCurrentPoint();
     this.setState({
-      fees: this.state.data[currentPoint],
+      amount: this.state.data[currentPoint],
       title: CONFIGS.repayDefaultTitle,
       isDefault: true
     });
+  }
+
+  showModal() {
+    PubSub.publish('repayDetail:show', this.state.amount);
   }
 
   render() {
@@ -72,10 +78,11 @@ export default class Rulers extends Component {
           cancelled: ev.cancelled
         }
         this.setState({
-          fees: this.state.data[ev.newPoint],
+          amount: this.state.data[ev.newPoint],
           title: CONFIGS.repayChangedTitle,
           isDefault: false
         });
+        CONFIGS.currentAmount = this.state.data[ev.newPoint];
         PubSub.publish('present:init', this.state.data[ev.newPoint]);
       }
     };
@@ -86,8 +93,8 @@ export default class Rulers extends Component {
       );
     };
 
-    const {title, fees, isDefault} = this.state;
-    const formatFees = Numeral(fees).format('0, 0.00');
+    const {title, amount, isDefault} = this.state;
+    const formatAmount = Numeral(amount).format('0, 0.00');
     return (
       <section className="crf-swipes">
         <div className="crf-swipes-title">
@@ -98,10 +105,10 @@ export default class Rulers extends Component {
             </span>
           }
         </div>
-        <div className="crf-swipes-fees">
-          <span className="crf-swipes-fees-text">{formatFees}</span>
-          <span className="crf-swipes-fees-link">
-            <a onClick={this.handleDetails.bind(this)}>明细</a>
+        <div className="crf-swipes-amount">
+          <span className="crf-swipes-amount-text">{formatAmount}</span>
+          <span className="crf-swipes-amount-link">
+            <a onClick={this.showModal.bind(this)}>明细</a>
           </span>
         </div>
         <div className="crf-swipes-content">
@@ -117,6 +124,7 @@ export default class Rulers extends Component {
           </div>
         </div>
         <div className="crf-swipes-description">左右滑动调整还款金额, 调整以50为单位</div>
+        <RepayDetail />
       </section>
     )
   }
