@@ -4,8 +4,6 @@ import styles from './index.scss';
 class WritePhone extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
   }
 
   componentDidMount() {
@@ -13,6 +11,7 @@ class WritePhone extends React.Component {
     const refTelInput=this.refs.refTelInput;
     const refPhoneClear=this.refs.refPhoneClear;
 
+    //向父组件传递ref
     this.props.getWritePhoneEle(refTelInput);
 
     //输入手机号码
@@ -26,22 +25,22 @@ class WritePhone extends React.Component {
 
     refTelInput.onblur=()=>{
       setTimeout(()=>{//解决与click冲突问题
-        refPhoneClear.classList.add('n');
+        refPhoneClear&&refPhoneClear.classList.add('n');
       },80);
     };
 
     refTelInput.onfocus=()=>{
-      if(refTelInput.value.length>0){
+      if(refTelInput.value.length>0&&refPhoneClear){
         refPhoneClear.classList.remove('n');
       }
     };
 
-    refPhoneClear.onclick=()=>{
+    refPhoneClear&&(refPhoneClear.onclick=()=>{
       refTelInput.value='';
       refPhoneClear.classList.add('n');
 
       this.refs.refTelErrorMsg.classList.add('n');//隐藏手机号错误提示
-    };
+    });
   }
 
   telRegex(e) {
@@ -70,13 +69,29 @@ class WritePhone extends React.Component {
   }
 
   render() {
+    let defaultPhoneNum=this.props.setUserTelNumber;
 
+    let phoneInput=()=>{
+      if(defaultPhoneNum){
+        return <input type="button" className={styles.infoInput + ' ' + styles.userPhone} value={defaultPhoneNum} />;
+      }else{
+        return <input type="tel" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号"
+                      onInput={this.telRegex.bind(this)} defaultValue={CONFIGS.bindCard.phoneNum} maxLength="11" ref="refTelInput"/>;
+      }
+    };
+    let clearBtn=()=>{
+      if(defaultPhoneNum){
+        return "";
+      }else{
+        return <div className="telInput clearVal n" ref="refPhoneClear"><div className="clearInput"><span className="closeBtn">x</span></div></div>;
+      }
+    };
+    console.log(defaultPhoneNum);
     return (
       <div className={styles.infoForm + " subInfoForm " + styles.telInput}>
-        <input type="tel" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号"
-               onInput={this.telRegex.bind(this)} defaultValue={CONFIGS.bindCard.phoneNum} maxLength="11" ref="refTelInput"/>
+        {phoneInput()}
+        {clearBtn()}
         <div className={styles.errorInfo + " color-FA4548 n"} ref="refTelErrorMsg">请输入正确的手机号</div>
-        <div className="telInput clearVal n" ref="refPhoneClear"><div className="clearInput"><span className="closeBtn">x</span></div></div>
       </div>
     );
   }

@@ -47,7 +47,7 @@ class SelectCity extends React.Component {
 
       // 获取数据
       let result = await fetchPromise;
-      console.log(result);
+      //console.log(result);
       if (result && !result.response) {
         localStorage.setItem('CRF_' + storageName, JSON.stringify(result));
 
