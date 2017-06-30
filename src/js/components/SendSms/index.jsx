@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Toast } from 'antd-mobile';
+import { Loading } from 'app/components';
+import { hashHistory } from 'react-router';
 import styles from './index.scss';
 
 export default class SendSms extends Component {
@@ -11,7 +13,7 @@ export default class SendSms extends Component {
       count: 0,
       timer: null,
       checkStatus: true,
-      isLoading: true,
+      isLoading: false,
       isRender: false,
       maxLength: 6,
       val: ''
@@ -25,6 +27,7 @@ export default class SendSms extends Component {
 
   getVerificationNum(e) {
     let status = this.refs.verificationNum.classList.contains('click-disable');
+    this.refs.smsText && this.refs.smsText.classList.remove(styles.error);
     if (!status) {
       this.countDown(0);
       this.getVerification(0); //0 文本
@@ -40,6 +43,9 @@ export default class SendSms extends Component {
   }
 
   countDown(code) {
+    this.clearInput();
+    let phoneNum = HandleRegex.hiddenMobile(CONFIGS.account.mobile);
+    this.setState({inputVerification: `已发送短信到${phoneNum}的手机`});
     let time = 60;
     clearInterval(this.state.timer);
     this.setState({getVerification: time + 's'});
@@ -74,9 +80,17 @@ export default class SendSms extends Component {
   }
 
   async getVerification(code) {
-    let path = CONFIGS.basePath + 'sms?type=' + code + '&userId=' + CONFIGS.userId;
+    let path = `${CONFIGS.basePath}msg/${CONFIGS.account.mobile}`;
+    let params = {
+      intent: CONFIGS.type[CONFIGS.sendSmsType],
+      phone: CONFIGS.account.mobile,
+      type: code
+    };
+    let headers = {
+      'Content-Type': 'application/json'
+    };
     try {
-      let fetchPromise = CRFFetch.Put(path);
+      let fetchPromise = CRFFetch.Put(path, JSON.stringify(params), headers);
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
@@ -94,20 +108,35 @@ export default class SendSms extends Component {
     let count = this.state.count;
     switch (result.status) {
       case 200:
-        let phoneNum = HandleRegex.hiddenMobile(CONFIGS.phone);
         if (code === 0) {
-          this.setState({inputVerification: `已发送短信到${phoneNum}的手机`});
           this.refs.smsSoundTextSub && this.refs.smsSoundTextSub.classList.add('hide');
         } else {
           this.refs.smsSoundTextSub && this.refs.smsSoundTextSub.classList.remove('hide');
         }
-        this.refs.smsText && this.refs.smsText.classList.remove('error');
+        this.refs.smsText && this.refs.smsText.classList.remove(styles.error);
         this.refs.smsSoundTextMain && this.refs.smsSoundTextMain.classList.add('hide');
         break;
       case 400:
+        this.setState({inputVerification: result.message});
+        this.refs.smsText && this.refs.smsText.classList.add(styles.error);
+        this.refs.smsText && this.refs.smsText.classList.remove('hide');
+        this.refs.smsSoundTextMain && this.refs.smsSoundTextMain.classList.add('hide');
+        this.refs.smsSoundTextSub && this.refs.smsSoundTextSub.classList.add('hide');
+        break;
+      case 500:
+        Toast.info(result.message);
+        break;
+      default:
+    }
+  }
+
+  setVerificationBySubmit(result) {
+    let count = this.state.count;
+    switch (result.status) {
+      case 400:
         if (result.code === 'E_M_02') {
           this.setState({inputVerification: result.message});
-          this.refs.smsText && this.refs.smsText.classList.add('error');
+          this.refs.smsText && this.refs.smsText.classList.add(styles.error);
         } else {
           Toast.info(result.message);
         }
@@ -119,6 +148,15 @@ export default class SendSms extends Component {
         Toast.info(result.message);
         break;
       default:
+    }
+  }
+
+  clearInput() {
+    this.setState({'val': ''});
+    let maxLength = this.state.maxLength;
+    let targetInputs = this.refs.smsInputTarget.children;
+    for (let i = 0 ; i < maxLength; i++) {
+      targetInputs[i].value = '';
     }
   }
 
@@ -149,12 +187,13 @@ export default class SendSms extends Component {
     this.setState({
       isLoading: true
     });
-    let path = CONFIGS.basePath + 'order';
+    let path = `${CONFIGS.repayPath}?kissoId=${CONFIGS.userId}`;
+    console.log(path);
     let params = {
-      categoryNo: this.state.productId,
       code: this.refs.smsNum.value,
-      goodsId: this.state.goodsId,
-      userId: CONFIGS.userId
+      deviceType: 'H5_24',
+      repayChannel: 'FTS',
+      repaymentAmount: CONFIGS.method.repayTotalAmt
     };
     let headers = {
       'Content-Type': 'application/json'
@@ -175,9 +214,9 @@ export default class SendSms extends Component {
             pathname: path,
             query: {
               ssoId: CONFIGS.userId,
-              contractNo: data.contractNo,
-              cash: this.state.amount,
-              source: 'loan'
+              contractNo: data.rcs_repay_no,
+              cash: CONFIGS.method.repayTotalAmt,
+              type: CONFIGS.sendSmsType
             }
           });
         });
@@ -194,7 +233,7 @@ export default class SendSms extends Component {
       let status = error.response.status;
       msgs.then((data) => {
         let res = Object.assign(data, errorStatus);
-        this.setVerification(res);
+        this.setVerificationBySubmit(res);
       });
     }
   }
@@ -204,15 +243,6 @@ export default class SendSms extends Component {
     if (currentValue.length > 6) {
       this.refs.smsNum.value = this.refs.smsNum.value.substr(0, 6);
     }
-  }
-
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-    //销毁监听的事件
-    //PubSub.unsubscribe(this.pubsub_token);
   }
 
   render() {
@@ -238,6 +268,7 @@ export default class SendSms extends Component {
             <input type="number" disabled />
           </div>
         </div>
+        <Loading show={isLoading} />
       </section>
     );
   }

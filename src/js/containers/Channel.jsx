@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Nav } from 'app/components';
+import { Nav, Loading } from 'app/components';
 import { Toast, WhiteSpace, Modal } from 'antd-mobile';
 import { hashHistory } from 'react-router';
 import Numeral from 'numeral';
@@ -10,16 +10,56 @@ class Channel extends Component {
     super(props);
     this.state = {
       title: '还款方式',
-      amount: 1203.6,
-      fees: 3.6,
-      details: '单笔还款金额的0.3%, 最低1.5元, 最高10元',
-      onlyWeixin: false,
+      amount: CONFIGS.method.repayTotalAmt || 0,
+      fees: CONFIGS.method.channelFee || 0,
+      details: CONFIGS.method.channelFeeDesc || '',
+      channelList: CONFIGS.method.channelList || [],
       modalPhone: false
     };
   }
 
   componentDidMount() {
+    if (CONFIGS.method.channelList) {
+      this.setMethodData();
+    } else {
+      this.getInitData();
+    }
+  }
 
+  async getInitData() {
+    this.refs.loading.show();
+    CONFIGS.userId = this.props.location.query.ssoId;
+    CONFIGS.currentAmount = this.props.location.query.currentAmount;
+    let currentAmount = Numeral(CONFIGS.currentAmount).multiply(100).value();
+    let methodPath = `${CONFIGS.repayPath}/method?kissoId=${CONFIGS.userId}&repayAmount=${currentAmount}`;
+    try {
+      let fetchMethodPromise = CRFFetch.Get(methodPath);
+      // 获取数据
+      let methodResult = await fetchMethodPromise;
+      if (methodResult && !methodResult.response) {
+        this.setMethodData(methodResult);
+      }
+    } catch (error) {
+      this.refs.loading.hide();
+      let msgs = error.body;
+    }
+  }
+
+  setMethodData(methodData) {
+    if (methodData) {
+      Object.assign(CONFIGS.method, methodData);
+    }
+    this.refs.loading.hide();
+
+    let formatAmount = CONFIGS.method.repayTotalAmt;
+    let formatFees = CONFIGS.method.channelFee;
+
+    this.setState({
+      amount: formatAmount,
+      fees: formatFees,
+      details: CONFIGS.method.channelFeeDesc,
+      channelList: CONFIGS.method.channelList
+    });
   }
 
   handleClick() {
@@ -27,9 +67,15 @@ class Channel extends Component {
     hashHistory.push({
       pathname: path,
       query: {
-        ssoId: CONFIGS.userId
+        ssoId: CONFIGS.userId,
+        currentAmount: CONFIGS.currentAmount,
+        type: 'r'
       }
     });
+  }
+
+  handleWeixinRepay() {
+
   }
 
   showCall = key => (e) => {
@@ -60,11 +106,21 @@ class Channel extends Component {
 
   render() {
     const props = { title: this.state.title};
-    const {amount, fees, details} = this.state;
-    const formatAmount = Numeral(amount).format('0, 0.00');
-    const formatFees = Numeral(fees).format('0, 0.00');
+    const {amount, fees, details, channelList} = this.state;
+    const formatAmount = Numeral(amount).divide(100).format('0, 0.00');
+    const formatFees = Numeral(fees).divide(100).format('0, 0.00');
     const formatPhone = HandleRegex.formatPhone(CONFIGS.csPhone, '-');
-
+    const ChannelRow = (item, index) => {
+      if (item.channelInfoNoEnum === 'wechat') {
+        return (
+          <button key={index} className="channel-btn" onClick={this.handleWeixinRepay.bind(this)}><span className="weixin-icon"></span><span>微信还款</span></button>
+        );
+      } else {
+        return (
+          <button key={index} className="normal-btn" onClick={this.handleClick.bind(this)}>快捷还款</button>
+        );
+      }
+    };
     return (
       <div>
         <Nav data={props} />
@@ -84,9 +140,10 @@ class Channel extends Component {
           </section>
         </section>
         <footer className="crf-channel-footer">
-          <button className="channel-btn" onClick={this.handleClick.bind(this)}><span className="weixin-icon"></span><span>微信还款</span></button>
-          <button className="normal-btn" onClick={this.handleClick.bind(this)}>快捷还款</button>
-          <div className="crf-channel-details">如您还款遇到问题, 可拨打客服电话<a onClick={this.showCall('modalPhone')}>{formatPhone}</a>咨询哦</div>
+          {channelList.map(ChannelRow)}
+          {channelList.length === 1 && channelList[0].channelInfoNoEnum === 'wechat' &&
+            <div className="crf-channel-details">如您还款遇到问题, 可拨打客服电话<a onClick={this.showCall('modalPhone')}>{formatPhone}</a>咨询哦</div>
+          }
           <Modal
             title={formatPhone}
             transparent
@@ -104,6 +161,7 @@ class Channel extends Component {
         <ReactTooltip id='description' place="bottom" className="crf-tooltips" effect='solid'>
           <span>{details}</span>
         </ReactTooltip>
+        <Loading ref="loading" />
       </div>
     )
   }

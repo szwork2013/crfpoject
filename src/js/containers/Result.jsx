@@ -7,58 +7,25 @@ import { hashHistory } from 'react-router';
 class ResultPage extends Component {
   constructor(props, context) {
     super(props, context);
+    CONFIGS.userId = this.props.location.query.ssoId;
     this.state = {
       status: 0,
       contractNo: this.props.location.query.contractNo,
       type: this.props.location.query.type || 's',
       from: this.props.location.query.source || '',
       cash: this.props.location.query.cash || 0,
-      isLoading: false,
-      dataList: [{
-        'process_status': 'i',
-        'trace_content': '充值申请成功',
-        'trace_time': '-',
-        'coupon_amt': 0,
-        'coupon_flag': 'N'
-      }]
+      isLoading: true,
+      dataList: []
     };
   }
 
   componentDidMount() {
     //_paq.push(['trackEvent', 'P_ConsumptionRecord', '借款记录']);
-    // if (!CONFIGS.userId) {
-    //   this.getUserData();
-    // } else {
-    //   if (this.state.contractNo) {
-    //     this.getInitData();
-    //   } else {
-    //     Toast.info('合同号缺失！');
-    //   }
-    // }
-  }
-
-  async getUserData() {
-    CONFIGS.userId = this.props.location.query.ssoId;
-    let homePath = CONFIGS.basePath + 'home/' + CONFIGS.userId;
-
-    try {
-      let fetchHomePromise = CRFFetch.Get(homePath);
-      // 获取数据
-      let resultHome = await fetchHomePromise;
-      if (resultHome && !resultHome.response) {
-        Object.assign(CONFIGS.home, resultHome);
-        this.getInitData();
-      }
-    } catch (error) {
-      let msgs = error.body;
-      msgs.then((data) => {
-        Toast.info(data.message);
-      });
-    }
+    this.getInitData();
   }
 
   async getInitData() {
-    let path = CONFIGS.basePath + 'order/' + this.state.contractNo + '/status?type=' + this.state.type;
+    let path = `${CONFIGS.repayPath}/dynamics?kissoId=${CONFIGS.userId}&repayNo=${this.state.contractNo}`;
     try {
       let fetchPromise = CRFFetch.Get(path);
       // 获取数据
@@ -117,13 +84,11 @@ class ResultPage extends Component {
     const {isLoading} = this.state;
 
     return (
-      <section>
+      <section className="result-content">
         <Nav data={props} />
         <WhiteSpace />
-        <div className="result-content">
-          <Result data={data} />
-          <ResultSteps data={this.state} />
-        </div>
+        <Result data={data} />
+        <ResultSteps data={this.state} />
         <Loading show={isLoading} />
       </section>
     )

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Nav, SendSms } from 'app/components';
+import { Nav, SendSms, Loading } from 'app/components';
 import { Toast, WhiteSpace, List } from 'antd-mobile';
 import { hashHistory } from 'react-router';
 import Numeral from 'numeral';
@@ -7,32 +7,69 @@ import ReactTooltip from 'react-tooltip';
 const Item = List.Item;
 
 class RepayConfirm extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
+    CONFIGS.sendSmsType = props.location.query.type;
+    if (!CONFIGS.userId) {
+      CONFIGS.userId = props.location.query.ssoId || ''
+    }
     this.state = {
+      kissoId: CONFIGS.userId || '',
       title: '还款确认',
       way: '',
-      amount: 0,
-      coupon: 0
+      amount: props.location.query.currentAmount || '',
+      fee: 0,
+      details: '',
+      isLoading: true
     };
   }
 
   componentDidMount() {
-    setTimeout(() => {
+    this.getInitData();
+  }
+
+  async getInitData() {
+    let currentAmount = Numeral(this.props.location.query.currentAmount).multiply(100).value();
+    let accountPath = `${CONFIGS.basePath}fts/{kissoId}/borrower_open_account?kissoId=${this.state.kissoId}`;
+    let methodPath = `${CONFIGS.repayPath}/method?kissoId=${this.state.kissoId}&repayAmount=${currentAmount}`;
+    try {
+      let fetchAccountPromise = CRFFetch.Get(accountPath);
+      let fetchMethodPromise = CRFFetch.Get(methodPath);
+      // 获取数据
+      let accountResult = await fetchAccountPromise;
+      let methodResult = await fetchMethodPromise;
+      if (accountResult && !accountResult.response && methodResult && !methodResult.response) {
+        this.setData(accountResult, methodResult);
+      }
+    } catch (error) {
       this.setState({
-        way: '交通银行储蓄卡(8841)',
-        amount: 1000,
-        coupon: 3
+        isLoading: false
       });
-    }, 1000);
+      let msgs = error.body;
+    }
+  }
+
+  setData(accountData, methodData) {
+    Object.assign(CONFIGS.account, accountData);
+    Object.assign(CONFIGS.method, methodData);
+    let way = `${accountData.bankName}(${accountData.bankCardNo.slice(-4)})`;
+    let currentAmount = Numeral(methodData.repayTotalAmt).divide(100).value();
+    let currentFee = Numeral(methodData.channelFee).divide(100).value();
+    this.setState({
+      way: way,
+      amount: currentAmount,
+      fee: currentFee,
+      details: methodData.channelFeeDesc,
+      isLoading: false
+    });
   }
 
   render() {
     let props = { title: this.state.title};
-    let {way, amount, coupon} = this.state;
+    let {way, amount, fee, isLoading, details} = this.state;
     let totalAmount = () => {
-      let formatTotalAmount = Numeral(coupon + amount).format('0, 0.00');
-      let formatCoupon = Numeral(coupon).format('0, 0.00');
+      let formatTotalAmount = Numeral(amount).format('0, 0.00');
+      let formatCoupon = Numeral(fee).format('0, 0.00');
       return (
         <div className="crf-confirm-details">
           <div className="crf-confirm-amount">
@@ -58,8 +95,9 @@ class RepayConfirm extends Component {
         <WhiteSpace />
         <SendSms />
         <ReactTooltip id='description' place="bottom" className="crf-tooltips" effect='solid'>
-          <span>单笔还款金额的0.3%, 最低1.5元, 最高10元</span>
+          <span>{details}</span>
         </ReactTooltip>
+        <Loading show={isLoading} />
       </div>
     )
   }

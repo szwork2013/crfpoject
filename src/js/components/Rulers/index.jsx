@@ -11,6 +11,7 @@ export default class Rulers extends Component {
     this.state = {
       title: CONFIGS.repayDefaultTitle,
       amount: 0,
+      defaultAmount: 0,
       data: [],
       rulerWidth: 9,
       isDefault: true
@@ -18,33 +19,37 @@ export default class Rulers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let currentPoint = this.getCurrentPoint(nextProps.list);
-    this.setState({data: nextProps.list, amount: nextProps.list[currentPoint]});
+    this.setState({data: nextProps.list.data, amount: nextProps.list.currentAmount, defaultAmount: nextProps.list.currentAmount});
   }
 
   componentDidUpdate() {
     this.resetContainer();
-    // setTimeout(() => {
-    //   let currentPoint = this.getCurrentPoint();
-    //   this.refs.rulers.swipes.moveToPoint(currentPoint);
-    // }, 3000);
   }
 
   resetContainer() {
     let totalWidth = this.state.data.length * this.state.rulerWidth;
+    let currentPoint = this.getCurrentPoint();
+    let rulerOffsetWidth = currentPoint * this.state.rulerWidth;
     let rulerContainer = document.getElementsByClassName('crf-rulers')[0];
-    let offsetValue = (totalWidth/2) - 10.5;
-    rulerContainer.style.width = totalWidth + 'px';
-    rulerContainer.style.marginLeft = offsetValue + 'px';
-    rulerContainer.style.marginRight = offsetValue + 'px';
-    rulerContainer.style.transform = `translate3d(-${totalWidth/2}px, 0, 0)`;
+    let offsetWidth = (screen.width / 2 - 3.5);
+    CONFIGS.currentAmount = this.state.defaultAmount;
+    if (rulerContainer) {
+      rulerContainer.style.width = totalWidth + 'px';
+      rulerContainer.style.marginLeft = offsetWidth + 'px';
+      rulerContainer.style.marginRight = offsetWidth + 'px';
+      rulerContainer.style.transform = `translate3d(-${rulerOffsetWidth}px, 0, 0)`;
+      if (this.state.amount === this.state.defaultAmount) PubSub.publish('present:init', this.state.data[currentPoint]);
+    }
   }
 
-  getCurrentPoint(data) {
-    let currentData = data || this.state.data;
-    let currentPoint = currentData.length / 2;
-    (currentPoint < 1) && (currentPoint === 0);
-    currentPoint = parseInt(currentPoint);
+  getCurrentPoint() {
+    let currentPoint = 0;
+    if (this.state.data.length === 0) {
+
+    } else {
+      let currentData = this.state.data;
+      currentPoint = this.state.data.indexOf(this.state.defaultAmount);
+    }
     return currentPoint;
   }
 
@@ -77,6 +82,7 @@ export default class Rulers extends Component {
           title: CONFIGS.repayChangedTitle,
           isDefault: false
         });
+        CONFIGS.currentAmount = this.state.data[ev.newPoint];
         PubSub.publish('present:init', this.state.data[ev.newPoint]);
       }
     };

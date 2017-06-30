@@ -24,16 +24,13 @@ export default class Nav extends Component {
   }
 
   handleBack() {
-    if(this.state.stage === 'home') {
-      window.location = 'crfxjd://consumptionLoanHome';
+    let couponsContainer = document.getElementsByClassName('coupons-container')[0];
+
+    if (couponsContainer && couponsContainer.classList.contains('show')) {
+      couponsContainer.classList.remove('show');
+      couponsContainer.classList.add('hide');
     } else {
-      if (this.state.isApp === 'crfapp') {
-        window.location = 'crfxjd://closeWindow';
-      } else {
-        //this.props.router.push('/');
-        hashHistory.goBack();
-        //hashHistory.push('/');
-      }
+      hashHistory.goBack();
     }
   }
 

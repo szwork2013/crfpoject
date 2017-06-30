@@ -18,36 +18,25 @@ export default class Result extends Component {
   }
 
   render() {
-    let {status, dataList} = this.state;
-    let realSteps = null;
-    let lastStep = null;
-    if (dataList.length === 3) {
-      if (status === 1) {
-        lastStep = <Step className="error" title={dataList[2].trace_content} description={dataList[2].trace_time} />;
-      } else if(status === 2) {
-        lastStep = <Step className="finish" title={dataList[2].trace_content} description={dataList[2].trace_time} />;
+    const {status, dataList} = this.state;
+
+    const step = (item, index) => {
+      let styleName = '';
+      if (index === (dataList.length - 1) && status === 2) {
+        styleName = 'finish';
+      } else if (index === (dataList.length - 1) && status === 1) {
+        styleName = 'error';
       }
-      realSteps = (
-        <Steps current={2}>
-          <Step title="充值申请成功" description={dataList[0].trace_time} />
-          <Step title="系统处理中" description={dataList[1].trace_time} />
-          {lastStep}
-        </Steps>
-      );
-    } else {
-      if (status === 1) {
-        lastStep = <Step className="error" title={dataList[dataList.length - 1].trace_content} description={dataList[dataList.length - 1].trace_time} />;
-      } else if(status === 2) {
-        lastStep = <Step className="finish" title={dataList[dataList.length - 1].trace_content} description={dataList[dataList.length - 1].trace_time} />;
-      }
-      realSteps = (
-        <Steps current={2}>
-          <Step title="充值申请成功" description={dataList[0].trace_time} />
-          <Step title="系统处理中" description={dataList[0].trace_time} />
-          {lastStep}
-        </Steps>
-      );
-    }
+      return (
+        <Step className={styleName} title={item.trace_content} description={item.trace_time} />
+      )
+    };
+    const realSteps = (
+      <Steps current={dataList.length - 1}>
+        {dataList.map(step)}
+      </Steps>
+    );
+
     return (
       <div>
         {realSteps}

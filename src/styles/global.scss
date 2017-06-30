@@ -31,8 +31,17 @@ footer {
   height: 100%;
 }
 
+.coupon-can-use {
+  padding: .2rem;
+  margin-bottom: 10px;
+  font-size: .32rem;
+  color: #323232;
+  background: #fff;
+  border-bottom: 1px solid #D6D7DC;
+}
+
 .coupons-list-content {
-  height: calc(100vh - 50px);
+  height: calc(100vh - 100px);
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -68,7 +77,7 @@ footer {
 
 .coupon-inner {
   width: 100%;
-  padding: .3rem .2rem .1rem;
+  padding: .2rem .2rem .1rem;
   .coupon-text {
     font-size: .3rem;
     color: #323232;
@@ -152,7 +161,7 @@ footer {
   color: #3693FD;
   font-size: .36rem;
   .coupon-button & {
-    padding: .05rem .1rem;
+    padding: .01rem .1rem;
     font-size: .22rem;
   }
   &:active {
@@ -231,6 +240,10 @@ footer {
   height: calc(100vh - 44px);
 }
 
+.repay-content {
+  height: 100%;
+}
+
 .gray-bg {
   background: #EFEFF4;
 }
@@ -259,8 +272,7 @@ footer {
 }
 
 .result-content {
-  height: calc(100vh - 44px);
-  background: #EFEFF4;
+  height: 100%;
   .am-icon-md {
     display: none;
   }
@@ -302,7 +314,7 @@ footer {
     .am-steps-head {
       margin: 0.4rem 0.1rem 0 0;
     }
-    .am-steps-status-process {
+    .am-steps-status-process.error, .am-steps-status-process.finish {
       .am-steps-head {
         margin-top: .28rem;
       }
@@ -318,15 +330,15 @@ footer {
         text-align: right;
       }
     }
+    .finish, .error {
+      .am-steps-main {
+        border-bottom: 0;
+      }
+    }
     .am-steps-tail {
       left: 9px;
       top: 0.46rem;
       width: 1px;
-    }
-    .am-steps-item:last-child {
-      .am-steps-main {
-        border: 0;
-      }
     }
     .am-steps-head-inner {
       margin-right: 0.3rem;
@@ -384,7 +396,7 @@ footer {
     }
   }
   .am-modal-header {
-    padding: .12rem 0 .2rem;
+    padding: .12rem 0 .25rem;
     border-bottom: 1px solid #D6D7DC;
   }
 }
@@ -392,7 +404,7 @@ footer {
 .crf-result-modal-body {
   padding: .4rem 0 0;
   p {
-    padding-bottom: .2rem;
+    padding-bottom: .3rem;
   }
   button {
     width: 100%;
@@ -518,7 +530,7 @@ footer {
 .accordion-row {
   font-size: .24rem;
   color: #909090;
-  padding-bottom: .1rem;
+  padding-bottom: .2rem;
 }
 
 .accordion-row.show, .accordion-row.hide {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Modal, Table} from 'antd-mobile';
 import Numeral from 'numeral';
 import styles from './index.scss';
+const dateFormat = require('dateformat');
 
 export default class RepayDetail extends Component {
   constructor(props, context) {
@@ -28,99 +29,7 @@ export default class RepayDetail extends Component {
     });
   }
 
-  convertTableData() {
-    let jsonData = [
-      {
-        "complete_flag": "Y",
-        "curr_bill_date": "06-01",
-        "loan_amt": 0,
-        "loan_no": "string",
-        "loan_periods": 0,
-        "loan_time": "string",
-        "offset_amt": 101600,
-        "offset_fee": 0,
-        "offset_int": 6,
-        "offset_over_int": 6,
-        "offset_penalty": 5,
-        "offset_principal": 100000,
-        "plan_amt": 0,
-        "plan_principal": 0,
-        "term_no": 0,
-        "unpaid_amt": 0
-      },
-      {
-        "complete_flag": "N",
-        "curr_bill_date": "06-01",
-        "loan_amt": 0,
-        "loan_no": "string",
-        "loan_periods": 0,
-        "loan_time": "string",
-        "offset_amt": 101600,
-        "offset_fee": 0,
-        "offset_int": 6,
-        "offset_over_int": 6,
-        "offset_penalty": 5,
-        "offset_principal": 100000,
-        "plan_amt": 0,
-        "plan_principal": 0,
-        "term_no": 0,
-        "unpaid_amt": 0
-      },
-      {
-        "complete_flag": "N",
-        "curr_bill_date": "06-01",
-        "loan_amt": 0,
-        "loan_no": "string",
-        "loan_periods": 0,
-        "loan_time": "string",
-        "offset_amt": 101600,
-        "offset_fee": 0,
-        "offset_int": 6,
-        "offset_over_int": 6,
-        "offset_penalty": 0,
-        "offset_principal": 100000,
-        "plan_amt": 0,
-        "plan_principal": 0,
-        "term_no": 0,
-        "unpaid_amt": 0
-      },
-      {
-        "complete_flag": "N",
-        "curr_bill_date": "06-02",
-        "loan_amt": 0,
-        "loan_no": "string",
-        "loan_periods": 0,
-        "loan_time": "string",
-        "offset_amt": 101600,
-        "offset_fee": 0,
-        "offset_int": 6,
-        "offset_over_int": 6,
-        "offset_penalty": 5,
-        "offset_principal": 100000,
-        "plan_amt": 0,
-        "plan_principal": 0,
-        "term_no": 0,
-        "unpaid_amt": 0
-      },
-      {
-        "complete_flag": "N",
-        "curr_bill_date": "06-02",
-        "loan_amt": 0,
-        "loan_no": "string",
-        "loan_periods": 0,
-        "loan_time": "string",
-        "offset_amt": 101600,
-        "offset_fee": 0,
-        "offset_int": 6,
-        "offset_over_int": 6,
-        "offset_penalty": 0,
-        "offset_principal": 100000,
-        "plan_amt": 0,
-        "plan_principal": 0,
-        "term_no": 0,
-        "unpaid_amt": 0
-      }
-    ];
+  convertTableData(jsonData) {
     let data = {};
     let i = 0;
     jsonData.map((item, index) => {
@@ -145,16 +54,17 @@ export default class RepayDetail extends Component {
         }
       }
     });
-    
-    Object.values(data).map((main) => {
+
+    Object.keys(data).map((key) => {
+      let main = data[key];
       jsonData.map((sub) => {
         if ((main.billDate === sub.curr_bill_date) && ( main.offsetPenalty === sub.offset_penalty)) {
           let currentData = {
-            amt: sub.offset_amt,
-            principal: sub.offset_principal,
-            fees: sub.offset_over_int,
-            interest: sub.offset_int,
-            flag: sub.complete_flag
+            amt: Numeral(sub.offset_amt).divide(100).format('0, 0.00'),
+            principal: Numeral(sub.offset_principal).divide(100).format('0, 0.00'),
+            fees: Numeral(sub.offset_over_int).divide(100).format('0, 0.00'),
+            interest: Numeral(sub.offset_int).divide(100).format('0, 0.00'),
+            flag: CONFIGS.repayStatus[sub.complete_flag]
           };
           main.list.push(currentData);
         }
@@ -199,12 +109,33 @@ export default class RepayDetail extends Component {
     return data;
   }
 
+  async getInitData(amount) {
+    this.setState({
+      amount: amount,
+      modal: true
+    });
+    let currentAmount = Numeral(amount).multiply(100).value();
+    let date = new Date();
+    let formatDate = dateFormat(date, 'yyyymmdd');
+    let repayPath = `${CONFIGS.repayPath}/detail?kissoId=${CONFIGS.userId}&repayamt=${currentAmount}&offsetDate=${formatDate}`;
+
+    try {
+      let fetchPromise = CRFFetch.Get(repayPath);
+      // 获取数据
+      let result = await fetchPromise;
+      if (result && !result.response) {
+        this.setState({
+          data: this.convertTableData(result.repay_plan_list)
+        });
+      }
+    } catch (error) {
+      let msgs = error.body;
+    }
+  }
+
   componentDidMount() {
     this.pubsub_token = PubSub.subscribe('repayDetail:show', function(topic, val) {
-      // 更新组件
-      this.setState({
-        amount: val, modal: true, data: this.convertTableData()
-      });
+      this.getInitData(val);
     }.bind(this));
   }
 
@@ -225,11 +156,15 @@ export default class RepayDetail extends Component {
       { title: '状态', dataIndex: 'flag', key: 'flag', width: '1.5rem', className: 'status' }
     ];
     const content = (item, index) => {
+      let date = new Date(item.billDate);
+      let formatDate = dateFormat(date, 'mm-dd');
       return (
         <div key={index} className={styles.repayContainer}>
           <div className={`${styles.repayTitle} hor`}>
-            <div className={styles.repayTitleLeft}>{item.billDate}</div>
-            <div className={styles.repayTitleRight}>{item.offsetPenalty}</div>
+            <div className={styles.repayTitleLeft}>{`到期日 : ${formatDate}`}</div>
+            {(item.offsetPenalty > 0) &&
+              <div className={styles.repayTitleRight}>{item.offsetPenalty}</div>
+            }
           </div>
           <Table
             className={styles.repayTable}
