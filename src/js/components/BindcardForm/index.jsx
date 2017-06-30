@@ -17,7 +17,6 @@ class Form extends Component {
     super(props, context);
     this.state = {
       userName:'',
-      telNumber:'',
       refAgree:{},
       refTelInput:{},
       refBankCard:{},
@@ -72,10 +71,13 @@ class Form extends Component {
           userPhone=result.phone;
         }
 
+        //发布
+        PubSub.publish('userPhone:val', userPhone);
+
         console.log(result);
+
         this.setState({
           userName:result.userName,
-          telNumber:userPhone,
         });
 
         //隐藏loading图片
@@ -265,6 +267,7 @@ class Form extends Component {
                 failReason:result.failReason
               }
             };
+            CONFIGS.isReload=true;//从失败页面返回要求清空所有数据
             this.props.router.push(nextLocation);
             break;
         }
@@ -353,14 +356,12 @@ class Form extends Component {
 
   render() {
     let userName = this.state.userName;
-    let userTelNumber = this.state.telNumber;
     console.log('userName  '+this.state.userName);
-    console.log('telNumber '+this.state.telNumber);
     return (
       <section className={CONFIGS.adapt?'adapt':''}>
         <FormWrap setLoading={this.props.setLoading} setUserName={userName} getFormEle={this.setFormEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)} />
 
-        <WritePhone setUserTelNumber={userTelNumber} getWritePhoneEle={this.setWritePhoneEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)} />
+        <WritePhone getWritePhoneEle={this.setWritePhoneEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)} />
 
         <SwitchBtn />
 

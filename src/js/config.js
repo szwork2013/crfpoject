@@ -16,6 +16,7 @@ module.exports = {
   referrerUrl:referrerUrl,
   adapt:adapt,
   showTopTips:showTopTips,
+  isReload:false,
   bindCard:{
     bankName:'',//银行卡名字
     bankNum:'',//银行卡号码
@@ -30,6 +31,9 @@ module.exports = {
     bankCode:'',//银行代码 如：PAB
     bankCardNumStatus:false,//判断银行卡是否正确
     phoneNumStatus:false,//判断手机号是否正确
+    showSupportCard:false,
+    showErrorMsg:false,
+    showTelErrMsg:false,
   },
   phone: null,
   csPhone: 4009699559,
@@ -45,7 +49,8 @@ module.exports = {
     s: '借款',
     r: '还款'
   },
-  userWritePhoneRegx:/^1([1-6]\d|7[^017]|[8-9]\d)\d{8}$/,
+  userWritePhoneRegx:/^1([358]\d|7[^017])\d{8}$/,
+  userWriteThreeDigits:/^1([358]\d|7[^017])/,
   chineseCharRegx:/[\u0391-\uFFE5]+/,
   chinaMobileRegx: /^1(3[4-9]|5[012789]|8[23478]|4[7]|7[8])\d{8}$/, //中国移动
   chinaUnionRegx: /^1(3[0-2]|5[56]|8[56]|4[5]|7[6])\d{8}$/, //中国联通

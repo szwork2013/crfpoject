@@ -34,6 +34,10 @@ export default class Nav extends Component {
     hashHistory.push(path);
   }
 
+  componentDidMount() {
+    Common.setDocTitle(this.state.title);
+  }
+
   render() {
     let { stage, title,  from} = this.state;
     /*let rootClass = '';

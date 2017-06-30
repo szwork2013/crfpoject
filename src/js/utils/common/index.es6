@@ -15,7 +15,7 @@ let Common={
   },
   isWeChat:function(){
     const ua = window.navigator.userAgent.toLowerCase();
-    return ua.match(/MicroMessenger/i) == 'micromessenger';
+    return ua.match(/micromessenger/i) == 'micromessenger';
   },
   isAdapt:function(){
     let adapt;
@@ -43,6 +43,12 @@ let Common={
     }
 
     return str;
+  },
+  setDocTitle:function(title){
+    doc.title = title;
+    if(Common.isWeChat()){
+      doc.setTitle(title);
+    }
   }
 };
 
