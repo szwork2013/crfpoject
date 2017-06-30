@@ -293,6 +293,11 @@ class Form extends Component {
   bindEvent(){
     //select city
     const amListExtra=doc.querySelector('.am-list-extra');
+
+    if(amListExtra.innerHTML.indexOf(',')>0){
+      amListExtra.innerHTML=amListExtra.innerHTML.replace(/,/g,'&nbsp;');
+    }
+
     doc.onclick = function (e) {
       if (e.target.classList.contains('am-picker-popup-header-right')) {
         amListExtra.classList.add('color-323232');
@@ -312,41 +317,10 @@ class Form extends Component {
     _paq.push(['trackEvent', 'C_BindCard', 'E_BindCard_submit', '确认提交按钮']);
 
     if (e.target.classList.contains(styles.btnDisabled)) {
-      this.checkSubmitStatus();
       return;
     }
 
     this.sendBindCardFetch();
-  }
-
-  checkSubmitStatus(){
-
-    if(this.state.refBankCard.value === ''){
-      Toast.info('银行卡号不能为空');
-      return;
-    }
-    if(!CONFIGS.bindCard.bankCardNumStatus){
-      Toast.info('请输入正确的银行卡号');
-      return;
-    }
-
-    if(this.state.refTelInput.value === ''){
-      Toast.info('手机号码不能为空');
-      return;
-    }
-    if(!CONFIGS.bindCard.phoneNumStatus){
-      Toast.info('请输入正确的手机号码');
-      return;
-    }
-
-    if(doc.querySelector('.am-list-extra').innerHTML === '开户行所在地'){
-      Toast.info('请选择开户城市');
-      return;
-    }
-
-    if(this.state.refAgree.classList.contains('un-agree')){
-      Toast.info('请勾选合同协议');
-    }
   }
 
   removeDisabled() {
