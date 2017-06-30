@@ -1,33 +1,103 @@
 import React, { Component } from 'react';
-import { Nav } from 'app/components';
-import { Toast, WhiteSpace } from 'antd-mobile';
+import { Nav, SendSms, Loading } from 'app/components';
+import { Toast, WhiteSpace, List } from 'antd-mobile';
 import { hashHistory } from 'react-router';
+import Numeral from 'numeral';
+import ReactTooltip from 'react-tooltip';
+const Item = List.Item;
 
 class RepayConfirm extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
+    CONFIGS.sendSmsType = props.location.query.type;
+    if (!CONFIGS.userId) {
+      CONFIGS.userId = props.location.query.ssoId || ''
+    }
     this.state = {
-      title: '还款确认'
+      kissoId: CONFIGS.userId || '',
+      title: '还款确认',
+      way: '',
+      amount: props.location.query.currentAmount || '',
+      fee: 0,
+      details: '',
+      isLoading: true
     };
   }
 
   componentDidMount() {
-    // setTimeout(() => {
-    //   let listData = [50, 100, 150, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1550, 1600, 1650, 1700, 1750, 1800, 1850, 1900, 1950, 2000, 2050];
-    //   Object.assign(CONFIGS.rulerData, listData);
-    //   this.setState({
-    //     data: listData
-    //   });
-    // }, 1000);
+    this.getInitData();
+  }
+
+  async getInitData() {
+    let currentAmount = Numeral(this.props.location.query.currentAmount).multiply(100).value();
+    let accountPath = `${CONFIGS.basePath}fts/{kissoId}/borrower_open_account?kissoId=${this.state.kissoId}`;
+    let methodPath = `${CONFIGS.repayPath}/method?kissoId=${this.state.kissoId}&repayAmount=${currentAmount}`;
+    try {
+      let fetchAccountPromise = CRFFetch.Get(accountPath);
+      let fetchMethodPromise = CRFFetch.Get(methodPath);
+      // 获取数据
+      let accountResult = await fetchAccountPromise;
+      let methodResult = await fetchMethodPromise;
+      if (accountResult && !accountResult.response && methodResult && !methodResult.response) {
+        this.setData(accountResult, methodResult);
+      }
+    } catch (error) {
+      this.setState({
+        isLoading: false
+      });
+      let msgs = error.body;
+    }
+  }
+
+  setData(accountData, methodData) {
+    Object.assign(CONFIGS.account, accountData);
+    Object.assign(CONFIGS.method, methodData);
+    let way = `${accountData.bankName}(${accountData.bankCardNo.slice(-4)})`;
+    let currentAmount = Numeral(methodData.repayTotalAmt).divide(100).value();
+    let currentFee = Numeral(methodData.channelFee).divide(100).value();
+    this.setState({
+      way: way,
+      amount: currentAmount,
+      fee: currentFee,
+      details: methodData.channelFeeDesc,
+      isLoading: false
+    });
   }
 
   render() {
     let props = { title: this.state.title};
+    let {way, amount, fee, isLoading, details} = this.state;
+    let totalAmount = () => {
+      let formatTotalAmount = Numeral(amount).format('0, 0.00');
+      let formatCoupon = Numeral(fee).format('0, 0.00');
+      return (
+        <div className="crf-confirm-details">
+          <div className="crf-confirm-amount">
+            <span className="number">{`${formatTotalAmount}`}</span>
+            <span>元</span>
+          </div>
+          <div className="crf-confirm-des">
+            <span className="tooltip-icon" data-tip data-for="description"></span>
+            <span className="crf-confirm-des-text">{`(含支付通道费${formatCoupon}元) `}</span>
+          </div>
+        </div>
+      );
+    };
 
     return (
-      <div className="bindCardMain">
+      <div>
         <Nav data={props} />
         <WhiteSpace />
+        <List className="crf-list crf-confirm">
+          <Item extra={way}>还款方式</Item>
+          <Item extra={totalAmount()}>还款金额</Item>
+        </List>
+        <WhiteSpace />
+        <SendSms />
+        <ReactTooltip id='description' place="bottom" className="crf-tooltips" effect='solid'>
+          <span>{details}</span>
+        </ReactTooltip>
+        <Loading show={isLoading} />
       </div>
     )
   }

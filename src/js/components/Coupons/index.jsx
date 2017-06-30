@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Toast, ListView, Accordion } from 'antd-mobile';
-import Numeral from 'numeral';
 import PubSub from 'pubsub-js';
+import Numeral from 'numeral';
 
 export default class Coupons extends Component {
   constructor(props, context) {
@@ -12,47 +12,39 @@ export default class Coupons extends Component {
     });
     this.dataList = [];
     this.createDs = (province) => {
-      this.dataList = this.dataList.concat(province);
+      this.dataList = province;
       return this.dataSource.cloneWithRows(this.dataList);
     };
 
     this.state = {
       dataSource: this.createDs(this.dataList),
       title: '使用红包',
-      fromRemote: false,
-      isLoading: true
+      fromRemote: false
     };
   }
 
   componentDidMount() {
-    this.pubsub_token = PubSub.subscribe('coupons:show', function(topic, val) {
-      // 更新组件
+    this.pubsub_token = PubSub.subscribe('coupons:show', function(topic, list) {
+      this.setData(list);
       this.showCoupons();
-      // this.setState({
-      //   presentNum: 2
-      // });
     }.bind(this));
+  }
 
-    // simulate initial Ajax
-    let data = [
-      {
-        id: 0,
-        amount: 5,
-        loanDate: '2017-05-01',
-        repayDate: '2017-06-29'
-      },
-      {
-        id: 1,
-        amount: 10,
-        loanDate: '2017-05-01',
-        repayDate: '2017-06-29'
-      }
-    ];
-    setTimeout(() => {
-      this.setState({
-        dataSource: this.createDs(data), fromRemote: true
-      });
-    }, 1000);
+  setData(list) {
+    let data = list.map((item) => {
+      let obj = {
+        id: item.id,
+        amount: Numeral(item.awardValue).divide(100).value(),
+        loanDate: item.effectiveDate,
+        repayDate: item.expiredTime,
+        note: item.note.split('</br> ')
+      };
+      return obj;
+    });
+    this.dataList = [];
+    this.setState({
+      dataSource: this.createDs(data), fromRemote: true
+    });
   }
 
   componentWillUnmount() {
@@ -68,12 +60,19 @@ export default class Coupons extends Component {
   closeCoupons() {
     this.refs.couponsSection.classList.remove('show');
     this.refs.couponsSection.classList.add('hide');
+    this.setState({
+      dataSource: this.createDs([])
+    });
   }
 
   handleClick(e) {
     this.closeCoupons();
     let val = e.currentTarget.getAttribute('data-value');
-    PubSub.publish('coupons:value', val);
+    let coupos = {
+      real: parseInt(5),
+      total: 10
+    };
+    PubSub.publish('coupons:value', coupos);
   }
 
   handleToggle(e) {
@@ -88,12 +87,25 @@ export default class Coupons extends Component {
     } else {
       menu.classList.remove('show');
       menu.classList.add('hide');
-        flag.classList.remove('show');
+      flag.classList.remove('show');
       e.preventDefault();
     }
   }
 
   render() {
+    const header = () => {
+      let nums = this.state.dataSource.rowIdentities[0].length;
+      return (
+        <div className="coupon-can-use">可使用({nums})</div>
+      );
+    };
+
+    const rule = (item) => {
+      return (
+        <p>{item}</p>
+      );
+    };
+
     const row = (rowData) => {
       return (
         <div key={rowData.id} id={`row_${rowData.id}`}>
@@ -126,15 +138,14 @@ export default class Coupons extends Component {
             </div>
           </div>
           <div className="accordion-row hide">
-            <p>1 每笔还款只能使用1个红包, 但可以抵扣多笔借款的手续费。</p>
-            <p>2 最多抵扣全部手续费, 多出部分作废</p>
+            {rowData.note.map(rule)}
           </div>
         </div>
       );
     };
 
     let data = this.state.dataSource.rowIdentities;
-    let { fromRemote, isLoading } = this.state;
+    let { fromRemote } = this.state;
     let couponsContent = null;
 
     if (fromRemote) {
@@ -154,6 +165,7 @@ export default class Coupons extends Component {
     return (
       <section ref="couponsSection" className="coupons-container">
         <div className="coupons-list">
+          {header()}
           {couponsContent}
         </div>
       </section>

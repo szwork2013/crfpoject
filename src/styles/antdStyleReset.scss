@@ -3,16 +3,18 @@
   min-height: .9rem;
   .am-list-line {
     padding-right: .3rem;
-    min-height: .9rem;
+    min-height: 1rem;
     .am-list-content {
       font-size: .34rem;
-      padding-top: .14rem;
-      padding-bottom: .14rem;
+      padding-top: .2rem;
+      padding-bottom: .2rem;
     }
     .am-list-extra {
-      font-size: .32rem;
-      padding-top: .14rem;
-      padding-bottom: .14rem;
+      font-size: .28rem;
+      padding-top: .2rem;
+      padding-bottom: .2rem;
+      flex-basis: 45%;
+      color: #323232;
     }
     .am-list-arrow {
       width: .3rem;
@@ -43,6 +45,14 @@
 
 .crf-list {
   .am-list-item {
+    &.crf-present-real-amount {
+      .am-list-line {
+        .am-list-content {
+          font-size: .32rem;
+          text-align: right;
+        }
+      }
+    }
     .am-list-line {
       .am-list-content {
         font-size: .28rem;
@@ -62,7 +72,7 @@
 
 .am-whitespace.am-whitespace-md {
   background: #efeff4;
-  height: 0.18rem;
+  height: 8px;
 }
 
 
@@ -99,7 +109,40 @@
   top: 2.04rem;
 }
 
+.am-modal-header {
+  padding: 0.12rem 0.3rem 0.12rem;
+}
 
+.am-modal.am-modal-transparent .am-modal-content {
+  padding-top: 0.3rem;
+  border-radius: 0.14rem;
+}
+
+.am-modal-title {
+  font-size: 0.36rem;
+}
+
+.am-modal.am-modal-transparent .am-modal-content .am-modal-body {
+  padding: 0 0.3rem 0.3rem;
+  font-size: 0.28rem;
+}
+
+.am-modal-button-group-h .am-modal-button {
+  font-size: 0.32rem;
+  height: 1rem;
+  line-height: 1rem;
+}
+
+.am-modal-close {
+  right: 10px;
+  width: 13px;
+  height: 13px;
+}
+
+.am-modal-close-x {
+  width: 13px;
+  height: 13px;
+}
 
 /*toast*/
 .am-toast {
@@ -129,8 +172,6 @@
   border:0;
 }
 
-
-
 .coupons-list-content {
   .am-list-body {
     margin: 0 .2rem;
@@ -139,5 +180,45 @@
     &:after {
       border-bottom: 0;
     }
+  }
+}
+
+.am-table th, .am-table td {
+  padding: .1rem .2rem;
+  font-size: .28rem;
+  color: #646464;
+  line-height: 0.46rem;
+  text-align: right;
+  font-weight: normal;
+  &:first-child {
+    text-align: left;
+  }
+  border: 0;
+}
+
+.am-table th, .am-table td {
+  background: #fff;
+  border-bottom: 1px solid #e1e1e1;
+  &:first-child {
+    text-align: right;
+  }
+}
+
+.am-table td {
+  font-size: .22rem;
+}
+
+.am-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.am-table td.status {
+  color: #3693FD;
+}
+
+.am-steps-item.am-steps-status-process {
+  .am-steps-head-inner {
+    width: 9px;
+    height: 9px;
   }
 }

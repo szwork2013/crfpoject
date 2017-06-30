@@ -9,61 +9,101 @@ export default class Present extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      presentNum: 0,
+      data: [],
       getPresent: false,
-      coupon: 0
+      coupon: {
+        real: 0,
+        total: 0
+      }
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      presentNum: nextProps.list.presentNum
+      data: nextProps.list
     });
   }
 
   componentDidMount() {
-    this.pubsub_token = PubSub.subscribe('present:init', function(topic, val) {
-      // 更新组件
-      this.setState({
-        presentNum: 2, coupon: 0
-      });
+    this.pubsub_token_present = PubSub.subscribe('present:init', function(topic, val) {
+      this.getCoupons(val);
     }.bind(this));
-    this.pubsub_token = PubSub.subscribe('coupons:value', function(topic, val) {
-      // 更新组件
+
+    this.pubsub_token_coupons = PubSub.subscribe('coupons:value', function(topic, val) {
       this.setState({
         coupon: val
       });
     }.bind(this));
-    // setTimeout(() => {
-    //   let currentPoint = this.getCurrentPoint();
-    //   this.refs.rulers.swipes.moveToPoint(currentPoint);
-    // }, 3000);
   }
 
   componentWillUnmount() {
     //销毁监听的事件
-    PubSub.unsubscribe(this.pubsub_token);
+    PubSub.unsubscribe(this.pubsub_token_present);
+    PubSub.unsubscribe(this.pubsub_token_coupons);
+  }
+
+  async getCoupons(amount) {
+    let currentAmount = Numeral(amount).multiply(100).value();
+    let couponsPath = `${CONFIGS.repayPath}/coupon?kissoId=${CONFIGS.userId}&repaymentMoney=${currentAmount}&isOverdue=${CONFIGS.repayData.overdue_flag}&loanDate=${CONFIGS.repayData.min_normal_loan_time}`;
+    this.setState({
+      getPresent: true
+    });
+    try {
+      let fetchPromise = CRFFetch.Get(couponsPath);
+      // 获取数据
+      let result = await fetchPromise;
+      if (result && !result.response) {
+        this.setState({
+          getPresent: false, data: result
+        });
+      }
+    } catch (error) {
+
+    }
   }
 
   handlePresent() {
-    PubSub.publish('coupons:show');
+    PubSub.publish('coupons:show', this.state.data);
   }
 
   render() {
     let item = null;
     let loadingItem = <LoadingIcon />;
-    let {presentNum, getPresent, coupon} = this.state;
-    if (coupon !== 0) {
-      let formatCoupon = Numeral(coupon).format('0, 0.00');
-      item = <Item arrow="horizontal" extra={`-${formatCoupon}元`} onClick={this.handlePresent.bind(this)}>抵扣红包</Item>;
+    let {data, getPresent, coupon} = this.state;
+    if (coupon.real !== 0) {
+      let formatCoupon = Numeral(coupon.real).format('0, 0.00');
+      let coupons = () => {
+        return (
+          <div className="crf-present-coupons">
+            <div className="crf-present-coupons-real">{`-${formatCoupon}元`}</div>
+            {coupon.total !== coupon.real &&
+              <div className="crf-present-coupons-fee">仅可抵扣{coupon.real}元手续费</div>
+            }
+          </div>
+        );
+      }
+      let realAmount = CONFIGS.currentAmount - formatCoupon;
+      let realAmountSpan = () => {
+        return (
+          <span className="crf-present-real-amount-num">{realAmount}</span>
+        );
+      }
+      item = (
+        <div>
+          <Item arrow="horizontal" extra={coupons()} onClick={this.handlePresent.bind(this)}>抵扣红包</Item>
+          <Item className="crf-present-real-amount">
+            实付金额 : {realAmountSpan()}元
+          </Item>
+        </div>
+      );
     } else {
       if (getPresent) {
         item = <Item extra={loadingItem}>抵扣红包</Item>;
       } else {
-        if (presentNum > 0) {
-          item = <Item arrow="horizontal" className='crf-present' extra={`${presentNum}个红包`} onClick={this.handlePresent.bind(this)}>抵扣红包</Item>;
+        if (data.length > 0) {
+          item = <Item arrow="horizontal" className='crf-present' extra={`${data.length}个可用`} onClick={this.handlePresent.bind(this)}>抵扣红包</Item>;
         } else {
-          item = <Item extra={`${presentNum}个红包`}>抵扣红包</Item>;
+          item = <Item>抵扣红包</Item>;
         }
       }
     }

@@ -7,10 +7,20 @@ export default class Loading extends Component {
     this.state = {
       show: props.show
     }
+    this.show = this.show.bind(this);
+    this.hide = this.hide.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({show: nextProps.show});
+  }
+
+  show() {
+    this.setState({show: true});
+  }
+
+  hide() {
+    this.setState({show: false});
   }
 
   render() {
