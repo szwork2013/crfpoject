@@ -11,13 +11,8 @@ export default class Coupons extends Component {
       rowHasChanged: (row1, row2) => row1 !== row2
     });
     this.dataList = [];
-    this.createDs = (province) => {
-      this.dataList = province;
-      return this.dataSource.cloneWithRows(this.dataList);
-    };
-
     this.state = {
-      dataSource: this.createDs(this.dataList),
+      dataSource: this.dataSource.cloneWithRows(this.dataList),
       title: '使用红包',
       fromRemote: false
     };
@@ -31,9 +26,11 @@ export default class Coupons extends Component {
   }
 
   setData(list) {
-    let data = list.map((item) => {
+    let data = list.map((item, index) => {
       let obj = {
         id: item.id,
+        index: index,
+        originAmount: item.awardValue,
         amount: Numeral(item.awardValue).divide(100).value(),
         loanDate: item.effectiveDate,
         repayDate: item.expiredTime,
@@ -41,9 +38,8 @@ export default class Coupons extends Component {
       };
       return obj;
     });
-    this.dataList = [];
     this.setState({
-      dataSource: this.createDs(data), fromRemote: true
+      dataSource: this.dataSource.cloneWithRows(data), fromRemote: true
     });
   }
 
@@ -61,18 +57,57 @@ export default class Coupons extends Component {
     this.refs.couponsSection.classList.remove('show');
     this.refs.couponsSection.classList.add('hide');
     this.setState({
-      dataSource: this.createDs([])
+      dataSource: this.dataSource.cloneWithRows([])
     });
   }
 
-  handleClick(e) {
+  async getFee(index) {
+    let currentAmount = Numeral(CONFIGS.currentAmount).multiply(100).value();
+    let path = `${CONFIGS.repayPath}/coupon?kissoId=${CONFIGS.userId}&repaymentAmount=${currentAmount}`;
+    let paramData = this.state.dataSource.getRowData(index,0);
+    CONFIGS.selectCoupon = paramData;
+    let params = {
+      amt_type: 1,
+      coupon_id: paramData.id,
+      coupon_price: paramData.originAmount
+    };
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+
+    try {
+      let fetchPromise = CRFFetch.Post(path, JSON.stringify(params), headers);
+      // 获取数据
+      let result = await fetchPromise;
+      if (result && !result.response) {
+        this.setCouponsData(result);
+      }
+    } catch (error) {
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      });
+    }
+  }
+
+  setCouponsData(result) {
     this.closeCoupons();
-    let val = e.currentTarget.getAttribute('data-value');
+    CONFIGS.selectCoupon.offsetedCouponPrice = result.offsetedCouponPrice;
+    let realFee = Numeral(CONFIGS.selectCoupon.offsetedCouponPrice).divide(100).value();
+    let totalFee = Numeral(CONFIGS.selectCoupon.originAmount).divide(100).value();
     let coupos = {
-      real: parseInt(5),
-      total: 10
+      real: realFee,
+      total: totalFee
     };
     PubSub.publish('coupons:value', coupos);
+  }
+
+  handleClick(e) {
+    let index = parseInt(e.currentTarget.getAttribute('data-index'));
+    this.getFee(index);
   }
 
   handleToggle(e) {
@@ -132,7 +167,7 @@ export default class Coupons extends Component {
                   </a>
                 </div>
                 <div className="coupon-button">
-                  <button className="normal-btn" data-value={rowData.amount} onClick={this.handleClick.bind(this)}>立即使用</button>
+                  <button className="normal-btn" data-index={rowData.index} onClick={this.handleClick.bind(this)}>立即使用</button>
                 </div>
               </div>
             </div>

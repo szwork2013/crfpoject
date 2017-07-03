@@ -39,7 +39,8 @@ export default class Result extends Component {
   render() {
     let { status, cash, type, name } = this.state;
     let modalStyle = {width: '90%'};
-    let formatCash = Numeral(cash).format('0, 0.00');
+    console.log(cash);
+    let formatCash = Numeral(cash).divide(100).format('0, 0.00');
     let statusText = '';
     if (status === 'failed') {
       statusText = `${name}失败`;

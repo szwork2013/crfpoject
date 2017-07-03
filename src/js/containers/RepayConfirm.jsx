@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Nav, SendSms, Loading } from 'app/components';
 import { Toast, WhiteSpace, List } from 'antd-mobile';
-import { hashHistory } from 'react-router';
 import Numeral from 'numeral';
 import ReactTooltip from 'react-tooltip';
+import { hashHistory } from 'react-router';
 const Item = List.Item;
 
 class RepayConfirm extends Component {
@@ -17,7 +17,7 @@ class RepayConfirm extends Component {
       kissoId: CONFIGS.userId || '',
       title: '还款确认',
       way: '',
-      amount: props.location.query.currentAmount || '',
+      amount: props.location.query.realAmount || '',
       fee: 0,
       details: '',
       isLoading: true
@@ -29,7 +29,7 @@ class RepayConfirm extends Component {
   }
 
   async getInitData() {
-    let currentAmount = Numeral(this.props.location.query.currentAmount).multiply(100).value();
+    let currentAmount = Numeral(this.props.location.query.realAmount).multiply(100).value();
     let accountPath = `${CONFIGS.basePath}fts/{kissoId}/borrower_open_account?kissoId=${this.state.kissoId}`;
     let methodPath = `${CONFIGS.repayPath}/method?kissoId=${this.state.kissoId}&repayAmount=${currentAmount}`;
     try {
@@ -45,7 +45,21 @@ class RepayConfirm extends Component {
       this.setState({
         isLoading: false
       });
-      let msgs = error.body;
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      }, () => {
+        let path = 'repay';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      });
     }
   }
 

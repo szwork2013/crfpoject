@@ -40,9 +40,20 @@ class ResultPage extends Component {
       this.setState({
         isLoading: false
       });
-      let msgs = error.body;
-      msgs.then((data) => {
-        Toast.info(data.message);
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      }, () => {
+        let path = 'repay';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
       });
     }
   }
