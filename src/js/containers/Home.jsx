@@ -11,10 +11,6 @@ class Home extends Component {
     };
   }
 
-  componentDidMount() {
-
-  }
-
   setLoading(status){
     this.setState({
       loadingShowStatus:status

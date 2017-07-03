@@ -15,6 +15,7 @@ export default class Rebind extends Component {
 
   componentWillMount() {
     _paq.push(['trackEvent', 'C_Page', 'E_P_SupportCard']);
+
     this.getBankJson();
   }
 

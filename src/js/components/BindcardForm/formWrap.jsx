@@ -28,8 +28,17 @@ class FormWrap extends React.Component {
       this.setState({
         refFormNextBtn:val
       });
-      console.log(val);
+      //console.log(val);
     });
+
+
+    //从失败页面返回需要刷新页面
+    const ln=location;
+    if(CONFIGS.isReload){
+      CONFIGS.isReload=false;
+      ln.href=ln.href+'?'+CONFIGS.referrerUrl;
+      ln.reload();
+    }
   }
 
   componentWillUnmount() {
@@ -47,12 +56,13 @@ class FormWrap extends React.Component {
     this.props.getFormEle(refBankCard);
 
     //银行卡号
-    refBankCard.oninput=()=>{
+    refBankCard.onkeyup=(e)=>{
       if(refBankCard.value.length>0){
         refBankCardClear.classList.remove('n');
       }else{
         refBankCardClear.classList.add('n');
       }
+      this.bankNumInput(e);
     };
 
     refBankCard.onfocus=()=>{
@@ -62,13 +72,15 @@ class FormWrap extends React.Component {
     };
 
     refBankCard.onblur=(e)=>{
-      this.bankNumBlur(e);
       setTimeout(()=>{//解决与click冲突问题
+        console.log(new Date().getTime()+'--blur');
         refBankCardClear.classList.add('n');
-      },80);
+        this.bankNumBlur(e);
+      },100);
     };
 
     refBankCardClear.onclick=()=>{
+      console.log(new Date().getTime()+'--click');
       refBankCard.value='';
       refBankCardClear.classList.add('n');
 
@@ -77,6 +89,11 @@ class FormWrap extends React.Component {
 
       refBankName.value = '银行';//所属银行名字变回‘银行’
       refBankName.classList.add(styles.disabled);//所属银行字体变灰
+
+      CONFIGS.bindCard.showErrorMsg=false;//是否显示错误信息
+      CONFIGS.bindCard.showSupportCard=false;//记录是否显示支持卡号
+
+      CONFIGS.bindCard.bankNum='';//清空银行卡
     };
   }
 
@@ -120,6 +137,7 @@ class FormWrap extends React.Component {
           }
 
           CONFIGS.bindCard.bankCardNumStatus=false;
+          CONFIGS.bindCard.showErrorMsg=true;
           this.state.refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
 
         }else if(result.prcptcd==='0'){
@@ -128,10 +146,14 @@ class FormWrap extends React.Component {
           refBankName.classList.remove(styles.disabled);//所属银行字体变黑
           CONFIGS.bindCard.bankCardNumStatus=true;
           this.props.removeDisabled();
+
+          CONFIGS.bindCard.showErrorMsg=false;//是否显示错误信息
         }
 
         refBankName.value=result.bankName||'银行';
         CONFIGS.bindCard.bankName=result.bankName;
+
+        CONFIGS.bindCard.showSupportCard=false;//记录是否显示支持卡号
 
         /*
          * bankCode:"CMB"
@@ -253,6 +275,8 @@ class FormWrap extends React.Component {
           refBankName.classList.add(styles.disabled);//所属银行字体变灰
           refSupportCard.classList.remove('n');//显示支持银行div
           refBankError.classList.add('n');//隐藏银行卡错误提示
+
+          CONFIGS.bindCard.showSupportCard=true;//记录是否显示支持卡号
         }
 
       }
@@ -274,6 +298,9 @@ class FormWrap extends React.Component {
       refBankName.classList.add(styles.disabled);//所属银行字体变灰
 
       refFormNextBtn.classList.add(styles.btnDisabled);//提交按钮置灰
+
+      CONFIGS.bindCard.showSupportCard=false;//记录是否显示支持卡号
+      CONFIGS.bindCard.showErrorMsg=false;
     }
   }
 
@@ -295,6 +322,9 @@ class FormWrap extends React.Component {
     const userName = '*'+this.props.setUserName.substring(1);
     const isBankName=CONFIGS.bindCard.bankName==='银行'||CONFIGS.bindCard.bankName==='';
 
+    let hideClass=CONFIGS.bindCard.showSupportCard?'':'n';
+    let errorClass=CONFIGS.bindCard.showErrorMsg?'':'n';
+
     return (
       <div className={styles.infoForm}>
         <div className={styles.formInput}>
@@ -304,12 +334,12 @@ class FormWrap extends React.Component {
         </div>
         <div className={styles.formInput}>
           <div className={styles.borderLine+' borderLine'}>
-            <input type="tel" className={styles.bankCard} placeholder="请输入银行卡号" defaultValue={CONFIGS.bindCard.bankNum||""} maxLength="19" onKeyUp={this.bankNumInput.bind(this)} ref="refBankCard"/>
+            <input type="tel" className={styles.bankCard} placeholder="请输入银行卡号" defaultValue={CONFIGS.bindCard.bankNum||""} maxLength="23" ref="refBankCard"/>
           </div>
-          <div className={styles.errorInfo + " n"} ref="refSupportCard">
+          <div className={styles.errorInfo + " "+hideClass} ref="refSupportCard">
             暂不支持此卡, 请查看<a href="javascript:void(0);" onClick={this.checkSupport.bind(this)}>支持银行卡</a>
           </div>
-          <div className={styles.errorInfo + " color-FA4548 n"} ref="refBankError">您输入的银行卡号有误</div>
+          <div className={styles.errorInfo + " color-FA4548 " + errorClass} ref="refBankError">您输入的银行卡号有误</div>
           <div className="clearVal n" ref="refBankCardClear"><div className="clearInput"><span className="closeBtn">x</span></div></div>
         </div>
         <div className={styles.formInput}>

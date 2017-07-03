@@ -1,25 +1,4 @@
 (function() {
-  if (typeof Object.assign != 'function') {
-    Object.assign = function(target) {
-      'use strict';
-      if (target == null) {
-        throw new TypeError('Cannot convert undefined or null to object');
-      }
-
-      target = Object(target);
-      for (var index = 1; index < arguments.length; index++) {
-        var source = arguments[index];
-        if (source != null) {
-          for (var key in source) {
-            if (Object.prototype.hasOwnProperty.call(source, key)) {
-              target[key] = source[key];
-            }
-          }
-        }
-      }
-      return target;
-    };
-  }
   let u = navigator.userAgent;
   let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
   let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
@@ -40,4 +19,18 @@
   } else if (isAndroid) {
     document.documentElement.style.fontSize = '300%';
   }
+
+
+  doc.setTitle = function(t) {
+    doc.title = t;
+    var i = doc.createElement('iframe');
+    i.src = '//m.baidu.com/favicon.ico';
+    i.style.display = 'none';
+    i.onload = function() {
+      setTimeout(function(){
+        i.remove();
+      }, 9)
+    };
+    doc.body.appendChild(i);
+  };
 })();

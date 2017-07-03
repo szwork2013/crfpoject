@@ -23,6 +23,10 @@ export default class Nav extends Component {
     this.setState(nextProps.data);
   }
 
+  componentDidMount() {
+    Common.setDocTitle(this.state.title);
+  }
+
   handleBack() {
     let couponsContainer = document.getElementsByClassName('coupons-container')[0];
 

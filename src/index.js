@@ -4,11 +4,13 @@ import {render} from 'react-dom';
 import {hashHistory} from 'react-router';
 import {default as App} from './js/index';
 import RedBox from 'redbox-react';
+
+global.doc = window.document;
 require('./js/utils/device/index.es6');
+
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-global.doc = window.document;
 global.Common = require('./js/utils/common/index.es6');
 global.CONFIGS = require('./js/config');
 global.CRFFetch = require('./js/utils/ajax/index.es6');
@@ -22,6 +24,7 @@ global.VERSION={
 if (typeof Object.assign !== 'function') {
   Object.assign = require('object-assign');
 }
+
 
 if (process.env.NODE_ENV === 'development') {
   const renderRoot = () => render(
