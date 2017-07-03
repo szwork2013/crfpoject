@@ -11,6 +11,10 @@ class Home extends Component {
     };
   }
 
+  componentDidMount(){
+    _paq.push(['trackEvent', 'C_Page', 'E_P_BindCard']);
+  }
+
   setLoading(status){
     this.setState({
       loadingShowStatus:status

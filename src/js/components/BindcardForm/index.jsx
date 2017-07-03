@@ -4,8 +4,8 @@ import styles from './index.scss';
 
 import {Toast} from 'antd-mobile';
 
-import SwitchBtn from '../switchBtn/index.jsx';
-import Contract from '../setContract/index.jsx';
+import SwitchBtn from '../SwitchBtn/index.jsx';
+import Contract from '../SetContract/index.jsx';
 import WritePhone from './writePhone.jsx';
 import FormWrap from './formWrap.jsx';
 
@@ -34,7 +34,6 @@ class Form extends Component {
   }
 
   componentDidMount() {
-    _paq.push(['trackEvent', 'C_Page', 'E_P_BindCard']);
 
       //绑定事件
     this.bindEvent();
@@ -51,7 +50,7 @@ class Form extends Component {
   }
 
   async getUserInfo(){
-    let getContractUrl=CONFIGS.basePath+'api/user?kissoId='+CONFIGS.ssoId;
+    let getContractUrl=CONFIGS.basePath+'user?kissoId='+CONFIGS.ssoId;
     let userPhone='';
 
     //显示loading图片

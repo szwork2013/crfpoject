@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import styles from './index.scss';
 import {withRouter } from 'react-router';
 
-import CityWrapper from '../selectCity/index.jsx';
+import CityWrapper from '../SelectCity/index.jsx';
 
 import {Toast} from 'antd-mobile';
 
@@ -36,6 +36,8 @@ class FormWrap extends React.Component {
     const ln=location;
     if(CONFIGS.isReload){
       CONFIGS.isReload=false;
+      console.log(ln.href);
+      console.log(CONFIGS.referrerUrl);
       ln.href=ln.href+'?'+CONFIGS.referrerUrl;
       ln.reload();
     }
@@ -73,14 +75,12 @@ class FormWrap extends React.Component {
 
     refBankCard.onblur=(e)=>{
       setTimeout(()=>{//解决与click冲突问题
-        console.log(new Date().getTime()+'--blur');
         refBankCardClear.classList.add('n');
         this.bankNumBlur(e);
       },100);
     };
 
     refBankCardClear.onclick=()=>{
-      console.log(new Date().getTime()+'--click');
       refBankCard.value='';
       refBankCardClear.classList.add('n');
 
