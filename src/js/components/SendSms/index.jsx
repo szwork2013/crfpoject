@@ -188,12 +188,17 @@ export default class SendSms extends Component {
       isLoading: true
     });
     let path = `${CONFIGS.repayPath}?kissoId=${CONFIGS.userId}`;
-    console.log(path);
+    let couponData = [{
+      amt_type: 1,
+      coupon_id: CONFIGS.selectCoupon.id,
+      coupon_price: CONFIGS.selectCoupon.originAmount
+    }];
     let params = {
       code: this.refs.smsNum.value,
       deviceType: 'H5_24',
       repayChannel: 'FTS',
-      repaymentAmount: CONFIGS.method.repayTotalAmt
+      repaymentAmount: CONFIGS.method.repayTotalAmt + CONFIGS.selectCoupon.offsetedCouponPrice,
+      couponList: JSON.stringify(couponData)
     };
     let headers = {
       'Content-Type': 'application/json'

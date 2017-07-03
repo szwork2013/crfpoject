@@ -17,7 +17,7 @@ class RepayConfirm extends Component {
       kissoId: CONFIGS.userId || '',
       title: '还款确认',
       way: '',
-      amount: props.location.query.currentAmount || '',
+      amount: props.location.query.realAmount || '',
       fee: 0,
       details: '',
       isLoading: true
@@ -29,7 +29,7 @@ class RepayConfirm extends Component {
   }
 
   async getInitData() {
-    let currentAmount = Numeral(this.props.location.query.currentAmount).multiply(100).value();
+    let currentAmount = Numeral(this.props.location.query.realAmount).multiply(100).value();
     let accountPath = `${CONFIGS.basePath}fts/{kissoId}/borrower_open_account?kissoId=${this.state.kissoId}`;
     let methodPath = `${CONFIGS.repayPath}/method?kissoId=${this.state.kissoId}&repayAmount=${currentAmount}`;
     try {

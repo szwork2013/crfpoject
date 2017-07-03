@@ -65,8 +65,10 @@ module.exports = {
   repayChangedTitle: '实还金款(元)',
   rulerData: [],
   couponData: [],
+  selectCoupon: null,
   repayData: {},
   currentAmount: 0,
+  realAmount: 0,
   account: {},
   method: {},
   repayStatus: {

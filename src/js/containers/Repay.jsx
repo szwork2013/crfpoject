@@ -83,7 +83,7 @@ class Repay extends Component {
 
   async handleClick() {
     this.refs.loading.show();
-    let currentAmount = Numeral(CONFIGS.currentAmount).multiply(100).value();
+    let currentAmount = Numeral(CONFIGS.realAmount).multiply(100).value();
     let methodPath = `${CONFIGS.repayPath}/method?kissoId=${CONFIGS.userId}&repayAmount=${currentAmount}`;
     try {
       let fetchMethodPromise = CRFFetch.Get(methodPath);
@@ -102,26 +102,35 @@ class Repay extends Component {
     Object.assign(CONFIGS.method, methodData);
     this.refs.loading.hide();
     let path = '';
-    if (CONFIGS.method.channelList && CONFIGS.method.channelList[0].channelInfoNoEnum === 'wechat') {
-      path = 'channel';
-      hashHistory.push({
-        pathname: path,
-        query: {
-          ssoId: CONFIGS.userId,
-          currentAmount: CONFIGS.currentAmount
-        }
-      });
-    } else {
-      path = 'repayconfirm';
-      hashHistory.push({
-        pathname: path,
-        query: {
-          ssoId: CONFIGS.userId,
-          currentAmount: CONFIGS.currentAmount,
-          type: 'r'
-        }
-      });
-    }
+    path = 'repayconfirm';
+    hashHistory.push({
+      pathname: path,
+      query: {
+        ssoId: CONFIGS.userId,
+        realAmount: CONFIGS.realAmount,
+        type: 'r'
+      }
+    });
+    // if (CONFIGS.method.channelList && CONFIGS.method.channelList[0].channelInfoNoEnum === 'wechat') {
+    //   path = 'channel';
+    //   hashHistory.push({
+    //     pathname: path,
+    //     query: {
+    //       ssoId: CONFIGS.userId,
+    //       realAmount: CONFIGS.realAmount
+    //     }
+    //   });
+    // } else {
+    //   path = 'repayconfirm';
+    //   hashHistory.push({
+    //     pathname: path,
+    //     query: {
+    //       ssoId: CONFIGS.userId,
+    //       realAmount: CONFIGS.realAmount,
+    //       type: 'r'
+    //     }
+    //   });
+    // }
   }
 
   render() {

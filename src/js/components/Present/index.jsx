@@ -83,6 +83,7 @@ export default class Present extends Component {
         );
       }
       let realAmount = CONFIGS.currentAmount - formatCoupon;
+      CONFIGS.realAmount = realAmount;
       let realAmountSpan = () => {
         return (
           <span className="crf-present-real-amount-num">{realAmount}</span>
