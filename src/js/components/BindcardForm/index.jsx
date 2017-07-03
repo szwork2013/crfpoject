@@ -35,7 +35,7 @@ class Form extends Component {
 
   componentDidMount() {
 
-      //绑定事件
+    //绑定事件
     this.bindEvent();
 
     //开户所在地
@@ -68,6 +68,7 @@ class Form extends Component {
         console.log(result.randomNumber);
         if(result.randomNumber>=50000){
           userPhone=result.phone;
+          CONFIGS.bindCard.phoneNumStatus=true;
         }
 
         //发布
@@ -176,11 +177,15 @@ class Form extends Component {
       //没有.json
       result.then((data)=>{
         if (data && !data.response) {
+
+          //mock
+          data.result='SUCCESS';
+          
           switch (data.result){
             case 'ACCEPTED':
               setTimeout(()=>{
                 this.reSendBindCardFetch(word32);
-              },500);
+              },1000);
               break;
             case 'SUCCESS':
               this.props.setLoading(false);//隐藏loading图片
@@ -236,8 +241,11 @@ class Form extends Component {
   }
 
   async reSendBindCardFetch(word32){
+    CONFIGS.bindCard.sendCount++;
 
     let reCheckFetchUrl=CONFIGS.basePath+'fts/borrower_open_account?kissoId='+CONFIGS.ssoId+'&requestRefNo='+word32;
+
+    let time=CONFIGS.bindCard.sendCount===2?2000:3000;
 
     try {
 
@@ -252,7 +260,7 @@ class Form extends Component {
           case 'UNKNOWN':
             setTimeout(()=>{
               this.reSendBindCardFetch(word32);
-            },1000);
+            },time);
             break;
           case 'SUCCESS':
             this.props.setLoading(false);//隐藏loading图片
@@ -354,6 +362,7 @@ class Form extends Component {
   }
 
   render() {
+
     let userName = this.state.userName;
     console.log('userName  '+this.state.userName);
     return (
