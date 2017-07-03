@@ -10,10 +10,35 @@ export default class Rebind extends Component {
   }
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Fail']);
+    this.customPopState();
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '点击重新绑定按钮']);
-    this.props.router.push('/');
+
+
+    //this.props.router.push('/');
+    let ln=location;
+    location.href=ln.origin+ln.pathname+'#/';//自动加上了问号后面的参数
+
+  }
+  customPopState(){
+    let refUrl=CONFIGS.referrerUrl;//首页点击绑卡过来返回首页 产品页过来返回产品页面（点击确认跳转支付页面）
+    //console.log(refUrl);
+    /*if(refUrl.indexOf('#/loan?')>-1){
+      refUrl=CONFIGS.referrerUrl.replace('#/loan?','#/recharge?');
+    }*/
+
+    //回退
+    window.addEventListener("popstate", function() {
+      location.href=refUrl;
+    }, false);
+    !function() {
+      var state = {
+        title: "title",
+        url: ""
+      };
+      window.history.pushState(state, "title", "");
+    }();
   }
   render() {
     let props={ title:'绑卡结果'};

@@ -62,45 +62,58 @@ body{
 }
 
 .CEB span{
-  background-position: .06rem -10.4rem;
+  /*background-position:.06rem -11.35rem;*/
+  background-position: .0rem -12.65rem;
+  background-size: 100%;
 }
 .GDB span{
-  background-position: .06rem -6.95rem;
+  background-position:.06rem -7.2rem;
 }
 .ABC span{
-  background-position: .06rem -5.23rem;
+  background-position: .06rem -5.2rem;
 }
 .PAB span{
-  background-position: .04rem -8.2rem;
-  background-size: 96%;
+  /*background-position: .04rem -8.85rem;
+  background-size: 96%;*/
+  background-position: .0rem -9.2rem;
+  background-size: 100%;
 }
 .CIB span{
-  background-position: .035rem -6.4rem;
-  background-size: 94%;
+  background-position:.035rem -6.65rem;
+  background-size: 96%;
 }
 .PSBC span{
-  background-position: .06rem -4.15rem;
+  background-position: .06rem -4.16rem;
 }
 .CMB span{
-  background-position: .06rem -1.0rem;
+  background-position: .06rem -1.1rem;
 }
 .BOC span{
-  background-position: .06rem -3.13rem;
+  background-position: .06rem -3.11rem;
 }
 .CITIC span{
-  background-position: .06rem -8.5rem;
+  /*background-position: .06rem -9.3rem;*/
+  background: url(../images/CITIC.png) no-repeat;
+  background-size: 100%;
 }
 .CCB span{
-  background-position: .06rem -2.08rem;
+  background-position: .06rem -2.15rem;
 }
 .HXB span{
-  background-position: .06rem -9.5rem;
+  /*background-position:.06rem -10.35rem;*/
+  background: url(../images/HXB.png) no-repeat;
+  background-size: 100%;
+
 }
 .CMBC span{
-  background-position: .06rem -11.25rem;
+  /*background-position: .06rem -12.4rem;*/
+  background: url(../images/CMBC.png) no-repeat;
+  background-size: 100%;
 }
 .BCM span{
-  background-position: .08rem -12.15rem;
+  /*background-position: .08rem -13.4rem;*/
+  background: url(../images/BCM.png) no-repeat;
+  background-size: 100%;
 }
 
 .check-bank-card{
@@ -211,7 +224,7 @@ body{
 
 /*rebindcard*/
 .bind-card-status{
-  padding: 1rem 2rem;
+  padding: 1rem .2rem;
   .fail{
     background: url(../images/error.png) no-repeat;
   }
@@ -402,10 +415,10 @@ body{
   position: relative;
   .agree{
     position: absolute;
-    top:.02rem;
+    top:0;
     left:0;
-    width:.28rem;
-    height:.28rem;
+    width:.3rem;
+    height:.3rem;
     background: url(../images/correct.png) no-repeat;
     background-size:100%;
     font-size: 0;

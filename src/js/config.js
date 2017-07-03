@@ -35,6 +35,7 @@ module.exports = {
     showSupportCard:false,
     showErrorMsg:false,
     showTelErrMsg:false,
+    sendCount:1,
   },
   sendSmsType: null,
   type: {

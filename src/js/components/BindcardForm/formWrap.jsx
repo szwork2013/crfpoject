@@ -94,6 +94,9 @@ class FormWrap extends React.Component {
       CONFIGS.bindCard.showSupportCard=false;//记录是否显示支持卡号
 
       CONFIGS.bindCard.bankNum='';//清空银行卡
+
+      CONFIGS.bindCard.bankCardNumStatus=false;
+      this.props.removeDisabled();
     };
   }
 
