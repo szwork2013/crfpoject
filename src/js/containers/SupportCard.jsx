@@ -75,7 +75,7 @@ export default class Rebind extends Component {
   }
 
   render() {
-    let props = {title: '选择开户行'};
+    let props = {title: '查看支持银行'};
     let allData = this.state.bankJson;
     let bankObj = {
       'ICBC': '工商银行',

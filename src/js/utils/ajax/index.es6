@@ -100,7 +100,6 @@ const FetchInterface = {
 
     if(!fn){
       fn=()=>location.reload();
-      console.log(fn);
     }
 
     switch(status){

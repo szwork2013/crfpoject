@@ -78,7 +78,7 @@ class WritePhone extends React.Component {
     let currentVal=e.target.value;
     CONFIGS.bindCard.phoneNum=currentVal;
 
-    if( (currentVal.length===1&&currentVal!=='1') || (currentVal.length===2&&!/^1[3578]/.test(currentVal)) || (currentVal.length===3&&!CONFIGS.userWriteThreeDigits.test(currentVal)) ){
+    if( currentVal.length===1&&currentVal!=='1' ){
       refTelErrorMsg.classList.remove('n');//显示手机号错误提示
       CONFIGS.bindCard.showTelErrMsg=true;
       return;
@@ -123,8 +123,7 @@ class WritePhone extends React.Component {
       if(defaultPhoneNum){
         return <input type="button" className={styles.infoInput + ' ' + styles.userPhone} value={defaultPhoneNum} />;
       }else{
-        return <input type="tel" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号"
-                      /*onInput={this.telRegex.bind(this)} onBlur={this.telBlur.bind(this)}*/ defaultValue={CONFIGS.bindCard.phoneNum} maxLength="11" ref="refTelInput"/>;
+        return <input type="tel" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号" defaultValue={CONFIGS.bindCard.phoneNum} maxLength="11" ref="refTelInput"/>;
       }
     };
 
