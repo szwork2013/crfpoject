@@ -29,8 +29,8 @@ class Channel extends Component {
   async getInitData() {
     this.refs.loading.show();
     CONFIGS.userId = this.props.location.query.ssoId;
-    CONFIGS.currentAmount = this.props.location.query.currentAmount;
-    let currentAmount = Numeral(CONFIGS.currentAmount).multiply(100).value();
+    CONFIGS.realAmount = this.props.location.query.realAmount;
+    let currentAmount = Numeral(CONFIGS.realAmount).multiply(100).value();
     let methodPath = `${CONFIGS.repayPath}/method?kissoId=${CONFIGS.userId}&repayAmount=${currentAmount}`;
     try {
       let fetchMethodPromise = CRFFetch.Get(methodPath);
@@ -41,7 +41,21 @@ class Channel extends Component {
       }
     } catch (error) {
       this.refs.loading.hide();
-      let msgs = error.body;
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      }, () => {
+        let path = 'repay';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      });
     }
   }
 
@@ -68,7 +82,7 @@ class Channel extends Component {
       pathname: path,
       query: {
         ssoId: CONFIGS.userId,
-        currentAmount: CONFIGS.currentAmount,
+        realAmount: CONFIGS.realAmount,
         type: 'r'
       }
     });

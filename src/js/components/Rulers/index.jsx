@@ -33,6 +33,9 @@ export default class Rulers extends Component {
     let rulerContainer = document.getElementsByClassName('crf-rulers')[0];
     let offsetWidth = (screen.width / 2 - 3.5);
     CONFIGS.currentAmount = this.state.defaultAmount;
+    let storage = window.localStorage;
+    storage.setItem('currentAmount', CONFIGS.currentAmount);
+    CONFIGS.realAmount = CONFIGS.currentAmount;
     if (rulerContainer) {
       rulerContainer.style.width = totalWidth + 'px';
       rulerContainer.style.marginLeft = offsetWidth + 'px';
@@ -83,6 +86,9 @@ export default class Rulers extends Component {
           isDefault: false
         });
         CONFIGS.currentAmount = this.state.data[ev.newPoint];
+        let storage = window.localStorage;
+        storage.setItem('currentAmount', CONFIGS.currentAmount);
+        CONFIGS.realAmount = CONFIGS.currentAmount;
         PubSub.publish('present:init', this.state.data[ev.newPoint]);
       }
     };

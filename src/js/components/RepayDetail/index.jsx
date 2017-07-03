@@ -129,7 +129,13 @@ export default class RepayDetail extends Component {
         });
       }
     } catch (error) {
-      let msgs = error.body;
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      });
     }
   }
 
@@ -155,7 +161,8 @@ export default class RepayDetail extends Component {
       { title: '利息', dataIndex: 'interest', key: 'interest'},
       { title: '状态', dataIndex: 'flag', key: 'flag', width: '1.5rem', className: 'status' }
     ];
-    const content = (item, index) => {
+    const content = (index) => {
+      let item = data[index];
       let date = new Date(item.billDate);
       let formatDate = dateFormat(date, 'mm-dd');
       return (
@@ -187,7 +194,7 @@ export default class RepayDetail extends Component {
         platform="ios"
       >
         <div className={styles.root}>
-          {Object.values(data).map(content)}
+          {Object.keys(data).map(content)}
         </div>
       </Modal>
     );

@@ -17,6 +17,7 @@ class Repay extends Component {
   }
 
   componentDidMount() {
+    _paq.push(['trackEvent', 'C_Page', 'E_P_Repay']);
     this.getInitData();
   }
 
@@ -34,7 +35,21 @@ class Repay extends Component {
       this.setState({
         isLoading: false
       });
-      let msgs = error.body;
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      }, () => {
+        let path = 'repay';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      });
     }
   }
 
@@ -83,13 +98,14 @@ class Repay extends Component {
 
   async handleClick() {
     this.refs.loading.show();
-    let currentAmount = Numeral(CONFIGS.currentAmount).multiply(100).value();
+    let currentAmount = Numeral(CONFIGS.realAmount).multiply(100).value();
     let methodPath = `${CONFIGS.repayPath}/method?kissoId=${CONFIGS.userId}&repayAmount=${currentAmount}`;
     try {
       let fetchMethodPromise = CRFFetch.Get(methodPath);
       // 获取数据
       let methodResult = await fetchMethodPromise;
       if (methodResult && !methodResult.response) {
+        _paq.push(['trackEvent', 'C_Repay', 'E_ImmediateRepay', '立即还款']);
         this.setMethodData(methodResult);
       }
     } catch (error) {
@@ -102,26 +118,35 @@ class Repay extends Component {
     Object.assign(CONFIGS.method, methodData);
     this.refs.loading.hide();
     let path = '';
-    if (CONFIGS.method.channelList && CONFIGS.method.channelList[0].channelInfoNoEnum === 'wechat') {
-      path = 'channel';
-      hashHistory.push({
-        pathname: path,
-        query: {
-          ssoId: CONFIGS.userId,
-          currentAmount: CONFIGS.currentAmount
-        }
-      });
-    } else {
-      path = 'repayconfirm';
-      hashHistory.push({
-        pathname: path,
-        query: {
-          ssoId: CONFIGS.userId,
-          currentAmount: CONFIGS.currentAmount,
-          type: 'r'
-        }
-      });
-    }
+    path = 'repayconfirm';
+    hashHistory.push({
+      pathname: path,
+      query: {
+        ssoId: CONFIGS.userId,
+        realAmount: CONFIGS.realAmount,
+        type: 'r'
+      }
+    });
+    // if (CONFIGS.method.channelList && CONFIGS.method.channelList[0].channelInfoNoEnum === 'wechat') {
+    //   path = 'channel';
+    //   hashHistory.push({
+    //     pathname: path,
+    //     query: {
+    //       ssoId: CONFIGS.userId,
+    //       realAmount: CONFIGS.realAmount
+    //     }
+    //   });
+    // } else {
+    //   path = 'repayconfirm';
+    //   hashHistory.push({
+    //     pathname: path,
+    //     query: {
+    //       ssoId: CONFIGS.userId,
+    //       realAmount: CONFIGS.realAmount,
+    //       type: 'r'
+    //     }
+    //   });
+    // }
   }
 
   render() {
