@@ -17,6 +17,7 @@ class Repay extends Component {
   }
 
   componentDidMount() {
+    _paq.push(['trackEvent', 'C_Page', 'E_P_Repay']);
     this.getInitData();
   }
 
@@ -34,7 +35,21 @@ class Repay extends Component {
       this.setState({
         isLoading: false
       });
-      let msgs = error.body;
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      }, () => {
+        let path = 'repay';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      });
     }
   }
 
@@ -90,6 +105,7 @@ class Repay extends Component {
       // 获取数据
       let methodResult = await fetchMethodPromise;
       if (methodResult && !methodResult.response) {
+        _paq.push(['trackEvent', 'C_Repay', 'E_ImmediateRepay', '立即还款']);
         this.setMethodData(methodResult);
       }
     } catch (error) {

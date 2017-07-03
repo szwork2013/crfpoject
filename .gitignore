@@ -7,3 +7,4 @@ yarn.lock
 *.xml
 src/styles/*.css
 .idea
+user_center

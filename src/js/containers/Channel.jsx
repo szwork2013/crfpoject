@@ -41,7 +41,21 @@ class Channel extends Component {
       }
     } catch (error) {
       this.refs.loading.hide();
-      let msgs = error.body;
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      }, () => {
+        let path = 'repay';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      });
     }
   }
 

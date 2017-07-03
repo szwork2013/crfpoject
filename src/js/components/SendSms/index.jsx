@@ -208,6 +208,7 @@ export default class SendSms extends Component {
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
+        _paq.push(['trackEvent', 'C_Repay', 'E_SubmitRepay', '确认还款']);
         this.sendFlag = true;
         this.setState({
           isLoading: false

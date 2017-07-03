@@ -129,7 +129,13 @@ export default class RepayDetail extends Component {
         });
       }
     } catch (error) {
-      let msgs = error.body;
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      });
     }
   }
 

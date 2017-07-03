@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Nav, SendSms, Loading } from 'app/components';
 import { Toast, WhiteSpace, List } from 'antd-mobile';
-import { hashHistory } from 'react-router';
 import Numeral from 'numeral';
 import ReactTooltip from 'react-tooltip';
+import { hashHistory } from 'react-router';
 const Item = List.Item;
 
 class RepayConfirm extends Component {
@@ -45,7 +45,21 @@ class RepayConfirm extends Component {
       this.setState({
         isLoading: false
       });
-      let msgs = error.body;
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      }, () => {
+        let path = 'repay';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      });
     }
   }
 

@@ -58,7 +58,16 @@ export default class Present extends Component {
         });
       }
     } catch (error) {
-
+      this.setState({
+        getPresent: false
+      });
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      });
     }
   }
 
