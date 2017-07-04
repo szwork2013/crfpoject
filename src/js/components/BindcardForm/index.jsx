@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router';
 import styles from './index.scss';
 
-import {Toast} from 'antd-mobile';
+import {Toast,WhiteSpace} from 'antd-mobile';
 
 import SwitchBtn from '../SwitchBtn/index.jsx';
 import Contract from '../SetContract/index.jsx';
@@ -244,6 +244,7 @@ class Form extends Component {
 
     let time=CONFIGS.bindCard.sendCount===2?2000:3000;
 
+
     if(CONFIGS.bindCard.sendCount>=10){
       this.props.setLoading(false);//隐藏loading图片
       const nextLocation = {
@@ -257,6 +258,8 @@ class Form extends Component {
       this.props.router.push(nextLocation);
       return;
     }
+
+
     try {
 
       let fetchPromise = CRFFetch.Get(reCheckFetchUrl);
@@ -378,7 +381,11 @@ class Form extends Component {
       <section className={CONFIGS.adapt?'adapt':''}>
         <FormWrap setLoading={this.props.setLoading} setUserName={userName} getFormEle={this.setFormEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)} />
 
+        <WhiteSpace className="formSpace" />
+
         <WritePhone getWritePhoneEle={this.setWritePhoneEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)} />
+
+        <WhiteSpace className="formSpace" />
 
         <SwitchBtn />
 

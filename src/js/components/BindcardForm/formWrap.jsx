@@ -255,6 +255,12 @@ class FormWrap extends React.Component {
 
     let notCardNum=true;
 
+
+    if(e.keyCode==8&&e.target.value.replace(/\s/g,'').length < 12){
+      refBankError.classList.add('n');//隐藏银行卡错误提示
+      //refSupportCard.classList.add('n');//隐藏支持银行div
+    }
+
     CONFIGS.bindCard.bankNum=refBankCard.value;
 
     if (e.keyCode != 8) {

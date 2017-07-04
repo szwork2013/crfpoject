@@ -5,7 +5,8 @@ export default class Loading extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      show: props.show
+      show: props.show,
+      maskHeight:{},
     }
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
@@ -13,6 +14,13 @@ export default class Loading extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({show: nextProps.show});
+  }
+
+  componentDidMount(){
+    let topHeight=doc.querySelector('nav').offsetHeight+doc.querySelector('.am-whitespace').offsetHeight;
+    this.setState({
+      maskHeight:{height:screen.availHeight-topHeight+'px'}
+    });
   }
 
   show() {
@@ -26,6 +34,7 @@ export default class Loading extends Component {
   render() {
     const show = this.state.show;
     let showStyle = '';
+
     if (show) {
       showStyle = styles.root;
     } else {
@@ -33,7 +42,7 @@ export default class Loading extends Component {
     }
     return (
       <div className={showStyle}>
-        <div className={styles.mask}>
+        <div className={styles.mask} style={this.state.maskHeight}>
           <div className={styles.loader}></div>
         </div>
       </div>
