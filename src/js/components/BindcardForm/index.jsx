@@ -178,9 +178,6 @@ class Form extends Component {
       result.then((data)=>{
         if (data && !data.response) {
 
-          //mock
-          data.result='SUCCESS';
-          
           switch (data.result){
             case 'ACCEPTED':
               setTimeout(()=>{
@@ -247,6 +244,19 @@ class Form extends Component {
 
     let time=CONFIGS.bindCard.sendCount===2?2000:3000;
 
+    if(CONFIGS.bindCard.sendCount>=10){
+      this.props.setLoading(false);//隐藏loading图片
+      const nextLocation = {
+        pathname:'rebindcard',
+        state:{
+          failReason:result.failReason
+        }
+      };
+      CONFIGS.isReload=true;//从失败页面返回要求清空所有数据
+      CONFIGS.bindCard.sendCount=1;
+      this.props.router.push(nextLocation);
+      return;
+    }
     try {
 
       let fetchPromise = CRFFetch.Get(reCheckFetchUrl);
@@ -254,7 +264,6 @@ class Form extends Component {
       let result = await fetchPromise;
 
       if (result && !result.response) {
-
         switch (result.result){
           case 'ACCEPTED':
           case 'UNKNOWN':
