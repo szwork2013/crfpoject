@@ -121,7 +121,7 @@ class WritePhone extends React.Component {
 
     let defaultPhoneNum=this.state.setUserTelNumber;
 
-    let lineHeight={lineHeight:'7px'};//for Coolpad htc
+    let lineHeight={lineHeight:'normal'};//for Coolpad htc gionee
 
     let phoneInput=()=>{
       if(defaultPhoneNum){
