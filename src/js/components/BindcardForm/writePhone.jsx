@@ -121,11 +121,13 @@ class WritePhone extends React.Component {
 
     let defaultPhoneNum=this.state.setUserTelNumber;
 
+    let lineHeight={lineHeight:'7px'};//for Coolpad htc
+
     let phoneInput=()=>{
       if(defaultPhoneNum){
         return <input type="button" className={styles.infoInput + ' ' + styles.userPhone} defaultValue={defaultPhoneNum} />;
       }else{
-        return <input type="tel" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号" defaultValue={CONFIGS.bindCard.phoneNum} maxLength="11" ref="refTelInput"/>;
+        return <input type="tel" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号" defaultValue={CONFIGS.bindCard.phoneNum} maxLength="11" style={lineHeight} ref="refTelInput"/>;
       }
     };
 

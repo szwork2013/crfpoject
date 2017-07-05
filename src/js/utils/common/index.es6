@@ -49,6 +49,27 @@ let Common={
     if(Common.isWeChat()){
       doc.setTitle(title);
     }
+  },
+  customPopState:function(){
+    let refUrl=CONFIGS.referrerUrl;//首页点击绑卡过来返回首页 产品页过来返回产品页面（点击确认跳转支付页面）
+
+    if(refUrl){
+      if(refUrl.indexOf('#/loan?')>-1){
+        refUrl=CONFIGS.referrerUrl.replace('#/loan?','#/recharge?');
+      }
+
+      //回退
+      window.addEventListener("popstate", function() {
+        location.href=refUrl;
+      }, false);
+
+      let state = {
+        title: "title",
+        url: ""
+      };
+      window.history.pushState(state, "title", "");
+    }
+
   }
 };
 
