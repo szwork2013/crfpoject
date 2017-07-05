@@ -7,6 +7,7 @@ import { WhiteSpace } from 'antd-mobile';
 export default class Success extends Component {
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Success']);
+
     Common.customPopState();
   }
   handleClick(){

@@ -59,7 +59,7 @@ let Common={
       }
 
       //回退
-      window.addEventListener("popstate", function() {
+      window.addEventListener("popstate",function(){
         location.href=refUrl;
       }, false);
 
@@ -70,6 +70,10 @@ let Common={
       window.history.pushState(state, "title", "");
     }
 
+  },
+  isIos:function(){
+    const u = navigator.userAgent;
+    return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
   }
 };
 
