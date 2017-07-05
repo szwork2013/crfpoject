@@ -34,6 +34,7 @@ class FormWrap extends React.Component {
     //从失败页面返回需要刷新页面
     const ln=location;
     if(CONFIGS.isReload){
+
       CONFIGS.isReload=false;
       console.log(ln.href);
       console.log(CONFIGS.referrerUrl);
@@ -58,6 +59,7 @@ class FormWrap extends React.Component {
 
     //银行卡号
     refBankCard.onkeyup=(e)=>{
+
       if(refBankCard.value.length>0){
         refBankCardClear.classList.remove('n');
       }else{
@@ -254,16 +256,32 @@ class FormWrap extends React.Component {
 
     let notCardNum=true;
 
-    if(e.keyCode==8&&e.target.value.replace(/\s/g,'').length < 12){
-      refBankError.classList.add('n');//隐藏银行卡错误提示
-      //refSupportCard.classList.add('n');//隐藏支持银行div
+    if(e.keyCode==8){
+      let targetVal=e.target.value;
+
+      if(/\s/.test(targetVal.charAt(targetVal.length-1))){
+        refBankCard.value=targetVal.substring(0,targetVal.length-1);
+      }
+
+      if(targetVal.replace(/\s/g,'').length < 12){
+        refBankError.classList.add('n');//隐藏银行卡错误提示
+        //refSupportCard.classList.add('n');//隐藏支持银行div
+      }
     }
 
     CONFIGS.bindCard.bankNum=refBankCard.value;
 
+    /*if((e.which >= 48 && e.which <= 57) ||(e.which >= 96 && e.which <= 105 )){
+      let v = e.target.value;
+      if(/\S{5}/.test(v)){
+        e.target.value = v.replace(/\s/g, '').replace(/(.{4})/g, "$1 ");
+      }
+    }*/
+
     if (e.keyCode != 8) {
 
       refBankCard.value=currentVal.replace(/(\d{4})/g, '$1 ');
+
 
       if (currentVal.length === 6) {
 
