@@ -250,7 +250,7 @@ class Form extends Component {
       const nextLocation = {
         pathname:'rebindcard',
         state:{
-          failReason:result.failReason
+          failReason:'请求超时'
         }
       };
       CONFIGS.isReload=true;//从失败页面返回要求清空所有数据

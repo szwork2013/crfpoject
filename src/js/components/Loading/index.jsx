@@ -19,7 +19,7 @@ export default class Loading extends Component {
   componentDidMount(){
     let topHeight=doc.querySelector('nav').offsetHeight+doc.querySelector('.am-whitespace').offsetHeight;
     this.setState({
-      maskHeight:{height:screen.availHeight-topHeight+'px'}
+      maskHeight:{height:doc.documentElement.clientHeight-topHeight+'px'}
     });
   }
 

@@ -31,7 +31,6 @@ class FormWrap extends React.Component {
       //console.log(val);
     });
 
-
     //从失败页面返回需要刷新页面
     const ln=location;
     if(CONFIGS.isReload){
@@ -255,7 +254,6 @@ class FormWrap extends React.Component {
 
     let notCardNum=true;
 
-
     if(e.keyCode==8&&e.target.value.replace(/\s/g,'').length < 12){
       refBankError.classList.add('n');//隐藏银行卡错误提示
       //refSupportCard.classList.add('n');//隐藏支持银行div
@@ -264,6 +262,7 @@ class FormWrap extends React.Component {
     CONFIGS.bindCard.bankNum=refBankCard.value;
 
     if (e.keyCode != 8) {
+
       refBankCard.value=currentVal.replace(/(\d{4})/g, '$1 ');
 
       if (currentVal.length === 6) {
@@ -297,6 +296,7 @@ class FormWrap extends React.Component {
       }
 
     }
+
 
     if (e.target.value.length <= 6) {
       clearTimeout(this.timer);
