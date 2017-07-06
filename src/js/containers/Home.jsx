@@ -14,7 +14,7 @@ class Home extends Component {
 
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_BindCard']);
-    //alert(Common.showTopTips&&Common.showTopTips());
+    //alert( .showTopTips&&Common.showTopTips());
   }
 
   setLoading(status){

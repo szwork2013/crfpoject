@@ -10,7 +10,13 @@ export default class Rebind extends Component {
   }
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Fail']);
-    Common.customPopState();
+    Common.customPopState(this.popUrlFn);
+  }
+  componentWillUnmount(){
+    window.removeEventListener('popstate',this.popUrlFn);
+  }
+  popUrlFn(refUrl){
+    location.href=refUrl;
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '点击重新绑定按钮']);
