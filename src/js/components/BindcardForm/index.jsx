@@ -12,6 +12,8 @@ import FormWrap from './formWrap.jsx';
 import PubSub from 'pubsub-js';
 
 
+import { hashHistory } from 'react-router';
+
 class Form extends Component {
   constructor(props, context) {
     super(props, context);
@@ -25,6 +27,10 @@ class Form extends Component {
   }
 
   componentWillMount() {
+    /*let path = 'https://www.baidu.com' ;
+console.log(path);
+    hashHistory.push(path);*/
+
     this.getUserInfo();
   }
 
