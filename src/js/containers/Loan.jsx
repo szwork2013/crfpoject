@@ -8,6 +8,7 @@ class Repay extends Component {
   constructor(props){
     super(props);
     CONFIGS.userId = this.props.location.query.ssoId;
+    CONFIGS.userId='f9c36b0f4c034c0bb723fd67019dfdd0';//test
     this.state = {
       title: '我要还款',
       data: [],
@@ -18,10 +19,11 @@ class Repay extends Component {
 
   componentDidMount() {
     _paq.push(['trackEvent', 'C_Page', 'E_P_Repay']);
-    this.getInitData();
+    this.getInitData();//获取
   }
 
   async getInitData() {
+
     let repayPath = `${CONFIGS.repayPath}?kissoId=${CONFIGS.userId}`;
 
     try {
@@ -29,6 +31,9 @@ class Repay extends Component {
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
+        console.log(result);
+        result.curr_amt=120000;
+        result.total_amt=120000;
         this.setData(result);
       }
     } catch (error) {
@@ -57,6 +62,7 @@ class Repay extends Component {
     Object.assign(CONFIGS.repayData, repayData);
     let repay = this.convertRepayData(repayData);
     Object.assign(CONFIGS.rulerData, repay);
+
     this.setState({
       isLoading: false,
       data: repay
@@ -155,7 +161,7 @@ class Repay extends Component {
     let data = {
       data: this.state.data,
       currentAmount: CONFIGS.currentAmount
-    }
+    };
 
     return (
       <div className="repay-content gray-bg">

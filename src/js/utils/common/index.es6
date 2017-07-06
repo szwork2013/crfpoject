@@ -30,7 +30,7 @@ let Common={
     switch (localHash){
       case '/':
         return false;
-      case '/recharge':
+      case '/loan':
         return true;
     }
   },
