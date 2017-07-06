@@ -79,7 +79,7 @@ export default class Rulers extends Component {
           originalPoint: ev.originalPoint,
           newPoint: ev.newPoint,
           cancelled: ev.cancelled
-        }
+        };
         this.setState({
           amount: this.state.data[ev.newPoint],
           title: CONFIGS.repayChangedTitle,
@@ -93,6 +93,7 @@ export default class Rulers extends Component {
       }
     };
 
+
     const ruler = (item, index) => {
       return (
         <div key={index} className="crf-ruler"></div>
@@ -101,6 +102,7 @@ export default class Rulers extends Component {
 
     const {title, amount, isDefault} = this.state;
     const formatAmount = Numeral(amount).format('0, 0.00');
+    console.log(this.state,'this.state');
     return (
       <section className="crf-swipes">
         <div className="crf-swipes-title">
