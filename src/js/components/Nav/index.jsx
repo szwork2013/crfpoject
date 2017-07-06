@@ -41,7 +41,7 @@ export default class Nav extends Component {
       let lnHash=location.hash;
 
       if(refUrl.indexOf('#/loan?')>-1 ){  //话费页
-        if(lnHash.indexOf('supportcard')>-1){
+        if(lnHash.indexOf('supportcard')>-1||lnHash.indexOf('contract')>-1){
           hashHistory.goBack();
           return;
         }
