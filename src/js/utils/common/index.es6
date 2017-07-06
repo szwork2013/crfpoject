@@ -51,7 +51,7 @@ let Common={
       doc.setTitle(title);
     }
   },
-  customPopState:function(){
+  customPopState:function(fn){
     let refUrl=CONFIGS.referrerUrl;//首页点击绑卡过来返回首页 产品页过来返回产品页面（点击确认跳转支付页面）
 
     if(refUrl){
@@ -60,9 +60,13 @@ let Common={
       }
 
       //回退
-      window.addEventListener("popstate",function(){
-        location.href=refUrl;
-      }, false);
+      window.addEventListener("popstate",fn.bind(this,refUrl), false);
+
+      /*
+       function(){
+       location.href=refUrl;
+       }
+      * */
 
       let state = {
         title: "title",

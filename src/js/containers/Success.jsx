@@ -8,7 +8,13 @@ export default class Success extends Component {
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Success']);
 
-    Common.customPopState();
+    Common.customPopState(this.popUrlFn);
+  }
+  componentWillUnmount(){
+    window.removeEventListener('popstate',this.popUrlFn);
+  }
+  popUrlFn(refUrl){
+    location.href=refUrl;
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Success', 'E_Success_button', '成功页面按钮']);
