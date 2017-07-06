@@ -72,7 +72,7 @@ console.log(path);
         CONFIGS.userName=result.userName;
         CONFIGS.idNo=result.idNo;
         console.log(result.randomNumber);
-        if(result.randomNumber>=50000){
+        if(result.randomNumber>=0){//50000
           userPhone=result.phone;
           CONFIGS.bindCard.phoneNumStatus=true;
         }
