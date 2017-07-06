@@ -27,6 +27,7 @@ let Common={
   showTopTips:function(){
     let referrerUrl=this.returnReferrerUrl();
     let localHash=referrerUrl.substring(referrerUrl.indexOf('consumption/#/')+13,referrerUrl.indexOf('?'));
+
     switch (localHash){
       case '/':
         return false;
