@@ -19,7 +19,7 @@ export default class Rebind extends Component {
       this.props.router.push('/');
     }else{
       let ln=location;
-      alert(ln.origin+ln.pathname+'#/');
+      
       location.href=ln.origin+ln.pathname+'#/';//自动加上了问号后面的参数
     }
 
