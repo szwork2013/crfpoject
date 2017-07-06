@@ -32,14 +32,33 @@ class FormWrap extends React.Component {
     });
 
     //从失败页面返回需要刷新页面
-    const ln=location;
+    //const ln=location;
     if(CONFIGS.isReload){
 
       CONFIGS.isReload=false;
-      console.log(ln.href);
+      CONFIGS.bindCard={
+        bankName:'',//银行卡名字
+          bankNum:'',//银行卡号码basePath
+          contractName:'',//协议名字
+          contractUrl:'',//协议地址
+          cityCode:'',//城市编号
+          areaCode:'',//区域编号
+          phoneNum:'',//手机号
+          switchStatus:true,
+          isAgree:true,
+          notSubmit:true,
+          bankCode:'',//银行代码 如：PAB
+          bankCardNumStatus:false,//判断银行卡是否正确
+          phoneNumStatus:false,//判断手机号是否正确
+          showSupportCard:false,
+          showErrorMsg:false,
+          showTelErrMsg:false,
+          sendCount:1,
+      };
+      /*console.log(ln.href);
       console.log(CONFIGS.referrerUrl);
       ln.href=ln.href+'?'+CONFIGS.referrerUrl;
-      ln.reload();
+      ln.reload();*/
     }
   }
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { hashHistory } from 'react-router';
 
 import { Nav } from 'app/components';
 import { WhiteSpace } from 'antd-mobile';
@@ -10,10 +10,16 @@ export default class Rebind extends Component {
   }
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Fail']);
-    Common.customPopState(this.popUrlFn);
+    console.log(Common.isWeChat());
+    if(Common.isWeChat()){
+      Common.customPopState(this.popUrlFn);
+      CONFIGS.bindCard.status=false;
+    }
   }
   componentWillUnmount(){
-    window.removeEventListener('popstate',this.popUrlFn);
+    if(Common.isWeChat()){
+      window.removeEventListener('popstate',this.popUrlFn);
+    }
   }
   popUrlFn(refUrl){
     location.href=refUrl;
@@ -22,7 +28,8 @@ export default class Rebind extends Component {
     _paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '点击重新绑定按钮']);
 
     //if(Common.isIos()){
-    this.props.router.push('/');
+    //this.props.router.push('/');
+    hashHistory.goBack();
     /*}else{
       let ln=location;
 
