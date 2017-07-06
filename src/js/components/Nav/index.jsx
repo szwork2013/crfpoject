@@ -36,19 +36,25 @@ export default class Nav extends Component {
       couponsContainer.classList.remove('show');
       couponsContainer.classList.add('hide');
     } else {
+      
+      let refUrl=CONFIGS.referrerUrl;
+      let lnHash=location.hash;
 
-      if(location.hash.indexOf('#/success?')>-1){
-        let refUrl=CONFIGS.referrerUrl;
-        if(refUrl.indexOf('#/loan?')>-1){
+      if(refUrl.indexOf('#/loan?')>-1 ){  //话费页
+        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/rebindcard?')>-1){
+          // /credit_loan/#/?https://m-ci.crfchina.com/consumption/#/recharge?ssoId=f9c36b0f4c034c0bb723fd67019dfdd0
           refUrl=CONFIGS.referrerUrl.replace('#/loan?','#/recharge?');
         }
         location.href=refUrl;
+      } else { //首页
+        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/rebindcard?')>-1 || lnHash.indexOf('#/success?')>-1){
+          location.href=refUrl;
+        }else{
+          hashHistory.goBack();
+        }
       }
-      if(location.hash.indexOf('#/?')>-1||location.hash.indexOf('#/rebindcard?')>-1){
-        location.href=CONFIGS.referrerUrl;
-      }else{
-        hashHistory.goBack();
-      }
+
+
     }
   }
 
