@@ -15,13 +15,13 @@ export default class Rebind extends Component {
   handleClick(){
     _paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '点击重新绑定按钮']);
 
-    if(Common.isIos()){
-      this.props.router.push('/');
-    }else{
+    //if(Common.isIos()){
+    this.props.router.push('/');
+    /*}else{
       let ln=location;
-      
+
       location.href=ln.origin+ln.pathname+'#/';//自动加上了问号后面的参数
-    }
+    }*/
 
 
   }
