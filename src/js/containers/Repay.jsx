@@ -41,14 +41,6 @@ class Repay extends Component {
             Toast.info(data.message);
           });
         }
-      }, () => {
-        let path = 'repay';
-        hashHistory.push({
-          pathname: path,
-          query: {
-            ssoId: CONFIGS.userId
-          }
-        });
       });
     }
   }
@@ -118,15 +110,15 @@ class Repay extends Component {
     Object.assign(CONFIGS.method, methodData);
     this.refs.loading.hide();
     let path = '';
-    path = 'repayconfirm';
-    hashHistory.push({
-      pathname: path,
-      query: {
-        ssoId: CONFIGS.userId,
-        realAmount: CONFIGS.realAmount,
-        type: 'r'
-      }
-    });
+      path = 'repayconfirm';
+      hashHistory.push({
+        pathname: path,
+        query: {
+          ssoId: CONFIGS.userId,
+          realAmount: CONFIGS.realAmount,
+          type: 'r'
+        }
+      });
     // if (CONFIGS.method.channelList && CONFIGS.method.channelList[0].channelInfoNoEnum === 'wechat') {
     //   path = 'channel';
     //   hashHistory.push({

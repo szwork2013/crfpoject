@@ -80,10 +80,14 @@ export default class Rulers extends Component {
           newPoint: ev.newPoint,
           cancelled: ev.cancelled
         }
+        let defaultValue = false;
+        if (this.state.data[ev.newPoint] === this.state.defaultAmount) {
+          defaultValue = true;
+        }
         this.setState({
           amount: this.state.data[ev.newPoint],
           title: CONFIGS.repayChangedTitle,
-          isDefault: false
+          isDefault: defaultValue
         });
         CONFIGS.currentAmount = this.state.data[ev.newPoint];
         let storage = window.localStorage;
