@@ -29,7 +29,13 @@ export default class Rebind extends Component {
 
     //if(Common.isIos()){
     //this.props.router.push('/');
-    hashHistory.goBack();
+    //hashHistory.goBack();
+
+    let path = '/?' + CONFIGS.referrerUrl;
+
+    hashHistory.push(path);
+
+
     /*}else{
       let ln=location;
 

@@ -24,6 +24,8 @@ export default class Nav extends Component {
   }
 
   componentDidMount() {
+    /*console.log(CONFIGS.referrerUrl,'referrer');
+    console.log(location.hash);*/
     Common.setDocTitle(this.state.title);
   }
 
@@ -34,7 +36,11 @@ export default class Nav extends Component {
       couponsContainer.classList.remove('show');
       couponsContainer.classList.add('hide');
     } else {
-      hashHistory.goBack();
+      if(location.hash.indexOf('#/?')>-1||location.hash.indexOf('#/rebindcard?')>-1||location.hash.indexOf('#/success?')>-1){
+        location.href=CONFIGS.referrerUrl;
+      }else{
+        hashHistory.goBack();
+      }
     }
   }
 
