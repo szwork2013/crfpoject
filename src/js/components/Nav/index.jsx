@@ -36,7 +36,15 @@ export default class Nav extends Component {
       couponsContainer.classList.remove('show');
       couponsContainer.classList.add('hide');
     } else {
-      if(location.hash.indexOf('#/?')>-1||location.hash.indexOf('#/rebindcard?')>-1||location.hash.indexOf('#/success?')>-1){
+
+      if(location.hash.indexOf('#/success?')>-1){
+        let refUrl=CONFIGS.referrerUrl;
+        if(refUrl.indexOf('#/loan?')>-1){
+          refUrl=CONFIGS.referrerUrl.replace('#/loan?','#/recharge?');
+        }
+        location.href=refUrl;
+      }
+      if(location.hash.indexOf('#/?')>-1||location.hash.indexOf('#/rebindcard?')>-1){
         location.href=CONFIGS.referrerUrl;
       }else{
         hashHistory.goBack();
