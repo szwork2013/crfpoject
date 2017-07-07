@@ -16,7 +16,8 @@ export default class SendSms extends Component {
       isLoading: false,
       isRender: false,
       maxLength: 6,
-      val: ''
+      val: '',
+      isLoading: false
     };
     this.sendFlag = true;
     this.getVerificationNum = this.getVerificationNum.bind(this);
@@ -29,7 +30,6 @@ export default class SendSms extends Component {
     let status = this.refs.verificationNum.classList.contains('click-disable');
     this.refs.smsText && this.refs.smsText.classList.remove(styles.error);
     if (!status) {
-      this.countDown(0);
       this.getVerification(0); //0 文本
     }
   }
@@ -38,7 +38,6 @@ export default class SendSms extends Component {
     this.refs.smsText && this.refs.smsText.classList.add('hide');
     this.refs.smsSoundTextMain && this.refs.smsSoundTextMain.classList.add('hide');
     this.refs.verificationNum && this.refs.verificationNum.classList.contains('click-disable');
-    this.countDown(1);
     this.getVerification(1); // 1 声音
   }
 
@@ -94,6 +93,7 @@ export default class SendSms extends Component {
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
+        this.countDown(code);
         this.setVerification(result, code);
       }
     } catch (error) {
@@ -188,18 +188,29 @@ export default class SendSms extends Component {
       isLoading: true
     });
     let path = `${CONFIGS.repayPath}?kissoId=${CONFIGS.userId}`;
-    let couponData = [{
-      amt_type: 1,
-      coupon_id: CONFIGS.selectCoupon.id,
-      coupon_price: CONFIGS.selectCoupon.originAmount
-    }];
-    let params = {
-      code: this.refs.smsNum.value,
-      deviceType: 'H5_24',
-      repayChannel: 'FTS',
-      repaymentAmount: CONFIGS.method.repayTotalAmt + CONFIGS.selectCoupon.offsetedCouponPrice,
-      couponList: JSON.stringify(couponData)
-    };
+    let params = null;
+    if (CONFIGS.selectCoupon) {
+      let couponData = [{
+        amt_type: 1,
+        coupon_id: CONFIGS.selectCoupon.id,
+        coupon_price: CONFIGS.selectCoupon.originAmount
+      }];
+      params = {
+        code: this.refs.smsNum.value,
+        deviceType: 'H5_24',
+        repayChannel: 'FTS',
+        repaymentAmount: CONFIGS.method.repayTotalAmt + CONFIGS.selectCoupon.offsetedCouponPrice,
+        couponList: JSON.stringify(couponData)
+      };
+    } else {
+      params = {
+        code: this.refs.smsNum.value,
+        deviceType: 'H5_24',
+        repayChannel: 'FTS',
+        repaymentAmount: CONFIGS.method.repayTotalAmt
+      };
+    }
+
     let headers = {
       'Content-Type': 'application/json'
     };

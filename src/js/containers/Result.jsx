@@ -8,6 +8,7 @@ class ResultPage extends Component {
   constructor(props, context) {
     super(props, context);
     CONFIGS.userId = this.props.location.query.ssoId;
+    this.timer = null;
     this.state = {
       status: 0,
       contractNo: this.props.location.query.contractNo,
@@ -22,6 +23,9 @@ class ResultPage extends Component {
   componentDidMount() {
     //_paq.push(['trackEvent', 'P_ConsumptionRecord', '借款记录']);
     this.getInitData();
+    this.timer = setInterval(() => {
+      this.getInitData();
+    }, 10000);
   }
 
   async getInitData() {
@@ -62,8 +66,12 @@ class ResultPage extends Component {
     this.setState({dataList: result});
     if (result[result.length - 1].process_status === 's') {
       this.setState({status: 2});
+      clearInterval(this.timer);
+      _paq.push(['trackEvent', 'C_RepayResult', 'E_P_Repay_Successed', '还款成功']);
     } else if(result[result.length - 1].process_status === 'f' || result[result.length - 1].process_status === 'p' || result[result.length - 1].process_status === 'n') {
       this.setState({status: 1});
+      clearInterval(this.timer);
+      _paq.push(['trackEvent', 'C_RepayResult', 'E_SubmitRepay_Failed', '还款失败']);
     }
   }
 
