@@ -10,6 +10,8 @@ export default class Success extends Component {
   }
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Contract']);
+
+    doc.body.scrollTop=0;//屏幕下拉后点击跳转页面顶部也跟着下拉
   }
   render() {
     let props={ title:'合同' };

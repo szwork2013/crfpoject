@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { hashHistory } from 'react-router';
 
 import { Nav } from 'app/components';
 import { WhiteSpace } from 'antd-mobile';
@@ -10,10 +10,39 @@ export default class Rebind extends Component {
   }
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Fail']);
+    console.log(Common.isWeChat());
+    if(Common.isWeChat()){
+      Common.customPopState(this.popUrlFn);
+      CONFIGS.bindCard.status=false;
+    }
+  }
+  componentWillUnmount(){
+    if(Common.isWeChat()){
+      window.removeEventListener('popstate',this.popUrlFn);
+    }
+  }
+  popUrlFn(refUrl){
+    location.href=refUrl;
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '点击重新绑定按钮']);
-    this.props.router.push('/');
+
+    //if(Common.isIos()){
+    //this.props.router.push('/');
+    //hashHistory.goBack();
+
+    let path = '/?' + CONFIGS.referrerUrl;
+
+    hashHistory.push(path);
+
+
+    /*}else{
+      let ln=location;
+
+      location.href=ln.origin+ln.pathname+'#/';//自动加上了问号后面的参数
+    }*/
+
+
   }
   render() {
     let props={ title:'绑卡结果'};

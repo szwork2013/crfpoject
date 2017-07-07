@@ -24,6 +24,8 @@ export default class Nav extends Component {
   }
 
   componentDidMount() {
+    /*console.log(CONFIGS.referrerUrl,'referrer');
+    console.log(location.hash);*/
     Common.setDocTitle(this.state.title);
   }
 
@@ -34,7 +36,29 @@ export default class Nav extends Component {
       couponsContainer.classList.remove('show');
       couponsContainer.classList.add('hide');
     } else {
-      hashHistory.goBack();
+
+      let refUrl=CONFIGS.referrerUrl;
+      let lnHash=location.hash;
+
+      if(refUrl.indexOf('#/loan?')>-1 ){  //话费页
+        if(lnHash.indexOf('supportcard')>-1||lnHash.indexOf('contract')>-1){
+          hashHistory.goBack();
+          return;
+        }
+        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/rebindcard?')>-1){
+          // /credit_loan/#/?https://m-ci.crfchina.com/consumption/#/recharge?ssoId=f9c36b0f4c034c0bb723fd67019dfdd0
+          refUrl=CONFIGS.referrerUrl.replace('#/loan?','#/recharge?');
+        }
+        location.href=refUrl;
+      } else { //首页
+        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/rebindcard?')>-1 || lnHash.indexOf('#/success?')>-1){
+          location.href=refUrl;
+        }else{
+          hashHistory.goBack();
+        }
+      }
+
+
     }
   }
 

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import styles from './index.scss';
 import {withRouter } from 'react-router';
 
-import CityWrapper from '../selectCity/index.jsx';
+import CityWrapper from '../SelectCity/index.jsx';
 
 import {Toast} from 'antd-mobile';
 
@@ -31,13 +31,34 @@ class FormWrap extends React.Component {
       //console.log(val);
     });
 
-
     //从失败页面返回需要刷新页面
-    const ln=location;
+    //const ln=location;
     if(CONFIGS.isReload){
+
       CONFIGS.isReload=false;
+      CONFIGS.bindCard={
+        bankName:'',//银行卡名字
+          bankNum:'',//银行卡号码basePath
+          contractName:'',//协议名字
+          contractUrl:'',//协议地址
+          cityCode:'',//城市编号
+          areaCode:'',//区域编号
+          phoneNum:'',//手机号
+          switchStatus:true,
+          isAgree:true,
+          notSubmit:true,
+          bankCode:'',//银行代码 如：PAB
+          bankCardNumStatus:false,//判断银行卡是否正确
+          phoneNumStatus:false,//判断手机号是否正确
+          showSupportCard:false,
+          showErrorMsg:false,
+          showTelErrMsg:false,
+          sendCount:1,
+      };
+      /*console.log(ln.href);
+      console.log(CONFIGS.referrerUrl);
       ln.href=ln.href+'?'+CONFIGS.referrerUrl;
-      ln.reload();
+      ln.reload();*/
     }
   }
 
@@ -57,6 +78,7 @@ class FormWrap extends React.Component {
 
     //银行卡号
     refBankCard.onkeyup=(e)=>{
+
       if(refBankCard.value.length>0){
         refBankCardClear.classList.remove('n');
       }else{
@@ -73,14 +95,12 @@ class FormWrap extends React.Component {
 
     refBankCard.onblur=(e)=>{
       setTimeout(()=>{//解决与click冲突问题
-        console.log(new Date().getTime()+'--blur');
         refBankCardClear.classList.add('n');
         this.bankNumBlur(e);
       },100);
     };
 
     refBankCardClear.onclick=()=>{
-      console.log(new Date().getTime()+'--click');
       refBankCard.value='';
       refBankCardClear.classList.add('n');
 
@@ -94,6 +114,9 @@ class FormWrap extends React.Component {
       CONFIGS.bindCard.showSupportCard=false;//记录是否显示支持卡号
 
       CONFIGS.bindCard.bankNum='';//清空银行卡
+
+      CONFIGS.bindCard.bankCardNumStatus=false;
+      this.props.removeDisabled();
     };
   }
 
@@ -252,10 +275,32 @@ class FormWrap extends React.Component {
 
     let notCardNum=true;
 
+    if(e.keyCode==8){
+      let targetVal=e.target.value;
+
+      if(/\s/.test(targetVal.charAt(targetVal.length-1))){
+        refBankCard.value=targetVal.substring(0,targetVal.length-1);
+      }
+
+      if(targetVal.replace(/\s/g,'').length < 12){
+        refBankError.classList.add('n');//隐藏银行卡错误提示
+        //refSupportCard.classList.add('n');//隐藏支持银行div
+      }
+    }
+
     CONFIGS.bindCard.bankNum=refBankCard.value;
 
+    /*if((e.which >= 48 && e.which <= 57) ||(e.which >= 96 && e.which <= 105 )){
+      let v = e.target.value;
+      if(/\S{5}/.test(v)){
+        e.target.value = v.replace(/\s/g, '').replace(/(.{4})/g, "$1 ");
+      }
+    }*/
+
     if (e.keyCode != 8) {
+
       refBankCard.value=currentVal.replace(/(\d{4})/g, '$1 ');
+
 
       if (currentVal.length === 6) {
 
@@ -288,6 +333,7 @@ class FormWrap extends React.Component {
       }
 
     }
+
 
     if (e.target.value.length <= 6) {
       clearTimeout(this.timer);

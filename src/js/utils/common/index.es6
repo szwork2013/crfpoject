@@ -27,10 +27,11 @@ let Common={
   showTopTips:function(){
     let referrerUrl=this.returnReferrerUrl();
     let localHash=referrerUrl.substring(referrerUrl.indexOf('consumption/#/')+13,referrerUrl.indexOf('?'));
+
     switch (localHash){
       case '/':
         return false;
-      case '/recharge':
+      case '/loan':
         return true;
     }
   },
@@ -49,6 +50,35 @@ let Common={
     if(Common.isWeChat()){
       doc.setTitle(title);
     }
+  },
+  customPopState:function(fn){
+    let refUrl=CONFIGS.referrerUrl;//首页点击绑卡过来返回首页 产品页过来返回产品页面（点击确认跳转支付页面）
+
+    if(refUrl){
+      if(refUrl.indexOf('#/loan?')>-1){
+        refUrl=CONFIGS.referrerUrl.replace('#/loan?','#/recharge?');
+      }
+
+      //回退
+      window.addEventListener("popstate",fn.bind(this,refUrl), false);
+
+      /*
+       function(){
+       location.href=refUrl;
+       }
+      * */
+
+      let state = {
+        title: "title",
+        url: ""
+      };
+      window.history.pushState(state, "title", "");
+    }
+
+  },
+  isIos:function(){
+    const u = navigator.userAgent;
+    return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
   }
 };
 

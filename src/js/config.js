@@ -35,6 +35,7 @@ module.exports = {
     showSupportCard:false,
     showErrorMsg:false,
     showTelErrMsg:false,
+    sendCount:1,
   },
   sendSmsType: null,
   type: {
@@ -55,7 +56,7 @@ module.exports = {
     s: '借款',
     r: '还款'
   },
-  userWritePhoneRegx:/^1([358]\d|7[^017])\d{8}$/,
+  userWritePhoneRegx:/^1\d{10}$/,// /^1([358]\d|7[^017])\d{8}$/
   userWriteThreeDigits:/^1([358]\d|7[^017])/,
   chineseCharRegx:/[\u0391-\uFFE5]+/,
   chinaMobileRegx: /^1(3[4-9]|5[012789]|8[23478]|4[7]|7[8])\d{8}$/, //中国移动

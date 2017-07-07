@@ -13,6 +13,9 @@ export { default as SupportCard } from './SupportCard.jsx';
 //Repay
 export { default as Repay } from './Repay.jsx';
 
+//Loan
+export { default as Loan } from './Loan.jsx';
+
 //Contract
 export { default as Contract } from './Contract.jsx';
 

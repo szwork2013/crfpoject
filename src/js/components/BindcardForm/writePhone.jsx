@@ -69,6 +69,8 @@ class WritePhone extends React.Component {
 
       this.refs.refTelErrorMsg.classList.add('n');//隐藏手机号错误提示
       CONFIGS.bindCard.showTelErrMsg=false;
+      CONFIGS.bindCard.phoneNumStatus=false;
+      this.props.removeDisabled();
     });
   }
 
@@ -78,7 +80,7 @@ class WritePhone extends React.Component {
     let currentVal=e.target.value;
     CONFIGS.bindCard.phoneNum=currentVal;
 
-    if( (currentVal.length===1&&currentVal!=='1') || (currentVal.length===2&&!/^1[3578]/.test(currentVal)) || (currentVal.length===3&&!CONFIGS.userWriteThreeDigits.test(currentVal)) ){
+    if( currentVal.length===1&&currentVal!=='1' ){
       refTelErrorMsg.classList.remove('n');//显示手机号错误提示
       CONFIGS.bindCard.showTelErrMsg=true;
       return;
@@ -119,18 +121,19 @@ class WritePhone extends React.Component {
 
     let defaultPhoneNum=this.state.setUserTelNumber;
 
+    let lineHeight={lineHeight:'normal'};//for Coolpad htc gionee
+
     let phoneInput=()=>{
       if(defaultPhoneNum){
-        return <input type="button" className={styles.infoInput + ' ' + styles.userPhone} value={defaultPhoneNum} />;
+        return <input type="button" className={styles.infoInput + ' ' + styles.userPhone} defaultValue={defaultPhoneNum} />;
       }else{
-        return <input type="tel" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号"
-                      /*onInput={this.telRegex.bind(this)} onBlur={this.telBlur.bind(this)}*/ defaultValue={CONFIGS.bindCard.phoneNum} maxLength="11" ref="refTelInput"/>;
+        return <input type="tel" className={styles.infoInput + ' ' + styles.userPhone} placeholder="请输入该银行卡预留的手机号" defaultValue={CONFIGS.bindCard.phoneNum} maxLength="11" style={lineHeight} ref="refTelInput"/>;
       }
     };
 
     let clearBtn=()=>{
       if(defaultPhoneNum){
-        return "";
+        return <div></div>;
       }else{
         return <div className="telInput clearVal n" ref="refPhoneClear"><div className="clearInput"><span className="closeBtn">x</span></div></div>;
       }

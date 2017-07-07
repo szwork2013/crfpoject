@@ -11,12 +11,10 @@
 
 .mask {
   position: fixed;
-  /*top: 0;*/
   right: 0;
   left: 0;
   bottom: 0;
   background-color: rgba(255,255,255,0.2);
-  height: calc(100vh - 0.92rem);
   z-index: 999;
 }
 

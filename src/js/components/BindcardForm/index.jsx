@@ -2,15 +2,17 @@ import React, {Component} from 'react';
 import {withRouter} from 'react-router';
 import styles from './index.scss';
 
-import {Toast} from 'antd-mobile';
+import {Toast,WhiteSpace} from 'antd-mobile';
 
-import SwitchBtn from '../switchBtn/index.jsx';
-import Contract from '../setContract/index.jsx';
+import SwitchBtn from '../SwitchBtn/index.jsx';
+import Contract from '../SetContract/index.jsx';
 import WritePhone from './writePhone.jsx';
 import FormWrap from './formWrap.jsx';
 
 import PubSub from 'pubsub-js';
 
+
+import { hashHistory } from 'react-router';
 
 class Form extends Component {
   constructor(props, context) {
@@ -25,6 +27,10 @@ class Form extends Component {
   }
 
   componentWillMount() {
+    /*let path = 'https://www.baidu.com' ;
+console.log(path);
+    hashHistory.push(path);*/
+
     this.getUserInfo();
   }
 
@@ -34,9 +40,8 @@ class Form extends Component {
   }
 
   componentDidMount() {
-    _paq.push(['trackEvent', 'C_Page', 'E_P_BindCard']);
 
-      //绑定事件
+    //绑定事件
     this.bindEvent();
 
     //开户所在地
@@ -51,7 +56,7 @@ class Form extends Component {
   }
 
   async getUserInfo(){
-    let getContractUrl=CONFIGS.basePath+'api/user?kissoId='+CONFIGS.ssoId;
+    let getContractUrl=CONFIGS.basePath+'user?kissoId='+CONFIGS.ssoId;
     let userPhone='';
 
     //显示loading图片
@@ -67,8 +72,9 @@ class Form extends Component {
         CONFIGS.userName=result.userName;
         CONFIGS.idNo=result.idNo;
         console.log(result.randomNumber);
-        if(result.randomNumber>=50000){
+        if(result.randomNumber>=0){//50000
           userPhone=result.phone;
+          CONFIGS.bindCard.phoneNumStatus=true;
         }
 
         //发布
@@ -177,11 +183,12 @@ class Form extends Component {
       //没有.json
       result.then((data)=>{
         if (data && !data.response) {
+
           switch (data.result){
             case 'ACCEPTED':
               setTimeout(()=>{
                 this.reSendBindCardFetch(word32);
-              },500);
+              },1000);
               break;
             case 'SUCCESS':
               this.props.setLoading(false);//隐藏loading图片
@@ -237,8 +244,27 @@ class Form extends Component {
   }
 
   async reSendBindCardFetch(word32){
+    CONFIGS.bindCard.sendCount++;
 
     let reCheckFetchUrl=CONFIGS.basePath+'fts/borrower_open_account?kissoId='+CONFIGS.ssoId+'&requestRefNo='+word32;
+
+    let time=CONFIGS.bindCard.sendCount===2?2000:3000;
+
+
+    if(CONFIGS.bindCard.sendCount>=10){
+      this.props.setLoading(false);//隐藏loading图片
+      const nextLocation = {
+        pathname:'rebindcard',
+        state:{
+          failReason:'请求超时'
+        }
+      };
+      CONFIGS.isReload=true;//从失败页面返回要求清空所有数据
+      CONFIGS.bindCard.sendCount=1;
+      this.props.router.push(nextLocation);
+      return;
+    }
+
 
     try {
 
@@ -247,13 +273,12 @@ class Form extends Component {
       let result = await fetchPromise;
 
       if (result && !result.response) {
-
         switch (result.result){
           case 'ACCEPTED':
           case 'UNKNOWN':
             setTimeout(()=>{
               this.reSendBindCardFetch(word32);
-            },1000);
+            },time);
             break;
           case 'SUCCESS':
             this.props.setLoading(false);//隐藏loading图片
@@ -355,13 +380,18 @@ class Form extends Component {
   }
 
   render() {
+
     let userName = this.state.userName;
     console.log('userName  '+this.state.userName);
     return (
       <section className={CONFIGS.adapt?'adapt':''}>
         <FormWrap setLoading={this.props.setLoading} setUserName={userName} getFormEle={this.setFormEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)} />
 
+        <WhiteSpace className="formSpace" />
+
         <WritePhone getWritePhoneEle={this.setWritePhoneEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)} />
+
+        <WhiteSpace className="formSpace" />
 
         <SwitchBtn />
 

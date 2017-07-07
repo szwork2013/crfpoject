@@ -15,6 +15,9 @@ body{
   height:100%;
   background-color:#EFEFF4;
   /*font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","\5FAE\8F6F\96C5\9ED1",Arial,sans-serif;*/
+  article{
+    background-color: #EFEFF4;
+  }
 }
 
 .color-FA4548{
@@ -57,55 +60,63 @@ body{
   left:.3rem;
   width:.8rem;
   height:.8rem;
-  background: url(../images/result_bank.png) no-repeat .08rem .08rem;
-  background-size: 86%;
+  background: url(../images/result_bank.png) no-repeat .06rem -.1rem;
+  background-size: 90%;
 }
+
 .CEB span{
-  background-position: .08rem -8rem;
+  /*background-position:.06rem -11.35rem;*/
+  background-position: .0rem -12.65rem;
+  background-size: 100%;
 }
 .GDB span{
-  background-position: .08rem -5.05rem;
+  background-position:.06rem -7.2rem;
 }
 .ABC span{
-  background-position: .08rem -3.65rem;
+  background-position: .06rem -5.2rem;
 }
 .PAB span{
-  background-position: .02rem -6.5rem;
-  background-size: 97%;
+  /*background-position: .04rem -8.85rem;
+  background-size: 96%;*/
+  background-position: .0rem -9.2rem;
+  background-size: 100%;
 }
 .CIB span{
-  background-position: .06rem -4.8rem;
-  background-size: 94%;
+  background-position:.035rem -6.65rem;
+  background-size: 96%;
 }
 .PSBC span{
-  background-position: .08rem -3.2rem;
-  background-size: 94%;
+  background-position: .06rem -4.16rem;
 }
 .CMB span{
-  background-position: .06rem -0.75rem;
-  background-size: 92%;
+  background-position: .06rem -1.1rem;
 }
 .BOC span{
-  background-position: .06rem -2.3rem;
-  background-size: 90%;
+  background-position: .06rem -3.11rem;
 }
 .CITIC span{
-  background-position: .06rem -6.75rem;
-  background-size: 90%;
+  /*background-position: .06rem -9.3rem;*/
+  background: url(../images/CITIC.png) no-repeat;
+  background-size: 100%;
 }
 .CCB span{
-  background-position: .06rem -1.54rem;
-  background-size: 90%;
+  background-position: .06rem -2.15rem;
 }
 .HXB span{
-  background-position: .06rem -7.9rem;
-  background-size: 94%;
+  /*background-position:.06rem -10.35rem;*/
+  background: url(../images/HXB.png) no-repeat;
+  background-size: 100%;
+
 }
 .CMBC span{
-  background-position: .08rem -8.72rem;
+  /*background-position: .06rem -12.4rem;*/
+  background: url(../images/CMBC.png) no-repeat;
+  background-size: 100%;
 }
 .BCM span{
-  background-position: .08rem -9.5rem;
+  /*background-position: .08rem -13.4rem;*/
+  background: url(../images/BCM.png) no-repeat;
+  background-size: 100%;
 }
 
 .check-bank-card{
@@ -216,7 +227,7 @@ body{
 
 /*rebindcard*/
 .bind-card-status{
-  padding: 1rem 2rem;
+  padding: 1rem .2rem;
   .fail{
     background: url(../images/error.png) no-repeat;
   }
@@ -329,6 +340,10 @@ body{
 
 }
 
+/*空白高度*/
+.bind-card-wrap .formSpace{
+  height:.3rem;
+}
 
 /*小屏幕*/
 .adapt > div{
@@ -407,10 +422,10 @@ body{
   position: relative;
   .agree{
     position: absolute;
-    top:.02rem;
+    top:0;
     left:0;
-    width:.28rem;
-    height:.28rem;
+    width:.3rem;
+    height:.3rem;
     background: url(../images/correct.png) no-repeat;
     background-size:100%;
     font-size: 0;
