@@ -36,6 +36,8 @@ export default class Rulers extends Component {
     let storage = window.localStorage;
     storage.setItem('currentAmount', CONFIGS.currentAmount);
     CONFIGS.realAmount = CONFIGS.currentAmount;
+
+    console.log(totalWidth,currentPoint,rulerContainer,offsetWidth);
     if (rulerContainer) {
       rulerContainer.style.width = totalWidth + 'px';
       rulerContainer.style.marginLeft = offsetWidth + 'px';
@@ -102,6 +104,7 @@ export default class Rulers extends Component {
 
     const {title, amount, isDefault} = this.state;
     const formatAmount = Numeral(amount).format('0, 0.00');
+
     console.log(this.state,'this.state');
     return (
       <section className="crf-swipes">

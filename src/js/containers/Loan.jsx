@@ -24,6 +24,15 @@ class Repay extends Component {
 
   async getInitData() {
 
+    //mock
+    let arr=[];
+    for(let i=1;i<=12;i++){
+      arr.push(i*100);
+    }
+    console.log(arr);
+    this.setData(arr);
+
+    return;
     let repayPath = `${CONFIGS.repayPath}?kissoId=${CONFIGS.userId}`;
 
     try {
@@ -32,8 +41,11 @@ class Repay extends Component {
       let result = await fetchPromise;
       if (result && !result.response) {
         console.log(result);
+
+        //mock
         result.curr_amt=120000;
         result.total_amt=120000;
+
         this.setData(result);
       }
     } catch (error) {
@@ -73,6 +85,9 @@ class Repay extends Component {
     let currentAmount = repayData.curr_amt;
     let totalAmount = repayData.total_amt;
     CONFIGS.currentAmount = Numeral(currentAmount).divide(100).value();
+
+    //mock
+    CONFIGS.currentAmount=1200;
 
     let leftData = [], rightData = [];
     // 构造大于currentAmount的数组
@@ -158,11 +173,18 @@ class Repay extends Component {
   render() {
     let props = { title: this.state.title};
     let {isLoading, couponsData} = this.state;
+
+    //mock
+    let arr=[];
+    for(let i=1;i<=12;i++){
+      arr.push(i*100);
+    }
+
     let data = {
-      data: this.state.data,
+      data:arr,//mock this.state.data
       currentAmount: CONFIGS.currentAmount
     };
-
+    console.log(data,'data');
     return (
       <div className="repay-content gray-bg">
         <Nav data={props} />

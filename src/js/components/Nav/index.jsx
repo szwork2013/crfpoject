@@ -42,6 +42,10 @@ export default class Nav extends Component {
 
       if(refUrl.indexOf('#/loan?')>-1 ){  //话费页
         if(lnHash.indexOf('supportcard')>-1||lnHash.indexOf('contract')>-1){
+
+          /*let path = '/?' + CONFIGS.referrerUrl;
+
+          hashHistory.push(path);*/
           hashHistory.goBack();
           return;
         }
