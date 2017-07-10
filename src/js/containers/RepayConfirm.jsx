@@ -107,7 +107,7 @@ class RepayConfirm extends Component {
           <Item extra={totalAmount()}>还款金额</Item>
         </List>
         <WhiteSpace />
-        <SendSms />
+        <SendSms show={isLoading}/>
         <ReactTooltip id='description' place="bottom" className="crf-tooltips" effect='solid'>
           <span>{details}</span>
         </ReactTooltip>
