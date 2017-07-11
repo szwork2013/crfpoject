@@ -7,29 +7,32 @@ class Contract extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      contractData:[
-        {contractName:'网络交易资金账号三方协议',contractUrl:location.origin+'contract/tripartite_agreement.html'},
-        {contractName:'第三方协议',contractUrl:location.origin+'contract/userLicense_agreement.html'}
-      ],
+      contractData:this.contractList(props),
     };
   }
 
   componentWillMount() {
-    this.getContractFetch();
+    console.log(this.props.location);
+    if(this.props.location.pathname==='/'){
+      this.getContractFetch();
+    }
+
   }
 
   componentDidMount() {
 
-    //勾选协议
-    const refAgree=this.refs.refAgree;
-    refAgree.onclick=()=>{
-      refAgree.classList.toggle('un-agree');
-      CONFIGS.bindCard.isAgree=!CONFIGS.bindCard.isAgree;
-      this.props.removeDisabled();
-    };
+    if(this.props.location.pathname==='/'){
+      //勾选协议
+      const refAgree=this.refs.refAgree;
+      refAgree.onclick=()=>{
+        refAgree.classList.toggle('un-agree');
+        CONFIGS.bindCard.isAgree=!CONFIGS.bindCard.isAgree;
+        this.props.removeDisabled();
+      };
 
-    //向父组件传递
-    this.props.getContractEle(this.refs.refAgree);
+      //向父组件传递
+      this.props.getContractEle(this.refs.refAgree);
+    }
 
   }
 
@@ -67,13 +70,33 @@ class Contract extends React.Component {
     }
   }
 
+  contractList(props){
+    let contractList=[];
+    if(props.location.pathname==='/'){
+      contractList=[
+        {contractName:'网络交易资金账号三方协议',contractUrl:location.origin+'contract/tripartite_agreement.html'},
+        {contractName:'第三方协议',contractUrl:location.origin+'contract/userLicense_agreement.html'}
+      ]
+    }
+    return contractList;
+  }
+
   handleContractClick(item){
-    CONFIGS.bindCard.contractName=item.contractName;
-    CONFIGS.bindCard.contractUrl=item.contractUrl;
 
-    _paq.push(['trackEvent', 'C_BindCard', 'E_BindCard_contract', item.contractName]);
+    if(this.props.location.pathname === '/') {
+      CONFIGS.bindCard.contractName = item.contractName;
+      CONFIGS.bindCard.contractUrl = item.contractUrl;
+      CONFIGS.currentPath = '/';
 
-    this.props.router.push('contract');
+      _paq.push(['trackEvent', 'C_BindCard', 'E_BindCard_contract', item.contractName]);
+
+      this.props.router.push('contract');
+    }
+
+    if(this.props.location.pathname === '/loanconfirm'){
+      CONFIGS.currentPath = '/loanconfirm';
+      console.log('loanconfirm');
+    }
   }
 
   render() {

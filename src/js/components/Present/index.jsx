@@ -45,6 +45,7 @@ export default class Present extends Component {
   async getCoupons(amount) {
     let currentAmount = Numeral(amount).multiply(100).value();
     let couponsPath = `${CONFIGS.repayPath}/coupon?kissoId=${CONFIGS.userId}&repaymentMoney=${currentAmount}&isOverdue=${CONFIGS.repayData.overdue_flag}&loanDate=${CONFIGS.repayData.min_normal_loan_time}`;
+    console.log(couponsPath,'couponsPath');
     this.setState({
       getPresent: true
     });

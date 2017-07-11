@@ -18,6 +18,7 @@ module.exports = {
   adapt:adapt,
   showTopTips:showTopTips,
   isReload:false,
+  currentPath:'',
   bindCard:{
     bankName:'',//银行卡名字
     bankNum:'',//银行卡号码basePath

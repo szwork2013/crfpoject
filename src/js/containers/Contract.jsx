@@ -14,17 +14,26 @@ export default class Success extends Component {
     doc.body.scrollTop=0;//屏幕下拉后点击跳转页面顶部也跟着下拉
   }
   render() {
+    console.log(this.props);
     let props={ title:'合同' };
     let frameStyle={
       width:'100%',
       height:'100%',
       backgroundColor:'#fff'
     };
+
+    let url;
+    if(CONFIGS.currentPath === '/'){
+      url=CONFIGS.bindCard.contractUrl;
+    }else if(CONFIGS.currentPath === '/loanconfirm'){
+      url='';
+    }
+
     return (
       <div className="bind-card-main sub-page-wrap">
         <Nav data={props} />
         <WhiteSpace />
-        <iframe src={CONFIGS.bindCard.contractUrl} style={frameStyle}></iframe>
+        <iframe src={url} style={frameStyle}></iframe>
       </div>
     )
   }

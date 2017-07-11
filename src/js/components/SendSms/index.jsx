@@ -13,7 +13,7 @@ export default class SendSms extends Component {
       count: 0,
       timer: null,
       checkStatus: true,
-      isLoading: false,
+      //isLoading: false,
       isRender: false,
       maxLength: 6,
       val: '',

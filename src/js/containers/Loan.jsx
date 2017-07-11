@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Nav, Rulers, Present, Coupons, Loading } from 'app/components';
+import { Nav, RulersLoan, RulersDay, Present, Coupons, Loading } from 'app/components';
 import { Toast, WhiteSpace } from 'antd-mobile';
 import { hashHistory } from 'react-router';
 import Numeral from 'numeral';
@@ -8,9 +8,8 @@ class Repay extends Component {
   constructor(props){
     super(props);
     CONFIGS.userId = this.props.location.query.ssoId;
-    CONFIGS.userId='f9c36b0f4c034c0bb723fd67019dfdd0';//test
     this.state = {
-      title: '我要还款',
+      title: '借款申请',
       data: [],
       couponsData: [],
       isLoading: true
@@ -175,21 +174,54 @@ class Repay extends Component {
     let {isLoading, couponsData} = this.state;
 
     //mock
+    let maxAmount=13;
     let arr=[];
-    for(let i=1;i<=12;i++){
+    for(let i=1;i<=maxAmount;i++){
       arr.push(i*100);
+    }
+
+    let curAmount=0;
+    if(maxAmount<=12){
+      curAmount=maxAmount;
+    }else{
+      curAmount=Math.ceil(maxAmount/2);
     }
 
     let data = {
       data:arr,//mock this.state.data
-      currentAmount: CONFIGS.currentAmount
+      currentAmount: curAmount*100
     };
     console.log(data,'data');
+
+
+    //mock
+    let arr2=[];
+    let maxDay=30;
+
+    if(maxAmount<=5){
+      maxDay=14;
+    }else if(maxAmount<=15){
+      maxDay=30;
+    }else if(maxAmount<=25){
+      maxDay=60;
+    }else{
+      maxDay=90;
+    }
+
+    for(let i=1;i<=maxDay;i++){
+      arr2.push(i);
+    }
+
+    let data2 = {
+      data:arr2,
+      currentDay:maxDay,
+    };
     return (
       <div className="repay-content gray-bg">
         <Nav data={props} />
         <WhiteSpace />
-        <Rulers list={data} />
+        <RulersLoan list={data} />
+        <RulersDay list={data2} />
         <WhiteSpace />
         <Present list={couponsData} />
         <Coupons />

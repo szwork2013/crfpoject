@@ -64,6 +64,7 @@ export default class Coupons extends Component {
   async getFee(index) {
     let currentAmount = Numeral(CONFIGS.currentAmount).multiply(100).value();
     let path = `${CONFIGS.repayPath}/coupon?kissoId=${CONFIGS.userId}&repaymentAmount=${currentAmount}`;
+
     let paramData = this.state.dataSource.getRowData(index,0);
     CONFIGS.selectCoupon = paramData;
     let params = {

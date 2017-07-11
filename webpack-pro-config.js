@@ -31,8 +31,8 @@ module.exports = {
       'react',
       'react-dom',
       'react-router',
-      'react-redux',
-      'redux'
+      /*'react-redux',
+      'redux'*/
     ],
     app: 'index.js',
   },

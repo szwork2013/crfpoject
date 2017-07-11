@@ -22,6 +22,9 @@ export { default as Contract } from './Contract.jsx';
 //RepayConfirm
 export { default as RepayConfirm } from './RepayConfirm.jsx';
 
+//LoanConfirm
+export { default as LoanConfirm } from './LoanConfirm.jsx';
+
 //Result
 export { default as Result } from './Result.jsx';
 

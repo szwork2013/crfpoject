@@ -10,6 +10,7 @@ import {
   Repay,
   Loan,
   Contract,
+  LoanConfirm,
   RepayConfirm,
   Result,
   Channel,
@@ -24,6 +25,7 @@ export default (
     <Route path="supportcard" component={SupportCard} />
     <Route path="repay" component={Repay} />
     <Route path="loan" component={Loan} />
+    <Route path="loanconfirm" component={LoanConfirm} />
     <Route path="repayconfirm" component={RepayConfirm} />
     <Route path="result" component={Result} />
     <Route path="channel" component={Channel} />

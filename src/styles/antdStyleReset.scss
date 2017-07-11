@@ -1,8 +1,10 @@
 .am-list-item {
-  padding-left:.3rem;
+  /*padding-left:.3rem;*/
+  padding-left: 0;
   min-height: .9rem;
   .am-list-line {
     padding-right: .3rem;
+    padding-left: .3rem;
     min-height: 1rem;
     .am-list-content {
       font-size: .34rem;
