@@ -38,11 +38,6 @@ class Bill extends Component {
     let {type} = this.state,
         billListByLoan = null,
         billListByRepay = null;
-    if (type === 'loan') {
-      billListByLoan = <BillList type="loan" />;
-    } else {
-      billListByRepay = <BillList type="repay" />;
-    }
     return (
       <section>
         <Loading />
@@ -51,12 +46,12 @@ class Bill extends Component {
         <Tabs defaultActiveKey="2" animated={false} onChange={this.callback} onTabClick={this.handleTabClick}>
           <TabPane tab="借款" key="1">
             <WhiteSpace />
-            <BillNotice />
-            {billListByLoan}
+            <BillNotice type={type} />
+            <BillList type={type} />
           </TabPane>
           <TabPane tab="还款" key="2">
             <WhiteSpace />
-            {billListByRepay}
+            <BillList type={type} />
           </TabPane>
         </Tabs>
       </section>

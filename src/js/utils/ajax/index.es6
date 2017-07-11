@@ -118,10 +118,10 @@ const FetchInterface = {
         case 500:
         case 502:
         case 504:
-          Toast.info('哎呀，服务器开小差了，请稍后再试吧!');
+          Toast.info('哎呀，服务器开小差了，请稍后再试吧!', 9999999);
           break;
         default:
-          msg&&msg.then(data=>{
+          msg && msg.then(data => {
             Toast.info(data.message);
           });
     }

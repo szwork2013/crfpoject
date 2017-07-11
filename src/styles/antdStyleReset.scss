@@ -130,7 +130,9 @@
 }
 
 .am-modal-header {
-  padding: 0.12rem 0.3rem 0.12rem;
+  position: relative;
+  padding: .12rem .3rem .12rem;
+  z-index: 1;
 }
 
 .am-modal.am-modal-transparent .am-modal-content {
@@ -155,13 +157,15 @@
 
 .am-modal-close {
   right: 10px;
-  width: 13px;
-  height: 13px;
+  width: 16px;
+  height: 16px;
+  z-index: 2;
 }
 
 .am-modal-close-x {
-  width: 13px;
-  height: 13px;
+  display: block;
+  width: 16px;
+  height: 16px;
 }
 
 /*toast*/
@@ -171,6 +175,12 @@
 
 .am-toast-notice-content .am-toast-text {
   padding: .18rem .3rem;
+}
+
+.am-toast-notice {
+  position: absolute;
+  vertical-align: inherit;
+  bottom: 15%;
 }
 
 

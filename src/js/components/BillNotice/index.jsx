@@ -12,6 +12,12 @@ export default class BillNotice extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.type === 'loan') {
+      this.getInitData();
+    }
+  }
+
   componentDidMount() {
     this.getInitData();
   }
