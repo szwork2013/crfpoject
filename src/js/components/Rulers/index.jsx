@@ -106,7 +106,6 @@ export default class Rulers extends Component {
 
     const {title, amount, isDefault} = this.state;
     const formatAmount = Numeral(amount).format('0, 0.00');
-    console.log(this.state,'this.state');
     return (
       <section className="crf-swipes">
         <div className="crf-swipes-title">
