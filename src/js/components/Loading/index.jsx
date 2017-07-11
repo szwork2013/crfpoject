@@ -6,7 +6,7 @@ export default class Loading extends Component {
     super(props, context);
     this.state = {
       show: props.show,
-      maskHeight:{},
+      maskHeight: {}
     }
     this.show = this.show.bind(this);
     this.hide = this.hide.bind(this);
@@ -17,15 +17,30 @@ export default class Loading extends Component {
   }
 
   componentDidMount(){
-    let topHeight=0;
+    let topHeight = 0;
 
-    if(!Common.isWeChat()){
-      topHeight=doc.querySelector('nav').offsetHeight+doc.querySelector('.am-whitespace').offsetHeight;
+    if (!Common.isWeChat()) {
+      topHeight = doc.querySelector('nav').offsetHeight;
     }
-
     this.setState({
-      maskHeight:{height:doc.documentElement.clientHeight-topHeight+'px'}
+      maskHeight: {
+        height: doc.documentElement.clientHeight - topHeight + 'px'
+      }
     });
+
+    this.pubsub_token_show = PubSub.subscribe('loading:show', () => {
+      this.show();
+    });
+
+    this.pubsub_token_hide = PubSub.subscribe('loading:hide', () => {
+      this.hide();
+    });
+  }
+
+  componentWillUnmount() {
+    //销毁监听的事件
+    PubSub.unsubscribe(this.pubsub_token_show);
+    PubSub.unsubscribe(this.pubsub_token_hide);
   }
 
   show() {

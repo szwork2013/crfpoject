@@ -21,6 +21,45 @@ class Repay extends Component {
     this.getInitData();//获取
   }
 
+  async getQuota() {
+    //https://m-ci.crfchina.com/h5_dubbo/loan/quota?kissoId=f9c36b0f4c034c0bb723fd67019dfdd0
+    let quotaPath = `${CONFIGS.loanPath}/quota?kissoId=${CONFIGS.ssoId}`;
+
+    try {
+      let fetchPromise = CRFFetch.Get(quotaPath);
+      // 获取数据
+      let result = await fetchPromise;
+      if (result && !result.response) {
+        console.log(result);
+
+        //mock
+        result.curr_amt=120000;
+        result.total_amt=120000;
+
+        this.setData(result);
+      }
+    } catch (error) {
+      this.setState({
+        isLoading: false
+      });
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      }, () => {
+        let path = 'repay';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      });
+    }
+  }
+
   async getInitData() {
 
     //mock
@@ -69,6 +108,24 @@ class Repay extends Component {
     }
   }
 
+  async handleClick() {
+    this.refs.loading.show();
+    let currentAmount = Numeral(CONFIGS.realAmount).multiply(100).value();
+    let methodPath = `${CONFIGS.repayPath}/method?kissoId=${CONFIGS.userId}&repayAmount=${currentAmount}`;
+    try {
+      let fetchMethodPromise = CRFFetch.Get(methodPath);
+      // 获取数据
+      let methodResult = await fetchMethodPromise;
+      if (methodResult && !methodResult.response) {
+        _paq.push(['trackEvent', 'C_Repay', 'E_ImmediateRepay', '立即还款']);
+        this.setMethodData(methodResult);
+      }
+    } catch (error) {
+      this.refs.loading.hide();
+      let msgs = error.body;
+    }
+  }
+
   setData(repayData) {
     Object.assign(CONFIGS.repayData, repayData);
     let repay = this.convertRepayData(repayData);
@@ -114,24 +171,6 @@ class Repay extends Component {
     }
     let finalData = leftData.concat(rightData);
     return finalData;
-  }
-
-  async handleClick() {
-    this.refs.loading.show();
-    let currentAmount = Numeral(CONFIGS.realAmount).multiply(100).value();
-    let methodPath = `${CONFIGS.repayPath}/method?kissoId=${CONFIGS.userId}&repayAmount=${currentAmount}`;
-    try {
-      let fetchMethodPromise = CRFFetch.Get(methodPath);
-      // 获取数据
-      let methodResult = await fetchMethodPromise;
-      if (methodResult && !methodResult.response) {
-        _paq.push(['trackEvent', 'C_Repay', 'E_ImmediateRepay', '立即还款']);
-        this.setMethodData(methodResult);
-      }
-    } catch (error) {
-      this.refs.loading.hide();
-      let msgs = error.body;
-    }
   }
 
   setMethodData(methodData) {

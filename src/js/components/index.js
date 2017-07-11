@@ -13,3 +13,6 @@ export { default as ResultSteps } from './ResultSteps/index.jsx';
 export { default as Phone } from './Phone/index.jsx';
 export { default as RepayDetail } from './RepayDetail/index.jsx';
 export { default as SetContract } from './SetContract/index.jsx';
+export { default as NoRecord } from './NoRecord/index.jsx';
+export { default as BillList } from './BillList/index.jsx';
+export { default as BillNotice } from './BillNotice/index.jsx';

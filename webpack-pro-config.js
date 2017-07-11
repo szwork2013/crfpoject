@@ -30,9 +30,7 @@ module.exports = {
     vendor: [
       'react',
       'react-dom',
-      'react-router',
-      /*'react-redux',
-      'redux'*/
+      'react-router'
     ],
     app: 'index.js',
   },

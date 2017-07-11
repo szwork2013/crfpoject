@@ -13,7 +13,6 @@ export default class SendSms extends Component {
       count: 0,
       timer: null,
       checkStatus: true,
-      //isLoading: false,
       isRender: false,
       maxLength: 6,
       val: '',
@@ -79,6 +78,9 @@ export default class SendSms extends Component {
   }
 
   async getVerification(code) {
+    this.setState({
+      isLoading: true
+    });
     let path = `${CONFIGS.basePath}msg/${CONFIGS.account.mobile}`;
     let params = {
       intent: CONFIGS.type[CONFIGS.sendSmsType],
@@ -93,10 +95,16 @@ export default class SendSms extends Component {
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
+        this.setState({
+          isLoading: false
+        });
         this.countDown(code);
         this.setVerification(result, code);
       }
     } catch (error) {
+      this.setState({
+        isLoading: false
+      });
       let msgs = error.body;
       msgs.then((data) => {
         Toast.info(data.message);

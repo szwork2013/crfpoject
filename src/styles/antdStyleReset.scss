@@ -71,10 +71,28 @@
     }
   }
 }
+.am-list-body {
+  border-top: 0;
+}
+
+.am-flexbox {
+  text-align: left;
+  overflow-y: hidden;
+  align-items: center;
+  .am-flexbox-item {
+    flex: 1;
+    margin-left: .16rem;
+    min-width: .2rem;
+  }
+}
+
+.am-grid .am-flexbox .am-flexbox-item.am-grid-item:active{
+  background: transparent;
+}
 
 .am-whitespace.am-whitespace-md {
   background: #efeff4;
-  height: 8px;
+  height: 10px;
 }
 
 
@@ -222,5 +240,56 @@
   .am-steps-head-inner {
     width: 9px;
     height: 9px;
+  }
+}
+
+.am-tabs-bar {
+  .am-tabs-tab {
+    height: auto;
+    padding: .26rem 0;
+    font-size: .32rem;
+    color: #909090;
+    line-height: normal;
+  }
+  .am-tabs-tab-active {
+    color: #3692FD;
+  }
+}
+
+.am-tabs-ink-bar {
+  height: 2px;
+  background-color: #3692FD;
+}
+
+.am-popover-arrow {
+  width: .14rem;
+  height: .14rem;
+}
+
+.am-popover-inner {
+  font-size: .3rem;
+  color: #646464;
+  border-radius: .06rem;
+  box-shadow: 0 0 .04rem rgba(0, 0, 0, 0.21);
+  height: 5rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.am-popover {
+  .am-popover-item {
+    padding: 0;
+  }
+  .am-popover-item-container {
+    min-width: 2.6rem;
+    height: .84rem;
+    padding: 0 0.5rem;
+  }
+}
+
+.am-popover-placement-bottomRight {
+  .am-popover-arrow {
+    top: -.07rem;
+    right: .16rem;
   }
 }

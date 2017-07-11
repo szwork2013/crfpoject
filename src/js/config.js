@@ -9,6 +9,7 @@ const showTopTips = Common.showTopTips();
 module.exports = {
   basePath: CurrentPath,
   repayPath: CurrentPath + 'repayment',
+  loanPath: CurrentPath + 'loan',
   userId: '',//用户ID
   userName:'',//用户名
   idNo:'',//身份证
@@ -56,6 +57,11 @@ module.exports = {
   billType: {
     s: '借款',
     r: '还款'
+  },
+  repayType: {
+    1: '快捷还款',
+    2: '微信还款',
+    3: '自动还款'
   },
   userWritePhoneRegx:/^1\d{10}$/,// /^1([358]\d|7[^017])\d{8}$/
   userWriteThreeDigits:/^1([358]\d|7[^017])/,
