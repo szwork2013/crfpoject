@@ -342,7 +342,7 @@ footer {
       width: 1px;
     }
     .am-steps-head-inner {
-      margin-right: 0.3rem;
+      margin-right: .3rem;
     }
   }
   .am-steps-item.am-steps-custom {
@@ -372,7 +372,8 @@ footer {
       height: 19px;
       background: url(../images/success-small-icon.png) no-repeat 0 0;
       background-size: contain;
-      margin-right: 0.2rem;
+      margin-right: .2rem;
+      margin-left: 0;
     }
   }
   .am-steps-item.am-steps-status-process.error {
