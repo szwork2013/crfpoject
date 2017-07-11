@@ -56,6 +56,11 @@ module.exports = {
     s: '借款',
     r: '还款'
   },
+  repayType: {
+    1: '快捷还款',
+    2: '微信还款',
+    3: '自动还款'
+  },
   userWritePhoneRegx:/^1\d{10}$/,// /^1([358]\d|7[^017])\d{8}$/
   userWriteThreeDigits:/^1([358]\d|7[^017])/,
   chineseCharRegx:/[\u0391-\uFFE5]+/,

@@ -13,6 +13,7 @@ import {
   RepayConfirm,
   Result,
   Channel,
+  Bill,
   NotFoundPage,
 } from './containers';
 
@@ -27,6 +28,7 @@ export default (
     <Route path="repayconfirm" component={RepayConfirm} />
     <Route path="result" component={Result} />
     <Route path="channel" component={Channel} />
+    <Route path="bill" component={Bill} />
     <Route path="contract" component={Contract} />
     <Route path="*" component={NotFoundPage} />
   </Route>
