@@ -273,6 +273,7 @@ footer {
 
 .result-content {
   height: 100%;
+  background: #fff;
   .am-icon-md {
     display: none;
   }
@@ -303,7 +304,7 @@ footer {
       flex: 1;
     }
   }
-  .am-steps-item.am-steps-status-finish {
+  .am-steps-item.am-steps-status-finish, .am-steps-item.am-steps-status-process {
     .am-steps-head-inner {
       margin-left: 5px;
       border: 0;
@@ -687,4 +688,132 @@ footer {
   100% {
     transform: scaleY(0);
   }
+}
+
+.bill-list {
+  position: relative;
+  background-color: #fff;
+  .am-list-item {
+    min-height: .5rem;
+    border-bottom: 1px solid #E1E1E1;
+    .am-list-line {
+      min-height: .5rem;
+      .am-list-content {
+        padding-top: .1rem;
+        padding-bottom: .1rem;
+      }
+    }
+  }
+}
+
+.bill-list-title {
+  transform: translateZ(0);
+}
+
+.bill-list-title-fixed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.bill-list-content {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bill-title, .bill-icon {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.bill-title {
+  font-size: .22rem;
+  color: #646464;
+}
+
+.bill-icon {
+  display: block;
+  text-align: right;
+}
+
+.bill-list-date {
+  background: url(../images/date-icon.png) no-repeat 0 0;
+  background-size: contain;
+  width: .44rem;
+  height: .44rem;
+  display: inline-block;
+}
+
+.bill-list-row {
+  margin-left: .3rem;
+  border-bottom: 1px solid #E1E1E1;
+  color: #646464;
+  font-size: .2rem;
+  text-align: left;
+  overflow-y: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.p {
+  background: url(../images/loan-icon.png) no-repeat 0 center;
+  background-size: .58rem .58rem;
+}
+
+.r {
+  background: url(../images/repay-icon.png) no-repeat 0 center;
+  background-size: .58rem .58rem;
+}
+
+.bill-list-row:last-child {
+  border: 0;
+}
+
+.am-flexbox .am-flexbox-item:first-child.bill-list-row-left {
+  margin-left: 1rem;
+}
+
+.bill-list-row-right {
+  padding-right: 0.3rem;
+  text-align: right;
+  min-height: 1.2rem;
+}
+
+.row-cash {
+  font-size: 0.36rem;
+  color: #323232;
+  &.HF {
+    background: url(../images/expenses-small-icon.png) no-repeat 1.1rem center;
+    background-size: 0.4rem 0.4rem;
+  }
+  &.LL {
+    background: url(../images/rate-small-icon.png) no-repeat 1.1rem center;
+    background-size: 0.4rem 0.4rem;
+  }
+  &.YX {
+    background: url(../images/game-small-icon.png) no-repeat 1.1rem center;
+    background-size: 0.4rem 0.4rem;
+  }
+  &.QQ {
+    background: url(../images/qq-small-icon.png) no-repeat 1.1rem center;
+    background-size: 0.4rem 0.4rem;
+  }
+}
+
+.row-status {
+  color: #323232;
+  font-size: .26rem;
+  padding: .16rem 0 .1rem;
+}
+
+.row-detail, .row-loan-date, .row-repay-date {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: .2rem;
+  color: #909090;
 }
