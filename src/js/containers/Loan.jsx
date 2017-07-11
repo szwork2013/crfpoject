@@ -12,12 +12,16 @@ class Repay extends Component {
       title: '借款申请',
       data: [],
       couponsData: [],
-      isLoading: true
+      isLoading: true,
+      initQuota:'',
     };
   }
 
   componentDidMount() {
     _paq.push(['trackEvent', 'C_Page', 'E_P_Repay']);
+
+    this.getQuota();//获取额度
+
     this.getInitData();//获取
   }
 
@@ -31,12 +35,21 @@ class Repay extends Component {
       let result = await fetchPromise;
       if (result && !result.response) {
         console.log(result);
+        /*
+        * {
+         "code": "000000",
+         "errorMsg": null,
+         "crfuid": "7358fea6fd4d1eea975536423c1f3fb5",
+         "vipLevel": "14",
+         "totalLimit": 140000,
+         "remainLimit": 140000,
+         "usedLimit": 0
+         }
+        * */
+        this.setState({
+          initQuota:result.totalLimit
+        });
 
-        //mock
-        result.curr_amt=120000;
-        result.total_amt=120000;
-
-        this.setData(result);
       }
     } catch (error) {
       this.setState({
@@ -48,14 +61,6 @@ class Repay extends Component {
             Toast.info(data.message);
           });
         }
-      }, () => {
-        let path = 'repay';
-        hashHistory.push({
-          pathname: path,
-          query: {
-            ssoId: CONFIGS.userId
-          }
-        });
       });
     }
   }
