@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Modal, Table} from 'antd-mobile';
+import {Modal, Table, Toast} from 'antd-mobile';
 import Numeral from 'numeral';
 import styles from './index.scss';
 const dateFormat = require('dateformat');

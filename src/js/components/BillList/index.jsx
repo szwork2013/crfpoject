@@ -10,7 +10,6 @@ const Item = Popover.Item;
 export default class BillList extends Component {
   constructor(props, context) {
     super(props, context);
-
     this.dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2
     });
@@ -23,6 +22,10 @@ export default class BillList extends Component {
       dateList: [],
       type: props.type
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
   }
 
   handleVisibleChange = (visible) => {
@@ -75,7 +78,13 @@ export default class BillList extends Component {
     PubSub.publish('loading:show');
     let date = new Date(mounth);
     let currentMounth = dateFormat(date, 'yyyymm');
-    let path = `${CONFIGS.repayPath}/record?kissoId=${CONFIGS.ssoId}&pageNo=-1&pageSize=-1&queryYearMonth=${currentMounth}`;
+    let type = '';
+    if (this.state.type === 'loan') {
+      type = 'c';
+    } else {
+      type = 'r';
+    }
+    let path = `${CONFIGS.repayPath}/record?kissoId=${CONFIGS.ssoId}&pageNo=-1&pageSize=-1&queryYearMonth=${currentMounth}&orderType=${type}`;
     try {
       let fetchPromise = CRFFetch.Get(path);
       // 获取数据
@@ -129,10 +138,10 @@ export default class BillList extends Component {
       noticeHeight = document.getElementsByClassName('bill-notice')[0].offsetHeight + 10;
     }
     let containerHeight = (document.documentElement.clientHeight - topHeight - tabHeight - noticeHeight - 20) + 'px';
-    this.refs.billList.style.height = containerHeight;
+    this.refs.billList && (this.refs.billList.style.height = containerHeight);
     let contentHeight = (document.documentElement.clientHeight - topHeight - tabHeight - headerHeight - noticeHeight - 20) + 'px';
     let billContainer = document.getElementsByClassName('bill-list-content')[0];
-    billContainer.style.height = contentHeight;
+    billContainer && (billContainer.style.height = contentHeight);
   }
 
   componentWillUnmount() {
