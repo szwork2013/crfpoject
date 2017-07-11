@@ -9,6 +9,7 @@ const showTopTips = Common.showTopTips();
 module.exports = {
   basePath: CurrentPath,
   repayPath: CurrentPath + 'repayment',
+  loanPath: CurrentPath + 'loan',
   userId: '',//用户ID
   userName:'',//用户名
   idNo:'',//身份证

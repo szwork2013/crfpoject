@@ -4,6 +4,7 @@ import { Toast, ListView, Popover } from 'antd-mobile';
 import { hashHistory } from 'react-router';
 import Numeral from 'numeral';
 const dateFormat = require('dateformat');
+import PubSub from 'pubsub-js';
 const Item = Popover.Item;
 
 export default class BillList extends Component {
@@ -42,6 +43,9 @@ export default class BillList extends Component {
 
   componentDidMount() {
     this.getMonth();
+    this.pubsub_token = PubSub.subscribe('loan:show', function(topic, type) {
+      this.setHeight(type);
+    }.bind(this));
   }
 
   async getMonth() {
@@ -109,19 +113,19 @@ export default class BillList extends Component {
         return obj;
       });
     }
+    this.setHeight();
     this.setState({
       dataSource: this.dataSource.cloneWithRows(data), fromRemote: true
     });
-    this.setHeight();
   }
 
-  setHeight() {
+  setHeight(type) {
     document.body.scrollTop = 0;
     let topHeight = document.querySelector('nav').offsetHeight;
     let tabHeight = document.getElementsByClassName('am-tabs-bar')[0].offsetHeight;
     let headerHeight = this.refs.billListHeader.offsetHeight;
     let noticeHeight = 0;
-    if (this.state.type === 'loan') {
+    if (type === 'loan') {
       noticeHeight = document.getElementsByClassName('bill-notice')[0].offsetHeight + 10;
     }
     let containerHeight = (document.documentElement.clientHeight - topHeight - tabHeight - noticeHeight - 20) + 'px';
