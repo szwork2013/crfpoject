@@ -14,7 +14,7 @@ export default class Rulers extends Component {
       defaultAmount: 0,
       data: [],
       rulerWidth: 9,
-      isDefault: true
+      isDefault: true,
     };
   }
 
@@ -23,6 +23,7 @@ export default class Rulers extends Component {
   }
 
   componentDidUpdate() {
+    console.log(window.length++);
     this.resetContainer();
   }
 
@@ -37,6 +38,7 @@ export default class Rulers extends Component {
     storage.setItem('currentAmount', CONFIGS.currentAmount);
     CONFIGS.realAmount = CONFIGS.currentAmount;
 
+    //console.log(totalWidth,currentPoint,rulerContainer,offsetWidth);
     if (rulerContainer) {
       rulerContainer.style.width = totalWidth + 'px';
       rulerContainer.style.marginLeft = offsetWidth + 'px';
@@ -80,7 +82,7 @@ export default class Rulers extends Component {
           originalPoint: ev.originalPoint,
           newPoint: ev.newPoint,
           cancelled: ev.cancelled
-        }
+        };
         let defaultValue = false;
         if (this.state.data[ev.newPoint] === this.state.defaultAmount) {
           defaultValue = true;
@@ -94,10 +96,13 @@ export default class Rulers extends Component {
         let storage = window.localStorage;
         storage.setItem('currentAmount', CONFIGS.currentAmount);
         CONFIGS.realAmount = CONFIGS.currentAmount;
-        PubSub.publish('present:init', this.state.data[ev.newPoint]);
+
+        console.log(this.state.data[ev.newPoint],'publish');
+        PubSub.publish('ruleDay:set',this.state.data[ev.newPoint]);
+
+        //PubSub.publish('present:init', this.state.data[ev.newPoint]);
       }
     };
-
 
     const ruler = (item, index) => {
       return (
@@ -106,7 +111,9 @@ export default class Rulers extends Component {
     };
 
     const {title, amount, isDefault} = this.state;
-    const formatAmount = Numeral(amount).format('0, 0.00');
+    const formatAmount = Numeral(amount).format('0, 0');
+
+    //console.log(this.state,'this.state');
 
     return (
       <section className="crf-swipes">
@@ -119,10 +126,10 @@ export default class Rulers extends Component {
           }
         </div>
         <div className="crf-swipes-amount">
-          <span className="crf-swipes-amount-text">{formatAmount}</span>
-          <span className="crf-swipes-amount-link">
+          <span className="crf-swipes-amount-text">{formatAmount}元</span>
+          {/*<span className="crf-swipes-amount-link">
             <a onClick={this.showModal.bind(this)}>明细</a>
-          </span>
+          </span>*/}
         </div>
         <div className="crf-swipes-content">
           <div className="crf-swipes-axis">
@@ -136,7 +143,7 @@ export default class Rulers extends Component {
             }
           </div>
         </div>
-        <div className="crf-swipes-description">左右滑动调整还款金额, 调整以50为单位</div>
+
         <RepayDetail />
       </section>
     )
