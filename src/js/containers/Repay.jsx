@@ -8,7 +8,6 @@ class Repay extends Component {
   constructor(props){
     super(props);
     CONFIGS.userId = this.props.location.query.ssoId;
-    CONFIGS.userId='f9c36b0f4c034c0bb723fd67019dfdd0';//test
     this.state = {
       title: '我要还款',
       data: [],
