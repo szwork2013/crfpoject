@@ -12,7 +12,7 @@ class ResultPage extends Component {
     this.state = {
       status: 0,
       contractNo: this.props.location.query.contractNo,
-      type: this.props.location.query.type || 's',
+      type: this.props.location.query.type || 'p',
       from: this.props.location.query.source || '',
       cash: this.props.location.query.cash || 0,
       isLoading: true,
