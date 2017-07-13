@@ -121,7 +121,7 @@ const FetchInterface = {
           Toast.info('哎呀，服务器开小差了，请稍后再试吧!');
           break;
         default:
-          msg&&msg.then(data=>{
+          msg && msg.then(data => {
             Toast.info(data.message);
           });
     }

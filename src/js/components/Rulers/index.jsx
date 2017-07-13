@@ -23,6 +23,7 @@ export default class Rulers extends Component {
   }
 
   componentDidUpdate() {
+    this.setTextPosition();
     this.resetContainer();
   }
 
@@ -64,10 +65,18 @@ export default class Rulers extends Component {
       title: CONFIGS.repayDefaultTitle,
       isDefault: true
     });
+    this.setTextPosition();
   }
 
   showModal() {
     PubSub.publish('repayDetail:show', this.state.amount);
+  }
+
+  setTextPosition() {
+    let textContainer = document.getElementsByClassName('crf-swipes-amount-text')[0];
+    let marginLeft = -(textContainer.clientWidth / 2) + 'px';
+    let container = document.getElementsByClassName('crf-swipes-amount')[0];
+    container.style.marginLeft = marginLeft;
   }
 
   render() {
@@ -95,9 +104,9 @@ export default class Rulers extends Component {
         storage.setItem('currentAmount', CONFIGS.currentAmount);
         CONFIGS.realAmount = CONFIGS.currentAmount;
         PubSub.publish('present:init', this.state.data[ev.newPoint]);
+        this.setTextPosition();
       }
     };
-
 
     const ruler = (item, index) => {
       return (
@@ -118,7 +127,7 @@ export default class Rulers extends Component {
             </span>
           }
         </div>
-        <div className="crf-swipes-amount">
+        <div ref="swipes" className="crf-swipes-amount">
           <span className="crf-swipes-amount-text">{formatAmount}</span>
           <span className="crf-swipes-amount-link">
             <a onClick={this.showModal.bind(this)}>明细</a>

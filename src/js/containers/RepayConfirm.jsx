@@ -30,7 +30,7 @@ class RepayConfirm extends Component {
 
   async getInitData() {
     let currentAmount = Numeral(this.props.location.query.realAmount).multiply(100).value();
-    let accountPath = `${CONFIGS.basePath}fts/{kissoId}/borrower_open_account?kissoId=${this.state.kissoId}`;
+    let accountPath = `${CONFIGS.basePath}fts/${this.state.kissoId}/borrower_open_account`;
     let methodPath = `${CONFIGS.repayPath}/method?kissoId=${this.state.kissoId}&repayAmount=${currentAmount}`;
     try {
       let fetchAccountPromise = CRFFetch.Get(accountPath);

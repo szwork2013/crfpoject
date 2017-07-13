@@ -24,8 +24,6 @@ export default class Nav extends Component {
   }
 
   componentDidMount() {
-    /*console.log(CONFIGS.referrerUrl,'referrer');
-    console.log(location.hash);*/
     Common.setDocTitle(this.state.title);
   }
 
@@ -100,7 +98,7 @@ export default class Nav extends Component {
     if (from === 'loan') { //from loan show finish
       leftEle = <span className={styles.dark} onClick={this.handleGoHome}>完成</span>
     } else {
-      leftEle = <span className={styles.navbarLeftIcon} onTouchTap={this.handleBack}></span>;
+      leftEle = <span className={styles.navbarLeftIcon} onTouchTap={this.handleBack}><button className="trs-btn" onTouchTap={this.handleBack}></button></span>;
       //if(contractNo) title = CONFIGS.billType[type] + '动态';
     }
     return (

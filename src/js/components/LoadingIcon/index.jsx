@@ -8,7 +8,7 @@ class LoadingIcon extends React.Component {
 
   render(){
     return (
-      <div className="ball-spin-fade-loader">
+      <div className="line-spin-fade-loader">
         <div></div>
         <div></div>
         <div></div>
