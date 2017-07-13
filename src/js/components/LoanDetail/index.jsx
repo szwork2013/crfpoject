@@ -14,7 +14,19 @@ export default class RepayDetail extends Component {
     };
   }
 
-  showModal = key => (e) => {
+  componentDidMount() {
+    this.pubsub_token = PubSub.subscribe('loanDetail:list', function(topic, val) {
+      //this.getInitData(val);
+      this.setListData(val);
+    }.bind(this));
+  }
+
+  componentWillUnmount() {
+    //销毁监听的事件
+    PubSub.unsubscribe(this.pubsub_token);
+  }
+
+  /*showModal = key => (e) => {
     // 现象：如果弹出的弹框上的 x 按钮的位置、和手指点击 button 时所在的位置「重叠」起来，
     // 会触发 x 按钮的点击事件而导致关闭弹框 (注：弹框上的取消/确定等按钮遇到同样情况也会如此)
     e.preventDefault(); // 修复 Android 上点击穿透
@@ -27,7 +39,7 @@ export default class RepayDetail extends Component {
     this.setState({
       [key]: false,
     });
-  }
+  }*/
 
   convertTableData(jsonData) {
     let data = {};
@@ -70,46 +82,34 @@ export default class RepayDetail extends Component {
         }
       });
     });
-
-    // let data = {
-    //   0: {
-    //     billDate: '到期日 : 06-01',
-    //     offsetPenalty: '延迟还款服务费 : 5.00元',
-    //     list: [
-    //       {
-    //         amt: '1,016.00',
-    //         principal: '1,000.00',
-    //         fees: '5.00',
-    //         interest: '6.00',
-    //         flag: '可结清'
-    //       }
-    //     ]
-    //   },
-    //   1: {
-    //     billDate: '到期日 : 06-03',
-    //     offsetPenalty: '',
-    //     list: [
-    //       {
-    //         amt: '1,016.00',
-    //         principal: '1,000.00',
-    //         fees: '5.00',
-    //         interest: '6.00',
-    //         flag: '可结清'
-    //       },
-    //       {
-    //         amt: '1,016.00',
-    //         principal: '1,000.00',
-    //         fees: '5.00',
-    //         interest: '6.00',
-    //         flag: '部分结清'
-    //       }
-    //     ]
-    //   }
-    // }
     return data;
   }
 
-  async getInitData(amount) {
+  setListData(data){
+    let allData={
+      "0":{
+        list:[]
+      }
+    };
+
+    data.forEach(function(value,index) {
+      allData["0"].list.push({
+        "day": value.currBillDate,
+        "principal": value.currStartMstAtm,
+        "fees": value.handleFee,
+        "interest": value.currInterest,
+        "repay": value.currCountMstAtm,
+        "key": index,//需要一个key
+      });
+    });
+
+    this.setState({
+      data:allData
+    });
+
+  }
+
+  /*async getInitData(amount) {
     this.setState({
       amount: amount,
       modal: true
@@ -137,44 +137,27 @@ export default class RepayDetail extends Component {
         }
       });
     }
-  }
-
-  componentDidMount() {
-    this.pubsub_token = PubSub.subscribe('repayDetail:show', function(topic, val) {
-      this.getInitData(val);
-    }.bind(this));
-  }
-
-  componentWillUnmount() {
-    //销毁监听的事件
-    PubSub.unsubscribe(this.pubsub_token);
-  }
+  }*/
 
   render() {
     const {amount, data} = this.state;
-    const formatFees = Numeral(amount).format('0, 0.00');
-    const modalStyle = {width: '90%'};
+    console.log(data);
     const columns = [
-      { title: '还款', dataIndex: 'amt', key: 'amt' },
+      { title: '应还款日', dataIndex: 'day', key: 'day' },
       { title: '本金', dataIndex: 'principal', key: 'principal'},
       { title: '手续费', dataIndex: 'fees', key: 'fees'},
       { title: '利息', dataIndex: 'interest', key: 'interest'},
-      { title: '状态', dataIndex: 'flag', key: 'flag', width: '1.5rem', className: 'status' }
+      { title: '到期应还', dataIndex: 'repay', key: 'repay', width: '1.5rem', className: 'result' }
     ];
     const content = (index) => {
       let item = data[index];
-      let date = new Date(item.billDate);
-      let formatDate = dateFormat(date, 'mm-dd');
       return (
-        <div key={index} className={styles.repayContainer}>
-          <div className={`${styles.repayTitle} hor`}>
-            <div className={styles.repayTitleLeft}>{`到期日 : ${formatDate}`}</div>
-            {(item.offsetPenalty > 0) &&
-              <div className={styles.repayTitleRight}>{item.offsetPenalty}</div>
-            }
+        <div key={index} className={styles.loanContainer}>
+          <div className={`${styles.loanTitle}`}>
+            <div className={styles.loanTitleLeft}>借款明细</div>
           </div>
           <Table
-            className={styles.repayTable}
+            className={styles.loanTable}
             columns={columns}
             dataSource={item.list}
           />
@@ -183,21 +166,9 @@ export default class RepayDetail extends Component {
     };
 
     return (
-      <Modal
-        className="crf-repay-modal"
-        transparent
-        style={modalStyle}
-        title={`还款金额${formatFees}元`}
-        closable={true}
-        maskClosable={false}
-        visible={this.state.modal}
-        onClose={this.onClose('modal')}
-        platform="ios"
-      >
-        <div className={styles.root}>
+      <div className="detail-list">
           {Object.keys(data).map(content)}
-        </div>
-      </Modal>
+      </div>
     );
   }
 }

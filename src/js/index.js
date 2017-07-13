@@ -8,6 +8,7 @@ import '../styles/antdStyleReset.scss';
 import '../styles/global.scss';
 import '../styles/bind-card.scss';
 import '../styles/repay.scss';
+import '../styles/loan.scss';
 import '../styles/confirm.scss';
 
 const Root = ({ history }) => (

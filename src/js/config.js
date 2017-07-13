@@ -10,6 +10,7 @@ module.exports = {
   basePath: CurrentPath,
   repayPath: CurrentPath + 'repayment',
   loanPath: CurrentPath + 'loan',
+  ftsPath: CurrentPath +'fts',
   userId: '',//用户ID
   userName:'',//用户名
   idNo:'',//身份证
@@ -80,6 +81,9 @@ module.exports = {
   couponData: [],
   selectCoupon: null,
   repayData: {},
+  loanData: {
+    isAgree:true,
+  },
   currentAmount: 0,
   realAmount: 0,
   account: {},

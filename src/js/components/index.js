@@ -11,6 +11,7 @@ export { default as SendSms } from './SendSms/index.jsx';
 export { default as Result } from './Result/index.jsx';
 export { default as ResultSteps } from './ResultSteps/index.jsx';
 export { default as Phone } from './Phone/index.jsx';
+export { default as LoanDetail } from './LoanDetail/index.jsx';
 export { default as RepayDetail } from './RepayDetail/index.jsx';
 export { default as SetContract } from './SetContract/index.jsx';
 export { default as NoRecord } from './NoRecord/index.jsx';

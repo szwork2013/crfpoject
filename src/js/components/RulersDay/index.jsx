@@ -149,7 +149,7 @@ export default class Rulers extends Component {
     return (
       <section className="crf-swipes">
         <div className="crf-swipes-title">
-          <span className="crf-swipes-title-text">借款金额</span>
+          <span className="crf-swipes-title-text">借款期限</span>
         </div>
         <div className="crf-swipes-amount">
           <span className="crf-swipes-amount-text">{formatDay}天</span>

@@ -29,7 +29,13 @@ class ResultPage extends Component {
   }
 
   async getInitData() {
+
     let path = `${CONFIGS.repayPath}/dynamics?kissoId=${CONFIGS.userId}&repayNo=${this.state.contractNo}`;
+
+    if(this.props.location.state.currentPath === 'loanconfirm'){
+      path = `${CONFIGS.loanPath}/dynamics?kissoId=${CONFIGS.ssoId}&loanNo=CRF01884667554126655488`;
+    }
+
     try {
       let fetchPromise = CRFFetch.Get(path);
       // 获取数据
