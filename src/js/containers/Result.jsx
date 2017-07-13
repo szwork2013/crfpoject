@@ -32,7 +32,7 @@ class ResultPage extends Component {
 
     let path = `${CONFIGS.repayPath}/dynamics?kissoId=${CONFIGS.userId}&repayNo=${this.state.contractNo}`;
 
-    if(this.props.location.state.currentPath === 'loanconfirm'){
+    if(this.props.location.state&&this.props.location.state.currentPath === 'loanconfirm'){
       path = `${CONFIGS.loanPath}/dynamics?kissoId=${CONFIGS.ssoId}&loanNo=CRF01884667554126655488`;
     }
 

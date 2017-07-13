@@ -41,7 +41,12 @@ export default class SendSms extends Component {
     this.refs.smsText && this.refs.smsText.classList.add('hide');
     this.refs.smsSoundTextMain && this.refs.smsSoundTextMain.classList.add('hide');
     this.refs.verificationNum && this.refs.verificationNum.classList.contains('click-disable');
-    this.getVerification(1); // 1 声音
+
+    if(this.props.pathname&&this.props.pathname.indexOf('loanconfirm')>-1){
+      CONFIGS.loanData.isAgree&&this.getVerification(1);
+    }else{
+      this.getVerification(1); // 1 声音
+    }
   }
 
   countDown(code) {
