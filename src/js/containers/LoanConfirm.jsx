@@ -15,33 +15,58 @@ class RepayConfirm extends Component {
     if (!CONFIGS.userId) {
       CONFIGS.userId = props.location.query.ssoId || ''
     }
+
+    let amount = props.location.state && Numeral(props.location.state.realAmount).format('0, 0.00');
+
     this.state = {
       kissoId: CONFIGS.userId || '',
       title: '借款确认',
       way: '',
-      amount: props.location.query.realAmount || '',
+      amount: amount || '',
       fee: 0,
       details: '',
-      isLoading: true
+      isLoading: true,
     };
   }
 
   componentDidMount() {
+    //this.getInitData();
+    console.log(this.props);
+
+    //this.getBankInfo();
     this.getInitData();
+
+    this.getActivityFetch();
+  }
+
+  async getActivityFetch(){
+    //https://m-ci.crfchina.com/h5_dubbo/loan/activity?kissoId=370486f0d16742b38138f3dc1839efcb
+    let activityPath=`${CONFIGS.loanPath}/activity?kissoId=${CONFIGS.ssoId}`;
+    try {
+      let fetchAccountPromise = CRFFetch.Get(activityPath);
+      // 获取数据
+      let accountResult = await fetchAccountPromise;
+      if (accountResult && !accountResult.response) {
+        //this.setData(accountResult);活动，暂不显示
+      }
+    } catch (error) {
+      this.setState({
+        isLoading: false
+      });
+    }
   }
 
   async getInitData() {
-    let currentAmount = Numeral(this.props.location.query.realAmount).multiply(100).value();
-    let accountPath = `${CONFIGS.basePath}fts/{kissoId}/borrower_open_account?kissoId=${this.state.kissoId}`;
-    let methodPath = `${CONFIGS.repayPath}/method?kissoId=${this.state.kissoId}&repayAmount=${currentAmount}`;
+    let accountPath = `${CONFIGS.ftsPath}/${CONFIGS.ssoId}/borrower_open_account`;
+
     try {
       let fetchAccountPromise = CRFFetch.Get(accountPath);
-      let fetchMethodPromise = CRFFetch.Get(methodPath);
+
       // 获取数据
       let accountResult = await fetchAccountPromise;
-      let methodResult = await fetchMethodPromise;
-      if (accountResult && !accountResult.response && methodResult && !methodResult.response) {
-        this.setData(accountResult, methodResult);
+
+      if (accountResult && !accountResult.response) {
+        this.setData(accountResult);
       }
     } catch (error) {
       this.setState({
@@ -65,17 +90,12 @@ class RepayConfirm extends Component {
     }
   }
 
-  setData(accountData, methodData) {
+  setData(accountData) {
     Object.assign(CONFIGS.account, accountData);
-    Object.assign(CONFIGS.method, methodData);
     let way = `${accountData.bankName}(${accountData.bankCardNo.slice(-4)})`;
-    let currentAmount = Numeral(methodData.repayTotalAmt).divide(100).value();
-    let currentFee = Numeral(methodData.channelFee).divide(100).value();
+
     this.setState({
       way: way,
-      amount: currentAmount,
-      fee: currentFee,
-      details: methodData.channelFeeDesc,
       isLoading: false
     });
   }
@@ -83,18 +103,14 @@ class RepayConfirm extends Component {
   render() {
     let props = { title: this.state.title};
     let {way, amount, fee, isLoading, details} = this.state;
+
     let totalAmount = () => {
       let formatTotalAmount = Numeral(amount).format('0, 0.00');
-      let formatCoupon = Numeral(fee).format('0, 0.00');
       return (
         <div className="crf-confirm-details">
           <div className="crf-confirm-amount">
             <span className="number">{`${formatTotalAmount}`}</span>
             <span>元</span>
-          </div>
-          <div className="crf-confirm-des">
-            <span className="tooltip-icon" data-tip data-for="description"></span>
-            <span className="crf-confirm-des-text">{`(含支付通道费${formatCoupon}元) `}</span>
           </div>
         </div>
       );
@@ -105,12 +121,12 @@ class RepayConfirm extends Component {
         <Nav data={props} />
         <WhiteSpace />
         <List className="crf-list crf-confirm">
-          <Item extra={way}>借款金额</Item>
-          <Item extra={totalAmount()}>到账银行卡</Item>
+          <Item extra={totalAmount()}>借款金额</Item>
+          <Item extra={way}>到账银行卡</Item>
         </List>
         <WhiteSpace />
-        <SendSms show={isLoading}/>
-        <SetContract />
+        <SendSms show={isLoading} pathname="loanconfirm"/>
+        <SetContract className="loan-contract" curPath="loanconfirm" />
         <ReactTooltip id='description' place="bottom" className="crf-tooltips" effect='solid'>
           <span>{details}</span>
         </ReactTooltip>

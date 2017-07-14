@@ -19,7 +19,9 @@ export default class Rulers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({data: nextProps.list.data, day: nextProps.list.currentDay, defaultDay: nextProps.list.currentDay});
+    if(Object.keys(nextProps.list).length !== 0) {
+      this.setState({data: nextProps.list.data, day: nextProps.list.defaultDay, defaultDay: nextProps.list.defaultDay});
+    }
   }
 
   componentDidUpdate() {
@@ -41,21 +43,33 @@ export default class Rulers extends Component {
       for(let i=1;i<=resetDay;i++){
         arr.push(i);
       }
+
+      let resultObj = {
+        remainLimit: val,
+        defaultDay: resetDay,
+      };
+
       //设置
-      console.log(this.state.day,resetDay);
       if(this.state.day!==resetDay){
-        console.log('change');
+        console.log(resetDay,this.state.day,'222222');
         this.setState({
           data:arr,
           day:resetDay,
           defaultDay:resetDay,
         });
+
+        resultObj = {
+          remainLimit: val,
+          defaultDay: resetDay,
+        }
+
       }
+      this.props.getInitDataFetch(resultObj);
       //console.log(window.length++);
       //console.log(val);
 
     });
-    console.log(this.state.day,'day');
+
     this.resetContainer();
   }
 
@@ -88,10 +102,8 @@ export default class Rulers extends Component {
 
   getCurrentPoint() {
     let currentPoint = 0;
-    if (this.state.data.length === 0) {
-
-    } else {
-      let currentData = this.state.data;
+    if (this.state.data.length !== 0) {
+      //let currentData = this.state.data;
       currentPoint = this.state.data.indexOf(this.state.defaultDay);
     }
     return currentPoint;
@@ -142,14 +154,14 @@ export default class Rulers extends Component {
       );
     };
 
-    const {day, isDefault} = this.state;
+    const {day, defaultDay, isDefault} = this.state;
 
-    const formatDay = Numeral(day).format('0, 0');
+    let formatDay = Numeral(day).format('0, 0');
 
     return (
       <section className="crf-swipes">
         <div className="crf-swipes-title">
-          <span className="crf-swipes-title-text">借款金额</span>
+          <span className="crf-swipes-title-text">借款期限</span>
         </div>
         <div className="crf-swipes-amount">
           <span className="crf-swipes-amount-text">{formatDay}天</span>

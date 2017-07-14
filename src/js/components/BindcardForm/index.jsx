@@ -399,7 +399,7 @@ console.log(path);
           <button className={styles.formNextButton + " " + (CONFIGS.bindCard.notSubmit?styles.btnDisabled:'')}
                   onClick={this.handleSubmit.bind(this)} ref="refFormNextBtn">确认提交
           </button>
-          <Contract getContractEle={this.setContractEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)}/>
+          <Contract curPath="/" getContractEle={this.setContractEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)}/>
         </div>
 
       </section>

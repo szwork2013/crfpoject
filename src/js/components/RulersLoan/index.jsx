@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactSwipes from 'react-swipes';
-import {RepayDetail} from 'app/components';
+//import {RepayDetail} from 'app/components';
 import {WhiteSpace} from 'antd-mobile';
 import Numeral from 'numeral';
 import PubSub from 'pubsub-js';
@@ -9,7 +9,7 @@ export default class Rulers extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      title: CONFIGS.repayDefaultTitle,
+      title: '借款金额',
       amount: 0,
       defaultAmount: 0,
       data: [],
@@ -19,11 +19,13 @@ export default class Rulers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({data: nextProps.list.data, amount: nextProps.list.currentAmount, defaultAmount: nextProps.list.currentAmount});
+    if(Object.keys(nextProps.list).length !== 0){
+      this.setState({data: nextProps.list.data, amount: nextProps.list.currentAmount, defaultAmount: nextProps.list.currentAmount});
+    }
   }
 
   componentDidUpdate() {
-    console.log(window.length++);
+    //console.log(window.length++);
     this.resetContainer();
   }
 
@@ -50,10 +52,8 @@ export default class Rulers extends Component {
 
   getCurrentPoint() {
     let currentPoint = 0;
-    if (this.state.data.length === 0) {
-
-    } else {
-      let currentData = this.state.data;
+    if (this.state.data.length !== 0) {
+      //let currentData = this.state.data;
       currentPoint = this.state.data.indexOf(this.state.defaultAmount);
     }
     return currentPoint;
@@ -68,9 +68,9 @@ export default class Rulers extends Component {
     });
   }
 
-  showModal() {
+  /*showModal() {
     PubSub.publish('repayDetail:show', this.state.amount);
-  }
+  }*/
 
   render() {
     const opt = {
@@ -89,7 +89,7 @@ export default class Rulers extends Component {
         }
         this.setState({
           amount: this.state.data[ev.newPoint],
-          title: CONFIGS.repayChangedTitle,
+          /*title: CONFIGS.repayChangedTitle,*/
           isDefault: defaultValue
         });
         CONFIGS.currentAmount = this.state.data[ev.newPoint];
@@ -97,7 +97,7 @@ export default class Rulers extends Component {
         storage.setItem('currentAmount', CONFIGS.currentAmount);
         CONFIGS.realAmount = CONFIGS.currentAmount;
 
-        console.log(this.state.data[ev.newPoint],'publish');
+        //console.log(this.state.data[ev.newPoint],'publish');
         PubSub.publish('ruleDay:set',this.state.data[ev.newPoint]);
 
         //PubSub.publish('present:init', this.state.data[ev.newPoint]);
@@ -119,17 +119,9 @@ export default class Rulers extends Component {
       <section className="crf-swipes">
         <div className="crf-swipes-title">
           <span className="crf-swipes-title-text">{title}</span>
-          {!isDefault &&
-            <span className="crf-swipes-title-link">
-              <a onClick={this.handleReset.bind(this)}></a>
-            </span>
-          }
         </div>
         <div className="crf-swipes-amount">
           <span className="crf-swipes-amount-text">{formatAmount}元</span>
-          {/*<span className="crf-swipes-amount-link">
-            <a onClick={this.showModal.bind(this)}>明细</a>
-          </span>*/}
         </div>
         <div className="crf-swipes-content">
           <div className="crf-swipes-axis">
@@ -144,7 +136,7 @@ export default class Rulers extends Component {
           </div>
         </div>
 
-        <RepayDetail />
+        {/*<RepayDetail />*/}
       </section>
     )
   }

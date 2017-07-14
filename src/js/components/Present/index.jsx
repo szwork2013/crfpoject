@@ -79,6 +79,7 @@ export default class Present extends Component {
     let item = null;
     let loadingItem = <LoadingIcon />;
     let {data, getPresent, coupon} = this.state;
+
     if (coupon.real !== 0) {
       let formatCoupon = Numeral(coupon.real).format('0, 0.00');
       let coupons = () => {
@@ -90,14 +91,14 @@ export default class Present extends Component {
             }
           </div>
         );
-      }
+      };
       let realAmount = CONFIGS.currentAmount - formatCoupon;
       CONFIGS.realAmount = realAmount;
       let realAmountSpan = () => {
         return (
           <span className="crf-present-real-amount-num">{realAmount}</span>
         );
-      }
+      };
       item = (
         <div>
           <Item arrow="horizontal" extra={coupons()} onClick={this.handlePresent.bind(this)}>抵扣红包</Item>

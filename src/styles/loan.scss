@@ -1,0 +1,54 @@
+.loan-contract {
+  padding: 0 .7rem;
+  .agree {
+    left: .3rem;
+  }
+}
+
+.loan-content {
+  height: 100%;
+  .crf-swipes-title{
+    text-align: left;
+    padding-left: .3rem;
+  }
+  .crf-swipes{
+    padding: .3rem 0 0;
+  }
+  .crf-swipes-title{
+    font-size: .36rem;
+  }
+  .crf-swipes-amount-text{
+    font-size: .72rem;
+  }
+
+  .crf-swipes-amount{
+    transform: translate(-48%, 0);
+  }
+
+  .crf-swipes-axis{
+    .crf-swipes-axis-inner{
+      background: url(../images/loan-axis.png) no-repeat;
+      background-size: 100%;
+      height:1.2rem;
+    }
+  }
+
+  .crf-rulers{
+    padding-top:.8rem;
+  }
+
+  .crf-swipes-content{
+    height:1.2rem;
+  }
+}
+
+.detail-list{
+  background-color: #fff;
+}
+
+.font-bold{
+  .am-list-extra{
+    font-size: .36rem;
+    font-weight: bold;
+  }
+}

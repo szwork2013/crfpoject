@@ -10,6 +10,7 @@ module.exports = {
   basePath: CurrentPath,
   repayPath: CurrentPath + 'repayment',
   loanPath: CurrentPath + 'loan',
+  ftsPath: CurrentPath +'fts',
   userId: '',//用户ID
   userName:'',//用户名
   idNo:'',//身份证
@@ -42,6 +43,7 @@ module.exports = {
   sendSmsType: null,
   type: {
     s: 4,
+    p: 4,
     r: 5
   },
   phone: null,
@@ -81,6 +83,12 @@ module.exports = {
   couponData: [],
   selectCoupon: null,
   repayData: {},
+  loanData: {
+    isAgree:true,
+    amount: 0,
+    day: 0,
+    period: 1,
+  },
   currentAmount: 0,
   realAmount: 0,
   account: {},
