@@ -27,6 +27,7 @@ export default class Rulers extends Component {
   componentDidUpdate() {
 
     this.pubsub_token = PubSub.subscribe('ruleDay:set', (topic, val)=> {
+      console.log('--------------------rulersDay');
       let resetDay;
 
       if(val<=500){

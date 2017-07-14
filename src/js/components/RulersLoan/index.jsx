@@ -98,6 +98,7 @@ export default class Rulers extends Component {
         CONFIGS.realAmount = CONFIGS.currentAmount;
 
         //console.log(this.state.data[ev.newPoint],'publish');
+        console.log('--------------------rulersDay',window.length++);
         PubSub.publish('ruleDay:set',this.state.data[ev.newPoint]);
 
         //PubSub.publish('present:init', this.state.data[ev.newPoint]);
