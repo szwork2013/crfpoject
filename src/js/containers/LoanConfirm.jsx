@@ -16,7 +16,7 @@ class RepayConfirm extends Component {
       CONFIGS.userId = props.location.query.ssoId || ''
     }
 
-    let amount = props.location.state && Numeral(props.location.state.realAmount).format('0, 0.00');
+    let amount = props.location.state && Numeral(props.location.state.realAmount).divide(100).format('0, 0.00');
 
     this.state = {
       kissoId: CONFIGS.userId || '',

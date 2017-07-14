@@ -52,3 +52,14 @@
     font-weight: bold;
   }
 }
+
+.result-content{
+  .loan-text-color{
+    .am-steps-item.am-steps-status-finish,.am-steps-item.am-steps-status-process{
+      .am-steps-title{
+        color:#646464;
+      }
+    }
+  }
+}
+

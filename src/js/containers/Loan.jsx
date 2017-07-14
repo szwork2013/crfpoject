@@ -82,9 +82,10 @@ class Repay extends Component {
 
     let period = defaultData.defaultDay>30 ? 'M' : 'D';
 
-    CONFIGS.loanData.amount = defaultData.remainLimit;
+    CONFIGS.loanData.amount = defaultData.remainLimit * 100;//分为单位
     CONFIGS.loanData.day = defaultData.defaultDay;
 
+    console.log(defaultData.remainLimit,'以分');
     const params={
       productNo: 'P2001002',//未动态传入
       loanAmount: defaultData.remainLimit,
@@ -137,6 +138,7 @@ class Repay extends Component {
   }
 
   async loanSubmitFetch(){
+    console.log(CONFIGS.loanData.amount,'以分');
     const params={
       loanAmount: CONFIGS.loanData.amount,//金额
       loanDays: CONFIGS.loanData.day,//借款天数
