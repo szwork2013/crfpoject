@@ -247,6 +247,7 @@ export default class SendSms extends Component {
         });
       }
     } catch (error) {
+      this.clearInput();
       this.sendFlag = true;
       this.setState({
         isLoading: false

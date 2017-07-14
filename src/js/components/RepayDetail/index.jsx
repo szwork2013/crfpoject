@@ -62,7 +62,7 @@ export default class RepayDetail extends Component {
           let currentData = {
             amt: Numeral(sub.offset_amt).divide(100).format('0, 0.00'),
             principal: Numeral(sub.offset_principal).divide(100).format('0, 0.00'),
-            fees: Numeral(sub.offset_over_int).divide(100).format('0, 0.00'),
+            fees: Numeral(sub.offset_fee).divide(100).format('0, 0.00'),
             interest: Numeral(sub.offset_int).divide(100).format('0, 0.00'),
             flag: CONFIGS.repayStatus[sub.complete_flag]
           };
