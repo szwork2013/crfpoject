@@ -207,21 +207,34 @@ export default class SendSms extends Component {
     //https://m-ci.crfchina.com/h5_dubbo/loan?kissoId=370486f0d16742b38138f3dc1839efcb
     let loanPath = `${CONFIGS.loanPath}?kissoId=${CONFIGS.ssoId}`;
     let params = {
-      "agreementGroup": "p2p",
-      "agreementName": "服务协议",
-      "agreementVersion": "2.0.2",
-      "applyTime": "2017-07-12",
-      "bankCardNo": "6216612600003455182",
+      "agreementGroup": CONFIGS.method.agreementGroup,
+      "agreementName": CONFIGS.method.agreementName,
+      "agreementVersion": CONFIGS.method.agreementVersion,
+      "bankCardNo": CONFIGS.account.bankCardNo,
       "billTerm": 1,
-      "campaigns": "string",//不传
-      "code": "864067",
-      "contractVersion": 1,
+      "code": this.refs.smsNum.value,
       "deviceType": "H5_24",
-      "loanDays": 12,
-      "loanNo": "CRF01884667554126655488",
+      "loanDays": CONFIGS.loanData.day,
+      "loanNo": CONFIGS.method.loanNo,
       "productNo": "P2001002",
-      "totalPrincipal": 50000
+      "totalPrincipal": CONFIGS.loanData.amount
     };
+
+    /*
+    * {
+     "agreementGroup": "p2p",
+     "agreementName": "服务协议",
+     "agreementVersion": "2.0.2",
+     "bankCardNo": "6216612600003455182",
+     "billTerm": 1,//分期
+     "code": "string",
+     "deviceType": "H5_24",//固定
+     "loanDays": 0,
+     "loanNo": "string",
+     "productNo": "p2001002",
+     "totalPrincipal": 0
+     }
+     * */
 
     let headers = {
       'Content-Type': 'application/json'
@@ -328,7 +341,7 @@ export default class SendSms extends Component {
       });
       let errorStatus = {
         status: error.response.status
-      }
+      };
       let msgs = error.body;
       let status = error.response.status;
       msgs.then((data) => {

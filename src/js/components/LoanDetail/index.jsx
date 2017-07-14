@@ -87,13 +87,13 @@ export default class RepayDetail extends Component {
 
   setListData(data){
     let allData={
-      "0":{
+      '0':{
         list:[]
       }
     };
 
     data.forEach(function(value,index) {
-      allData["0"].list.push({
+      allData['0'].list.push({
         "day": value.currBillDate,
         "principal": value.currStartMstAtm,
         "fees": value.handleFee,
@@ -141,7 +141,7 @@ export default class RepayDetail extends Component {
 
   render() {
     const {amount, data} = this.state;
-    console.log(data);
+    console.log(window.length++,'------------------------detail');
     const columns = [
       { title: '应还款日', dataIndex: 'day', key: 'day' },
       { title: '本金', dataIndex: 'principal', key: 'principal'},

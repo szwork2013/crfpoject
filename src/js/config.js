@@ -43,6 +43,7 @@ module.exports = {
   sendSmsType: null,
   type: {
     s: 4,
+    p: 4,
     r: 5
   },
   phone: null,
@@ -84,6 +85,9 @@ module.exports = {
   repayData: {},
   loanData: {
     isAgree:true,
+    amount: 0,
+    day: 0,
+    period: 1,
   },
   currentAmount: 0,
   realAmount: 0,

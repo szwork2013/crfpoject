@@ -1,4 +1,4 @@
-.loanContract {
+.loan-contract {
   padding: 0 .7rem;
   .agree {
     left: .3rem;
@@ -44,4 +44,11 @@
 
 .detail-list{
   background-color: #fff;
+}
+
+.font-bold{
+  .am-list-extra{
+    font-size: .36rem;
+    font-weight: bold;
+  }
 }

@@ -19,11 +19,13 @@ export default class Rulers extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({data: nextProps.list.data, amount: nextProps.list.currentAmount, defaultAmount: nextProps.list.currentAmount});
+    if(Object.keys(nextProps.list).length !== 0){
+      this.setState({data: nextProps.list.data, amount: nextProps.list.currentAmount, defaultAmount: nextProps.list.currentAmount});
+    }
   }
 
   componentDidUpdate() {
-    console.log(window.length++);
+    //console.log(window.length++);
     this.resetContainer();
   }
 
@@ -50,10 +52,8 @@ export default class Rulers extends Component {
 
   getCurrentPoint() {
     let currentPoint = 0;
-    if (this.state.data.length === 0) {
-
-    } else {
-      let currentData = this.state.data;
+    if (this.state.data.length !== 0) {
+      //let currentData = this.state.data;
       currentPoint = this.state.data.indexOf(this.state.defaultAmount);
     }
     return currentPoint;
@@ -97,7 +97,7 @@ export default class Rulers extends Component {
         storage.setItem('currentAmount', CONFIGS.currentAmount);
         CONFIGS.realAmount = CONFIGS.currentAmount;
 
-        console.log(this.state.data[ev.newPoint],'publish');
+        //console.log(this.state.data[ev.newPoint],'publish');
         PubSub.publish('ruleDay:set',this.state.data[ev.newPoint]);
 
         //PubSub.publish('present:init', this.state.data[ev.newPoint]);

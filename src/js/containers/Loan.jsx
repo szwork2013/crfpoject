@@ -14,20 +14,18 @@ class Repay extends Component {
       data: [],
       couponsData: [],
       isLoading: true,
-      initQuota: '',
-      maxQuota: '',
+      loanData: {},
+      dayData: {},
     };
   }
 
   componentDidMount() {
     _paq.push(['trackEvent', 'C_Page', 'E_P_Repay']);
 
-    this.getQuota();//获取额度
-
-    this.getInitData();//获取
+    this.getQuotaFetch();//获取额度
   }
 
-  async getQuota() {
+  async getQuotaFetch() {
     //https://m-ci.crfchina.com/h5_dubbo/loan/quota?kissoId=f9c36b0f4c034c0bb723fd67019dfdd0
     let quotaPath = `${CONFIGS.loanPath}/quota?kissoId=${CONFIGS.ssoId}`;
 
@@ -35,8 +33,13 @@ class Repay extends Component {
       let fetchPromise = CRFFetch.Get(quotaPath);
       // 获取数据
       let result = await fetchPromise;
+
+      this.setState({
+        isLoading: false
+      });
+
       if (result && !result.response) {
-        console.log(result);
+        //console.log(result);
         /*
         * {
          "code": "000000",
@@ -48,11 +51,8 @@ class Repay extends Component {
          "usedLimit": 0
          }
         * */
-        this.setState({
-          initQuota: result.remainLimit,
-          maxQuota: result.totalLimit,
-        });
-
+        const defaultData = this.defaultData(result.remainLimit/100);
+        this.getInitDataFetch(defaultData);//获取额度列表
       }
     } catch (error) {
       this.setState({
@@ -68,105 +68,54 @@ class Repay extends Component {
     }
   }
 
-  async getInitData() {
+  async getInitDataFetch(defaultData) {
+    let d = new Date();
 
-    //https://m-ci.crfchina.com/h5_dubbo/repayment/plan?productNo=P2001002&loanAmount=50000&loanPeriod=12&startTime=2017-07-10&periodUnit=1&kissoId=f9c36b0f4c034c0bb723fd67019dfdd0
+    let period = defaultData.defaultDay>30 ? 'M' : 'D';
+
+    if(defaultData.defaultDay<=30){
+      CONFIGS.loanData.period = 1;
+    }else if(defaultData.defaultDay<=60){
+      CONFIGS.loanData.period = 2;
+    }else if(defaultData.defaultDay<=90){
+      CONFIGS.loanData.period = 3;
+    }
+
+    CONFIGS.loanData.amount = defaultData.remainLimit;
+    CONFIGS.loanData.day = defaultData.defaultDay;
+
     const params={
-      productNo: 'P2001002',
-      loanAmount: '50000',
-      loanPeriod: '12',
-      startTime: '2017-07-10',
-      periodUnit: '1',
+      productNo: 'P2001002',//未动态传入
+      loanAmount: defaultData.remainLimit,
+      loanPeriod: defaultData.defaultDay,
+      startTime: `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`,
+      periodUnit: period,//D是短期，M是分期
       kissoId: CONFIGS.ssoId,
     };
 
     let loanPath = `${CONFIGS.repayPath}/plan?productNo=${params.productNo}&loanAmount=${params.loanAmount}&loanPeriod=${params.loanPeriod}&startTime=${params.startTime}&periodUnit=${params.periodUnit}&kissoId=${params.kissoId}`;
 
     try {
-      let fetchPromise = CRFFetch.Get(loanPath);
-      // 获取数据
-      let result = await fetchPromise;
-      if (result && !result.response) {
-        console.log(result);
+      let loanFetchPromise = CRFFetch.Get(loanPath);
 
-        this.setData(result);
-      }
-    } catch (error) {
+      // 获取数据
+      let loanResult = await loanFetchPromise;
+
       this.setState({
         isLoading: false
       });
-      console.log('error--mock');
-      //mock
-      const result={
-        "channel": "xhd",
-        "detailList": {
-          "loanScale": {
-            "contract_name": "信而富现金贷借款服务协议",
-            "contract_version": "0.01",
-            "day_scale": "1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|",
-            "errorMessag": "",
-            "loan_amount_max": "3300.0",
-            "loan_amount_min": "100.0",
-            "loan_amount_step": "100.0",
-            "period_amount_min": "50.0",
-            "period_limit": "1600",
-            "period_scale": "",
-            "result": "0",
-            "return_ability": "700.00",
-            "used_limit": "0.0"
-          },
-          "LoanPlan": [
-            {
-              "currBillDate": "2017-08-09",//账单日期
-              "currCountMstAtm": "1602.00",//本期总额
-              "currEndMstAtm": "0.00",//期末本金
-              "currInterest": "27.00",//本期还息
-              "currMstAtm": "1500.00",//本期还本
-              "currStartMstAtm": "1500.00",//期初本金
-              "handleFee": "75.00",//手续费
-              "period": "1"//期号
-            },
-            {
-              "currBillDate": "2017-08-10",//账单日期
-              "currCountMstAtm": "1610.00",//本期总额
-              "currEndMstAtm": "0.00",//期末本金
-              "currInterest": "35.00",//本期还息
-              "currMstAtm": "1500.00",//本期还本
-              "currStartMstAtm": "1500.00",//期初本金
-              "handleFee": "75.00",//手续费
-              "period": "1"//期号
-            }
-          ],
-          "LoanClause": {
-            "billDate": "2017-08-09",
-            "channelFee": "",
-            "countMstAtm": "1602.00",
-            "dInterestRate": "0.0006",
-            "dOverDueRate": "3.0000",
-            "dailyFreeHandFeeTimes": "3",
-            "handingFeeFix": "75.00",
-            "interestFreeDays": "3",
-            "loanAmount": "1500.00",
-            "loanPeriod": "30",
-            "mInterestRate": "0.0180",
-            "mOverDueRate": "90.0000",
-            "monthFreeHandFeeTimes": "30",
-            "overDueFreeDays": "3",
-            "periodYN": "A",
-            "productVersion": "1",
-            "startTime": "2017-07-10",
-            "totalInterestFee": "27.00",
-            "totalRtnAmount": "1500.00",
-            "yInterestRate": ""
-          }
-        },
-        "result": "0",
-        "errMsg": ""
-      };
 
-      PubSub.publish('loanDetail:list', result.detailList.LoanPlan);
+      if (loanResult && !loanResult.response) {
+        //console.log(loanResult);
+        PubSub.publish('loanDetail:list', loanResult.detailList.LoanPlan);
+      }
 
-      /*
+    } catch (error) {
+
+      this.setState({
+        isLoading: false
+      });
+
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
@@ -174,22 +123,23 @@ class Repay extends Component {
           });
         }
       }, () => {
-        let path = 'repay';
+        let path = 'loan';
         hashHistory.push({
           pathname: path,
           query: {
             ssoId: CONFIGS.userId
           }
         });
-      });*/
+      });
+
     }
   }
 
   async loanSubmitFetch(){
     const params={
-      loanAmount: '',//金额
-      loanDays: '',//借款天数
-      loanProductNo: '',//产品
+      loanAmount: CONFIGS.loanData.amount,//金额
+      loanDays: CONFIGS.loanData.day,//借款天数
+      loanProductNo: 'P2001002',//产品
       kissoId: CONFIGS.ssoId,
     };
 
@@ -207,7 +157,22 @@ class Repay extends Component {
       this.refs.loading.hide();
 
       //mock
-      this.setMethodData({});
+      //this.setMethodData({});
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      }, () => {
+        let path = 'loan';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      });
     }
   }
 
@@ -225,6 +190,54 @@ class Repay extends Component {
       isLoading: false,
       data: repay
     });
+  }
+
+  defaultData(remainLimit){
+    let maxAmount = remainLimit/100;
+
+    //生成借款数组
+    let loanData=[];
+    for(let i=1;i<=maxAmount;i++){
+      loanData.push(i*100);
+    }
+    let curAmount = maxAmount<16 ? maxAmount : 15;
+    let loanList = {
+      data: loanData,
+      currentAmount: curAmount*100
+    };
+
+    //生成借款期限数组
+    let dayData=[];
+    let maxDay=30;
+    if(maxAmount<=5){
+      maxDay=14;
+    }else if(maxAmount<=15){
+      maxDay=30;
+    }else if(maxAmount<=25){
+      maxDay=60;
+    }else{
+      maxDay=90;
+    }
+    for(let i=1;i<=maxDay;i++){
+      dayData.push(i);
+    }
+
+    let defaultDay = maxAmount<=5 ? 14 : 30;
+    let dayList = {
+      data: dayData,
+      currentDay: maxDay,
+      defaultDay: defaultDay,
+    };
+
+    this.setState({
+      loanData: loanList,
+      dayData: dayList,
+    });
+
+    return {
+      remainLimit: curAmount*100,
+      defaultDay: defaultDay,
+    };
   }
 
   convertRepayData(repayData) {
@@ -271,10 +284,10 @@ class Repay extends Component {
       pathname: path,
       query: {
         ssoId: CONFIGS.userId,
-        type: 'l'
+        type: 'p'
       },
       state: {
-        realAmount:1000,
+        realAmount:CONFIGS.loanData.amount,
         b:2
       }
     });
@@ -282,61 +295,16 @@ class Repay extends Component {
 
   render() {
     let props = { title: this.state.title};
-    let {isLoading, couponsData} = this.state;
+    let {isLoading, couponsData, loanData, dayData} = this.state;
 
-    //mock
-    let maxAmount=this.state.maxQuota/10000;
-    let arr=[];
-    for(let i=1;i<=maxAmount;i++){
-      arr.push(i*100);
-    }
-
-    let curAmount=0;
-    if(maxAmount<=12){
-      curAmount=maxAmount;
-    }else{
-      curAmount=Math.ceil(maxAmount/2);
-    }
-
-    let data = {
-      data:arr,//mock this.state.data
-      currentAmount: curAmount*100
-    };
-    console.log(data,'data');
-
-
-    //mock
-    let arr2=[];
-    let maxDay=30;
-
-    if(maxAmount<=5){
-      maxDay=14;
-    }else if(maxAmount<=15){
-      maxDay=30;
-    }else if(maxAmount<=25){
-      maxDay=60;
-    }else{
-      maxDay=90;
-    }
-
-    for(let i=1;i<=maxDay;i++){
-      arr2.push(i);
-    }
-
-    let data2 = {
-      data:arr2,
-      currentDay:maxDay,
-    };
     return (
       <div className="loan-content gray-bg">
         <Nav data={props} />
         <WhiteSpace />
-        <RulersLoan list={data} />
+        <RulersLoan list={loanData} />
         <WhiteSpace />
-        <RulersDay list={data2} />
+        <RulersDay list={dayData} getInitDataFetch={this.getInitDataFetch.bind(this)} />
         <WhiteSpace />
-        {/*<Present list={couponsData} />
-        <Coupons />*/}
         <LoanDetail />
         <footer>
           <button onClick={this.handleClick.bind(this)}>提交申请</button>

@@ -15,11 +15,14 @@ class RepayConfirm extends Component {
     if (!CONFIGS.userId) {
       CONFIGS.userId = props.location.query.ssoId || ''
     }
+
+    let amount = props.location.state && Numeral(props.location.state.realAmount).format('0, 0.00');
+
     this.state = {
       kissoId: CONFIGS.userId || '',
       title: '借款确认',
       way: '',
-      amount: props.location.state&&props.location.state.realAmount || '',
+      amount: amount || '',
       fee: 0,
       details: '',
       isLoading: true,
@@ -44,7 +47,7 @@ class RepayConfirm extends Component {
       // 获取数据
       let accountResult = await fetchAccountPromise;
       if (accountResult && !accountResult.response) {
-        //this.setData(accountResult);
+        //this.setData(accountResult);活动，暂不显示
       }
     } catch (error) {
       this.setState({
@@ -101,17 +104,29 @@ class RepayConfirm extends Component {
     let props = { title: this.state.title};
     let {way, amount, fee, isLoading, details} = this.state;
 
+    let totalAmount = () => {
+      let formatTotalAmount = Numeral(amount).format('0, 0.00');
+      return (
+        <div className="crf-confirm-details">
+          <div className="crf-confirm-amount">
+            <span className="number">{`${formatTotalAmount}`}</span>
+            <span>元</span>
+          </div>
+        </div>
+      );
+    };
+
     return (
       <div>
         <Nav data={props} />
         <WhiteSpace />
         <List className="crf-list crf-confirm">
-          <Item extra={amount}>借款金额</Item>
+          <Item extra={totalAmount()}>借款金额</Item>
           <Item extra={way}>到账银行卡</Item>
         </List>
         <WhiteSpace />
         <SendSms show={isLoading} pathname="loanconfirm"/>
-        <SetContract className="loanContract" curPath="loanconfirm" />
+        <SetContract className="loan-contract" curPath="loanconfirm" />
         <ReactTooltip id='description' place="bottom" className="crf-tooltips" effect='solid'>
           <span>{details}</span>
         </ReactTooltip>
