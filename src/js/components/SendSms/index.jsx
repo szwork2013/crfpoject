@@ -209,9 +209,9 @@ export default class SendSms extends Component {
     let params = {
       "agreementGroup": CONFIGS.method.agreementGroup,
       "agreementName": CONFIGS.method.agreementName,
-      "agreementVersion": CONFIGS.method.agreementVersion,
+      "agreementVersion": CONFIGS.method.agreementGroupVer,
       "bankCardNo": CONFIGS.account.bankCardNo,
-      "billTerm": 1,
+      "billTerm": CONFIGS.loanData.period,
       "code": this.refs.smsNum.value,
       "deviceType": "H5_24",
       "loanDays": CONFIGS.loanData.day,
@@ -239,7 +239,7 @@ export default class SendSms extends Component {
     let headers = {
       'Content-Type': 'application/json'
     };
-
+    console.log(params);
     try {
       let fetchPromise = CRFFetch.Put(loanPath, JSON.stringify(params), headers);
       // 获取数据

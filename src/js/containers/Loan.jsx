@@ -51,7 +51,16 @@ class Repay extends Component {
          "usedLimit": 0
          }
         * */
-        const defaultData = this.defaultData(result.remainLimit/100);
+        const defaultData = this.defaultData(result.remainLimit/100);//设置标尺
+
+        if(defaultData.defaultDay<=30){
+          CONFIGS.loanData.period = 1;
+        }else if(defaultData.defaultDay<=60){
+          CONFIGS.loanData.period = 2;
+        }else if(defaultData.defaultDay<=90){
+          CONFIGS.loanData.period = 3;
+        }
+
         this.getInitDataFetch(defaultData);//获取额度列表
       }
     } catch (error) {
@@ -72,14 +81,6 @@ class Repay extends Component {
     let d = new Date();
 
     let period = defaultData.defaultDay>30 ? 'M' : 'D';
-
-    if(defaultData.defaultDay<=30){
-      CONFIGS.loanData.period = 1;
-    }else if(defaultData.defaultDay<=60){
-      CONFIGS.loanData.period = 2;
-    }else if(defaultData.defaultDay<=90){
-      CONFIGS.loanData.period = 3;
-    }
 
     CONFIGS.loanData.amount = defaultData.remainLimit;
     CONFIGS.loanData.day = defaultData.defaultDay;
@@ -278,6 +279,7 @@ class Repay extends Component {
 
   setMethodData(methodData) {
     Object.assign(CONFIGS.method, methodData);
+    console.log(CONFIGS.method,'CONFIGS.method');
     this.refs.loading.hide();
     let path = 'loanconfirm';
     hashHistory.push({
