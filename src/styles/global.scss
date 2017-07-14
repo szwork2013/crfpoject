@@ -224,21 +224,23 @@ footer {
   background-size: cover;
 }
 
-.crf-tooltips {
-  padding: .02rem .40rem !important;
-  font-size: .22rem !important;
-  color: #646464 !important;
-  background-color: #E8F3FE !important;
-  box-shadow: .04rem .04rem .07rem 0 rgba(154, 175, 195, 0.50);
-  &.place-bottom {
-    &:after {
-      margin-left: -4px !important;
-      border-left-width: 4px !important;
-      border-right-width: 4px !important;
-      border-bottom-color: #E8F3FE !important;
-      border-bottom-style: solid !important;
-      border-bottom-width: 6px !important;
-    }
+.tooltip {
+  .am-popover {
+    width: 80%;
+    left: 50%;
+    transform: translate(-50%,0);
+  }
+  .am-popover-inner {
+    height: auto;
+    padding: .02rem .40rem;
+    font-size: .22rem;
+    color: #646464;
+    background-color: #E8F3FE;
+    box-shadow: .04rem .04rem .07rem 0 rgba(154, 175, 195, 0.50);
+    text-align: center;
+  }
+  .am-popover-arrow {
+    background-color: #E8F3FE;
   }
 }
 
@@ -389,6 +391,7 @@ footer {
       background: url(../images/failed-small-icon.png) no-repeat 0 0;
       background-size: contain;
       margin-right: 0.2rem;
+      margin-left: 0;
     }
     .am-steps-title {
       color: #FA4548;
