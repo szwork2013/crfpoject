@@ -9,6 +9,12 @@ footer {
   }
 }
 
+button {
+  &.disable-btn {
+    background-color: #96aac1;
+  }
+}
+
 .number {
   font-family: "Helvetica Neue";
 }

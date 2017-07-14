@@ -14,12 +14,13 @@ export default class Rulers extends Component {
       defaultAmount: 0,
       data: [],
       rulerWidth: 9,
-      isDefault: true
+      isDefault: true,
+      disable: true
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({data: nextProps.list.data, amount: nextProps.list.currentAmount, defaultAmount: nextProps.list.currentAmount});
+    this.setState({data: nextProps.list.data, amount: nextProps.list.currentAmount, defaultAmount: nextProps.list.currentAmount, disable: nextProps.list.disable});
   }
 
   componentDidUpdate() {
@@ -114,7 +115,7 @@ export default class Rulers extends Component {
       );
     };
 
-    const {title, amount, isDefault} = this.state;
+    const {title, amount, isDefault, disable} = this.state;
     const formatAmount = Numeral(amount).format('0, 0.00');
 
     return (
@@ -130,7 +131,9 @@ export default class Rulers extends Component {
         <div ref="swipes" className="crf-swipes-amount">
           <span className="crf-swipes-amount-text">{formatAmount}</span>
           <span className="crf-swipes-amount-link">
-            <a onClick={this.showModal.bind(this)}>明细</a>
+            {!disable &&
+              <a onClick={this.showModal.bind(this)}>明细</a>
+            }
           </span>
         </div>
         <div className="crf-swipes-content">

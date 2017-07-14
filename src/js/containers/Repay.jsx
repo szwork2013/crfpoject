@@ -12,7 +12,8 @@ class Repay extends Component {
       title: '我要还款',
       data: [],
       couponsData: [],
-      isLoading: true
+      isLoading: true,
+      disable: true
     };
   }
 
@@ -53,6 +54,15 @@ class Repay extends Component {
       isLoading: false,
       data: repay
     });
+    if (repayData.total_amt === 0) {
+      this.setState({
+        disable: true
+      });
+    } else {
+      this.setState({
+        disable: false
+      });
+    }
   }
 
   convertRepayData(repayData) {
@@ -88,7 +98,9 @@ class Repay extends Component {
     return finalData;
   }
 
-  async handleClick() {
+  async handleClick(e) {
+    let btn = e.currentTarget;
+    if (btn.classList.contains('disable-btn')) return;
     this.refs.loading.show();
     let currentAmount = Numeral(CONFIGS.realAmount).multiply(100).value();
     let methodPath = `${CONFIGS.repayPath}/method?kissoId=${CONFIGS.userId}&repayAmount=${currentAmount}`;
@@ -143,10 +155,15 @@ class Repay extends Component {
 
   render() {
     let props = { title: this.state.title};
-    let {isLoading, couponsData} = this.state;
+    let {isLoading, couponsData, disable} = this.state;
+    let buttonClass = '';
+    if (disable) {
+      buttonClass = 'disable-btn'
+    }
     let data = {
       data: this.state.data,
-      currentAmount: CONFIGS.currentAmount
+      currentAmount: CONFIGS.currentAmount,
+      disable: disable
     }
 
     return (
@@ -158,7 +175,7 @@ class Repay extends Component {
         <Present list={couponsData} />
         <Coupons />
         <footer>
-          <button onClick={this.handleClick.bind(this)}>立即还款</button>
+          <button className={buttonClass} onClick={this.handleClick.bind(this)}>立即还款</button>
         </footer>
         <Loading ref="loading" show={isLoading} />
       </div>
