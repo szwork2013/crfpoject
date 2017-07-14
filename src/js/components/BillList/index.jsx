@@ -122,10 +122,10 @@ export default class BillList extends Component {
         return obj;
       });
     }
-    this.setHeight();
     this.setState({
       dataSource: this.dataSource.cloneWithRows(data), fromRemote: true
     });
+    this.setHeight();
   }
 
   setHeight(type) {
@@ -151,9 +151,10 @@ export default class BillList extends Component {
 
   handleClick(e) {
     e.stopPropagation();
-    let contractNo = e.currentTarget.getAttribute('data-no');
-    let cash = e.currentTarget.getAttribute('data-amount');
-    let type = e.currentTarget.getAttribute('data-type');
+    let ele = e.currentTarget;
+    let contractNo = ele.dataset.no;
+    let cash = ele.dataset.amount;
+    let type = ele.dataset.type;
     // let category = 'C_ConsumptionBorrowResult';
     // let eventName = 'E_ConsumptionBorrowResult';
     // _paq.push(['trackEvent', category, eventName, '借款结果页']);
