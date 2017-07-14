@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Nav, SendSms, Loading } from 'app/components';
-import { Toast, WhiteSpace, List } from 'antd-mobile';
+import { Toast, WhiteSpace, List, Popover } from 'antd-mobile';
 import Numeral from 'numeral';
-import ReactTooltip from 'react-tooltip';
 import { hashHistory } from 'react-router';
 const Item = List.Item;
 
@@ -20,12 +19,35 @@ class RepayConfirm extends Component {
       amount: props.location.query.realAmount || '',
       fee: 0,
       details: '',
-      isLoading: true
+      visible: false,
+      isLoading: false
     };
   }
 
   componentDidMount() {
     this.getInitData();
+  }
+
+  handleVisibleChange = (visible) => {
+    setTimeout(() => {
+      this.setState({
+        visible,
+      });
+      this.setPopoverPosition();
+    }, 300);
+  };
+
+  setPopoverPosition() {
+    let ele = document.querySelector('.am-popover');
+    ele.style.left = '50%';
+    ele.style.top = (ele.offsetTop + 2) + 'px';
+    let arrow = document.querySelector('.am-popover-arrow');
+    let currentPoint = document.querySelector('.tooltip-icon');
+    let mainContainerLeft = ele.clientWidth;
+    let screenWidth = document.body.clientWidth;
+    let offsetLeft = currentPoint.offsetLeft - (screenWidth - mainContainerLeft) / 2 + 2;
+    arrow.style.left = offsetLeft + 'px';
+    arrow.style.top = '-2px';
   }
 
   async getInitData() {
@@ -76,6 +98,11 @@ class RepayConfirm extends Component {
       details: methodData.channelFeeDesc,
       isLoading: false
     });
+    this.setTooltip();
+  }
+
+  setTooltip() {
+    document.body.classList.add('tooltip');
   }
 
   render() {
@@ -91,7 +118,13 @@ class RepayConfirm extends Component {
             <span>元</span>
           </div>
           <div className="crf-confirm-des">
-            <span className="tooltip-icon" data-tip data-for="description"></span>
+            <Popover
+              visible={this.state.visible}
+              overlay={details}
+              onVisibleChange={this.handleVisibleChange}
+            >
+              <span className="tooltip-icon" data-tip data-for="description"></span>
+            </Popover>
             <span className="crf-confirm-des-text">{`(含支付通道费${formatCoupon}元) `}</span>
           </div>
         </div>
@@ -108,9 +141,6 @@ class RepayConfirm extends Component {
         </List>
         <WhiteSpace />
         <SendSms show={isLoading}/>
-        <ReactTooltip id='description' place="bottom" className="crf-tooltips" effect='solid'>
-          <span>{details}</span>
-        </ReactTooltip>
         <Loading show={isLoading} />
       </div>
     )
