@@ -114,7 +114,7 @@ export default class Present extends Component {
         if (data.length > 0) {
           item = <Item arrow="horizontal" className='crf-present' extra={`${data.length}个可用`} onClick={this.handlePresent.bind(this)}>抵扣红包</Item>;
         } else {
-          item = <Item>抵扣红包</Item>;
+          item = <Item extra="0个可用">抵扣红包</Item>;
         }
       }
     }

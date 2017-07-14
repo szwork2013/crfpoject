@@ -295,7 +295,7 @@ export default class SendSms extends Component {
         code: this.refs.smsNum.value,
         deviceType: 'H5_24',
         repayChannel: 'FTS',
-        repaymentAmount: CONFIGS.method.repayTotalAmt + CONFIGS.selectCoupon.offsetedCouponPrice,
+        repaymentAmount: CONFIGS.realAmount + CONFIGS.selectCoupon.offsetedCouponPrice,
         couponList: JSON.stringify(couponData)
       };
     } else {
@@ -303,7 +303,7 @@ export default class SendSms extends Component {
         code: this.refs.smsNum.value,
         deviceType: 'H5_24',
         repayChannel: 'FTS',
-        repaymentAmount: CONFIGS.method.repayTotalAmt
+        repaymentAmount: CONFIGS.realAmount
       };
     }
 
