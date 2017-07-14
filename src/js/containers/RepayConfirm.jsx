@@ -25,8 +25,7 @@ class RepayConfirm extends Component {
   }
 
   componentDidMount() {
-    //this.getInitData();
-    this.setTooltip();
+    this.getInitData();
   }
 
   handleVisibleChange = (visible) => {
