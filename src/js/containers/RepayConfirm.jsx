@@ -9,6 +9,7 @@ class RepayConfirm extends Component {
   constructor(props) {
     super(props);
     CONFIGS.sendSmsType = props.location.query.type;
+    CONFIGS.realAmount = props.location.query.realAmount;
     if (!CONFIGS.userId) {
       CONFIGS.userId = props.location.query.ssoId || ''
     }
@@ -136,7 +137,7 @@ class RepayConfirm extends Component {
         <Nav data={props} />
         <WhiteSpace />
         <List className="crf-list crf-confirm">
-          <Item extra={way}>还款方式</Item>
+          <Item extra={`${way}卡`}>还款方式</Item>
           <Item extra={totalAmount()}>还款金额</Item>
         </List>
         <WhiteSpace />

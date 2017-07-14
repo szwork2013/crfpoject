@@ -165,12 +165,13 @@ export default class RepayDetail extends Component {
       let item = data[index];
       let date = new Date(item.billDate);
       let formatDate = dateFormat(date, 'mm-dd');
+      let offsetPenalty = Numeral(item.offsetPenalty).divide(100).format('0, 0.00');
       return (
         <div key={index} className={styles.repayContainer}>
           <div className={`${styles.repayTitle} hor`}>
             <div className={styles.repayTitleLeft}>{`到期日 : ${formatDate}`}</div>
             {(item.offsetPenalty > 0) &&
-              <div className={styles.repayTitleRight}>{item.offsetPenalty}</div>
+              <div className={styles.repayTitleRight}>{`延迟还款服务费 : ${offsetPenalty}元`}</div>
             }
           </div>
           <Table
