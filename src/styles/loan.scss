@@ -7,6 +7,17 @@
 
 .loan-content {
   height: 100%;
+  
+  footer{
+    position: static;
+  }
+
+  .error-message{
+    padding: .2rem 0 .4rem .2rem;
+    color: #fa4548;
+    font-size: .30rem;
+  }
+  
   .crf-swipes-title{
     text-align: left;
     padding-left: .3rem;
@@ -43,6 +54,10 @@
 
   .crf-swipes-rulers{
     z-index: 3;
+  }
+
+  .disabled{
+    background-color: #96AAC1;
   }
 }
 
@@ -137,4 +152,6 @@
     padding:.1rem 0;
   }
 }
+
+
 

@@ -20,23 +20,24 @@ class Repay extends Component {
   componentDidMount() {
     _paq.push(['trackEvent', 'C_Page', 'E_P_Repay']);
     this.getQuotaFetch();//获取额度
+
   }
 
   async getQuotaFetch() {
     //https://m-ci.crfchina.com/h5_dubbo/loan/quota?kissoId=f9c36b0f4c034c0bb723fd67019dfdd0
     const quotaPath = `${CONFIGS.loanPath}/quota?kissoId=${CONFIGS.ssoId}`;
+    const productNo = 'P2001002';
+    const periodPath = `${CONFIGS.productPath}/params?kissoId=${CONFIGS.ssoId}&productNo=${productNo}`;
 
     try {
-      let fetchPromise = CRFFetch.Get(quotaPath);
+      let quotaFetchPromise = CRFFetch.Get(quotaPath);
+      let periodFetchPromise = CRFFetch.Get(periodPath);
       // 获取数据
-      let result = await fetchPromise;
+      let quotaResult = await quotaFetchPromise;
+      let periodResult = await periodFetchPromise;
 
-      /*this.setState({
-        isLoading: false
-      });*/
-
-      if (result && !result.response) {
-        //console.log(result);
+      if (quotaResult && !quotaResult.response && periodResult && !periodResult.response) {
+        //console.log(quotaResult,'quota');
         /*
         * {
          "code": "000000",
@@ -48,8 +49,10 @@ class Repay extends Component {
          "usedLimit": 0
          }
         * */
-        console.log('重新拖动的时候不能触发这里');
-        let defaultData = this.defaultData(result.remainLimit/100);//设置标尺
+
+        Object.assign(CONFIGS.loanPeriod,periodResult);
+
+        let defaultData = this.defaultData(quotaResult.remainLimit/100);//设置标尺
 
         if(defaultData.defaultDay<=30){
           CONFIGS.loanData.period = 1;
@@ -73,9 +76,52 @@ class Repay extends Component {
             Toast.info(data.message);
           });
         }
+      },() => {
+        let path = 'loan';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
       });
     }
   }
+
+  /*async getPeriodFetch(){
+    //https://m-ci.crfchina.com/h5_dubbo/product/params?kissoId=370486f0d16742b38138f3dc1839efcb&productNo=P2001002
+    const productNo = 'P2001002';
+    const periodPath = `${CONFIGS.productPath}/params?kissoId=${CONFIGS.ssoId}&productNo=${productNo}`;
+
+    try {
+      let fetchPromise = CRFFetch.Get(periodPath);
+      // 获取数据
+      let result = await fetchPromise;
+
+      if (result && !result.response) {
+        Object.assign(CONFIGS.loanPeriod,result);
+      }
+    } catch (error) {
+
+      this.refs.loading.hide();
+
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      },() => {
+        let path = 'loan';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      });
+    }
+  }*/
 
   async getInitDataFetch(defaultData) {
     let { defaultDay, remainLimit } = defaultData;
@@ -104,7 +150,8 @@ class Repay extends Component {
       kissoId: CONFIGS.ssoId,
     };
 
-    let loanPath = `${CONFIGS.repayPath}/plan?productNo=${params.productNo}&loanAmount=${params.loanAmount}&loanPeriod=${params.loanPeriod}&startTime=${params.startTime}&periodUnit=${params.periodUnit}&kissoId=${params.kissoId}`;
+    //https://m-ci.crfchina.com/h5_dubbo/product/loanClause?productNo=P2001002&loanAmount=1500&loanPeriod=30&startTime=2017-07-10&periodUnit=D&kissoId=370486f0d16742b38138f3dc1839efcb
+    let loanPath = `${CONFIGS.productPath}/loanClause?productNo=${params.productNo}&loanAmount=${params.loanAmount}&loanPeriod=${params.loanPeriod}&startTime=${params.startTime}&periodUnit=${params.periodUnit}&kissoId=${params.kissoId}`;
 
     try {
       let loanFetchPromise = CRFFetch.Get(loanPath);
@@ -185,8 +232,10 @@ class Repay extends Component {
   }
 
   handleClick() {
-    this.refs.loading.show();
-    this.loanSubmitFetch();
+    if(!this.refs.refLoanSubmit.classList.contains('disabled')){
+      this.refs.loading.show();
+      this.loanSubmitFetch();
+    }
   }
 
   /*setData(repayData) {
@@ -236,8 +285,12 @@ class Repay extends Component {
 
     let defaultDay = maxAmount<=5 ? 14 : 30;
     //CONFIGS.loanData.defaultDay = defaultDay;
+
+
+    console.log(CONFIGS.loanPeriod.productions[curAmount/100-1].dayArray,'金额对应的天数数组');
+    let dayArray = CONFIGS.loanPeriod.productions[curAmount/100-1].dayArray;
     let dayList = {
-      data: dayData,
+      data: dayArray,//dayData根据金额生成的日期
       currentDay: maxDay,
       defaultDay: defaultDay,
     };
@@ -286,7 +339,7 @@ class Repay extends Component {
         <WhiteSpace />
         <LoanDetail />
         <footer>
-          <button onClick={this.handleClick.bind(this)}>提交申请</button>
+          <button className="loan-submit-btn" onClick={this.handleClick.bind(this)} ref="refLoanSubmit">提交申请</button>
         </footer>
         <Loading ref="loading" show={isLoading} />
       </div>

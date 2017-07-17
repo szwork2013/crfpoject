@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Modal, Table} from 'antd-mobile';
+import { Table} from 'antd-mobile';
 import { hashHistory } from 'react-router';
 //import Numeral from 'numeral';
 import styles from './index.scss';
@@ -11,14 +11,12 @@ export default class RepayDetail extends Component {
     this.state = {
       amount: 0,
       data: {},
-      modal: false
+      message: '',
     };
   }
 
   componentDidMount() {
     this.pubsub_token = PubSub.subscribe('loanDetail:list', function(topic, val) {
-      //this.getInitData(val);
-      console.log('loan detail ---------------');
       this.setListData(val);
     }.bind(this));
   }
@@ -29,31 +27,36 @@ export default class RepayDetail extends Component {
   }
 
   setListData(data){
-    let allData={
-      '0':{
-        list:[]
-      }
-    };
+    if(Object.prototype.toString.call(data) === '[object Array]'){
+      let allData={
+        '0':{
+          list:[]
+        }
+      };
 
-    data.forEach(function(value,index) {
-      allData['0'].list.push({
-        "day": value.currBillDate,
-        "principal": value.currStartMstAtm,
-        "fees": value.handleFee,
-        "interest": value.currInterest,
-        "repay": value.currCountMstAtm,
-        "key": index,//需要一个key
+      data.forEach(function(value,index) {
+        allData['0'].list.push({
+          "day": value.currBillDate,
+          "principal": value.currStartMstAtm,
+          "fees": value.handleFee,
+          "interest": value.currInterest,
+          "repay": value.currCountMstAtm,
+          "key": index,//需要一个key
+        });
       });
-    });
 
-    this.setState({
-      data:allData
-    });
-
+      this.setState({
+        data:allData
+      });
+    }else{
+      this.setState({
+        message: data,
+      });
+    }
   }
 
   render() {
-    const {data} = this.state;
+    const { data, message} = this.state;
 
     const columns = [
       { title: '应还款日', dataIndex: 'day', key: 'day' },
@@ -64,23 +67,37 @@ export default class RepayDetail extends Component {
     ];
     const content = (index) => {
       let item = data[index];
+
+      let table;
+      console.log(message,'message');
+      if(!message){
+        table = <Table
+          className={styles.loanTable}
+          columns={columns}
+          dataSource={item.list}
+        />;
+        doc.querySelector('.loan-submit-btn').classList.remove('disabled');
+      }else{
+        table = <div className="error-message">{message}</div>;
+        this.state.message = '';
+        doc.querySelector('.loan-submit-btn').classList.add('disabled');
+      }
+
+      //2期
+
       return (
         <div key={index} className={styles.loanContainer}>
           <div className={`${styles.loanTitle}`}>
             <div className={styles.loanTitleLeft}>借款明细</div>
           </div>
-          <Table
-            className={styles.loanTable}
-            columns={columns}
-            dataSource={item.list}
-          />
+          {table}
         </div>
       );
     };
 
     return (
       <div className="detail-list loan-detail-list">
-          {Object.keys(data).map(content)}
+        {Object.keys(data).map(content)}
       </div>
     );
   }

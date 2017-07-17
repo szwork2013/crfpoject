@@ -84,12 +84,12 @@ export default class Rulers extends Component {
           doc.querySelectorAll('.loan-rulers .crf-ruler')[currentAmountCount].innerHTML='';
         }
 
-        this.refs.refAmount.innerHTML = `${Numeral(currentAmount).format('0, 0')}元`;//尺子使用setState会引起多次渲染
+        this.refs.refAmount.innerHTML = `${Numeral(currentAmount).format('0, 0')}元`;//尺子使用setState可能会引起多次渲染
 
         if(CONFIGS.currentAmount !== currentAmount){
           CONFIGS.loanData.sendSwitch = true;
-          //PubSub.publish('ruleDay:set',currentAmount);
-          PubSub.publish('daySwipes:day',currentAmount)
+          console.log(currentAmount,'拖动完成的金额');
+          PubSub.publish('daySwipes:day',currentAmount);
 
           CONFIGS.currentAmount = currentAmount;
         }

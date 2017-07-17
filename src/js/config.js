@@ -11,6 +11,7 @@ module.exports = {
   repayPath: CurrentPath + 'repayment',
   loanPath: CurrentPath + 'loan',
   ftsPath: CurrentPath +'fts',
+  productPath: CurrentPath + 'product',
   userId: '',//用户ID
   userName:'',//用户名
   idNo:'',//身份证
@@ -90,11 +91,13 @@ module.exports = {
     period: 1,
     currentAmountCount: 0,
     sendSwitch: true,
+    touchEndDay: 0,
   },
   currentAmount: 0,
   realAmount: 0,
   account: {},
   method: {},
+  loanPeriod: {},
   repayStatus: {
     Y: '可结清',
     N: '部分结清'
