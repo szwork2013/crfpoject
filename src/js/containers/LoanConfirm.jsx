@@ -16,7 +16,7 @@ class RepayConfirm extends Component {
       CONFIGS.userId = props.location.query.ssoId || ''
     }
 
-    let amount = props.location.state && Numeral(props.location.state.realAmount).format('0, 0.00');
+    let amount = props.location.state && Numeral(props.location.state.realAmount).divide(100).format('0, 0.00');
 
     this.state = {
       kissoId: CONFIGS.userId || '',
@@ -50,13 +50,12 @@ class RepayConfirm extends Component {
         //this.setData(accountResult);活动，暂不显示
       }
     } catch (error) {
-      this.setState({
-        isLoading: false
-      });
+      this.refs.loading.hide();
     }
   }
 
   async getInitData() {
+    ///h5_dubbo/user?kissoId=f9c36b0f4c034c0bb723fd67019dfdd0 获取手机号
     let accountPath = `${CONFIGS.ftsPath}/${CONFIGS.ssoId}/borrower_open_account`;
 
     try {
@@ -66,12 +65,12 @@ class RepayConfirm extends Component {
       let accountResult = await fetchAccountPromise;
 
       if (accountResult && !accountResult.response) {
+        this.refs.loading.hide();
         this.setData(accountResult);
       }
     } catch (error) {
-      this.setState({
-        isLoading: false
-      });
+      this.refs.loading.hide();
+
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
@@ -102,7 +101,7 @@ class RepayConfirm extends Component {
 
   render() {
     let props = { title: this.state.title};
-    let {way, amount, fee, isLoading, details} = this.state;
+    let {way, amount, isLoading, details} = this.state;
 
     let totalAmount = () => {
       let formatTotalAmount = Numeral(amount).format('0, 0.00');
@@ -130,7 +129,7 @@ class RepayConfirm extends Component {
         <ReactTooltip id='description' place="bottom" className="crf-tooltips" effect='solid'>
           <span>{details}</span>
         </ReactTooltip>
-        <Loading show={isLoading} />
+        <Loading ref="loading" show={isLoading} />
       </div>
     )
   }

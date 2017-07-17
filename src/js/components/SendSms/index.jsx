@@ -30,7 +30,11 @@ export default class SendSms extends Component {
     this.refs.smsText && this.refs.smsText.classList.remove(styles.error);
     if (!status) {
       if(this.props.pathname&&this.props.pathname.indexOf('loanconfirm')>-1){
-        CONFIGS.loanData.isAgree&&this.getVerification(0);
+        if(CONFIGS.loanData.isAgree){
+          this.getVerification(0);
+        }else{
+          Toast.info('请勾选协议');
+        }
       }else{
         this.getVerification(0); //0 文本
       }
@@ -209,15 +213,15 @@ export default class SendSms extends Component {
     let params = {
       "agreementGroup": CONFIGS.method.agreementGroup,
       "agreementName": CONFIGS.method.agreementName,
-      "agreementVersion": CONFIGS.method.agreementVersion,
+      "agreementVersion": CONFIGS.method.agreementGroupVer,
       "bankCardNo": CONFIGS.account.bankCardNo,
-      "billTerm": 1,
+      "billTerm": CONFIGS.loanData.period,
       "code": this.refs.smsNum.value,
       "deviceType": "H5_24",
       "loanDays": CONFIGS.loanData.day,
       "loanNo": CONFIGS.method.loanNo,
       "productNo": "P2001002",
-      "totalPrincipal": CONFIGS.loanData.amount
+      "totalPrincipal": CONFIGS.loanData.amount,//传值的时候以 分 为单位
     };
 
     /*
@@ -239,7 +243,7 @@ export default class SendSms extends Component {
     let headers = {
       'Content-Type': 'application/json'
     };
-
+    console.log(params);
     try {
       let fetchPromise = CRFFetch.Put(loanPath, JSON.stringify(params), headers);
       // 获取数据
@@ -249,18 +253,18 @@ export default class SendSms extends Component {
       result=result.json();
       result.then((data)=>{
         if (data && !data.response) {
-          console.log(data.result);
+          console.log(data.result,'loan submit');
 
           //hash
           hashHistory.push({
             pathname: path,
             query: {
               ssoId: CONFIGS.userId,
-            },
-            state: {
               contractNo: data.rcs_repay_no,
               cash: CONFIGS.method.repayTotalAmt,
               type: CONFIGS.sendSmsType,
+            },
+            state: {
               currentPath: 'loanconfirm',
             }
           });

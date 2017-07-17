@@ -111,7 +111,10 @@ class Contract extends React.Component {
   }
 
   render() {
-    const isAgree=CONFIGS.bindCard.isAgree;
+    let isAgree=CONFIGS.bindCard.isAgree;
+    if(this.props.curPath === 'loanconfirm'){
+      isAgree = CONFIGS.loanData.isAgree;
+    }
 
     let authClassName='authorize';
     if(this.props.className){
