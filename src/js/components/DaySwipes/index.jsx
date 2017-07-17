@@ -62,36 +62,56 @@ export default class DaySwipes extends Component {
     });
   }
 
-  setListData(val){
+  maxDay(amount){
     let resetDay;
 
-    if(val<=500){
+    if(amount<=500){
       resetDay=14;
-    }else if(val<=1500){
+    }else if(amount<=1500){
       resetDay=30;
-    }else if(val<=2500){
+    }else if(amount<=2500){
       resetDay=60;
     }else{
       resetDay=90;
     }
 
+    return resetDay;
+  }
+
+  setListData(val){
+    let resetDay = this.maxDay(val);//resetDay是根据规则返回的最大日期期限
+
     let arr=[];
     for(let i=1;i<=resetDay;i++){
       arr.push(i);
     }
-
+    let dayArray = CONFIGS.loanPeriod.productions[CONFIGS.currentAmount/100-1].dayArray;
+    console.log(CONFIGS.loanPeriod.productions[CONFIGS.currentAmount/100-1]);
+    console.log(CONFIGS.currentAmount,CONFIGS.loanPeriod.productions[CONFIGS.currentAmount/100-1].dayArray);
     let resultObj = {
       remainLimit: val,
       defaultDay: resetDay,
     };
 
-    this.setState({
-      list: arr,
-      defaultDay: resetDay,
-    });
+    //console.log(this.state.list.length , dayArray.length,'//////////************------------');
+    if(this.state.list.length !== dayArray.length){
+      this.setState({
+        list: dayArray,//arr是计算出来的日期数组,dayArray是接口返回的日期数组
+        defaultDay: resetDay,
+      });
+      doc.querySelector('.ref-day').innerHTML=`${resetDay}天`;
+    }
+
     this.getInitDataFetch(resultObj);
 
-    doc.querySelector('.ref-day').innerHTML=`${resetDay}天`;
+    console.log(CONFIGS.loanData.touchEndDay , dayArray.length, '//////////************------------');
+
+    //当最后拖拽结束的日期 大于 金额最大期限天数
+    //14 / 30
+    //20
+    if(CONFIGS.loanData.touchEndDay > dayArray.length ){
+      doc.querySelector('.ref-day').innerHTML=`${dayArray.length}天`;
+    }
   }
 
   async getInitDataFetch(defaultData) {
@@ -124,7 +144,7 @@ export default class DaySwipes extends Component {
       kissoId: CONFIGS.ssoId,
     };
 
-    let loanPath = `${CONFIGS.repayPath}/plan?productNo=${params.productNo}&loanAmount=${params.loanAmount}&loanPeriod=${params.loanPeriod}&startTime=${params.startTime}&periodUnit=${params.periodUnit}&kissoId=${params.kissoId}`;
+    let loanPath = `${CONFIGS.productPath}/loanClause?productNo=${params.productNo}&loanAmount=${params.loanAmount}&loanPeriod=${params.loanPeriod}&startTime=${params.startTime}&periodUnit=${params.periodUnit}&kissoId=${params.kissoId}`;
 
     try {
       let loanFetchPromise = CRFFetch.Get(loanPath);
@@ -136,7 +156,6 @@ export default class DaySwipes extends Component {
       PubSub.publish('loading:hide');
 
       if (loanResult && !loanResult.response) {
-        //console.log('+++++++++++++++多次？',window.length++);
         PubSub.publish('loanDetail:list', loanResult.detailList.LoanPlan);
       }
 
@@ -148,7 +167,8 @@ export default class DaySwipes extends Component {
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
-            Toast.info(data.message);
+            //Toast.info(data.message);
+            PubSub.publish('loanDetail:list', data.message);
           });
         }
       }, () => {
@@ -163,7 +183,6 @@ export default class DaySwipes extends Component {
 
     }
   }
-
 
   startFn(e){
     const touch = e.touches[0];
@@ -210,6 +229,11 @@ export default class DaySwipes extends Component {
     let dayIndex = Math.round((total-this.touchEl.aboveX) / this.state.rulerWidth + 1);
     let dayLeft = total - (dayIndex - 1) * 9;
 
+    console.log(this.maxDay(CONFIGS.currentAmount));
+    if(dayIndex > this.maxDay(CONFIGS.currentAmount)){
+      dayIndex = this.maxDay(CONFIGS.currentAmount);
+    }
+
     if(dayIndex === 1){
       doc.querySelector('.first-day').innerHTML='';
     }else{
@@ -218,17 +242,20 @@ export default class DaySwipes extends Component {
     refDaySwipes.style.left = dayLeft+'px';
     doc.querySelector('.ref-day').innerHTML=`${dayIndex}天`;
 
+    CONFIGS.loanData.touchEndDay = dayIndex;
+
     let resultObj = {
       remainLimit: CONFIGS.currentAmount,
       defaultDay: dayIndex,
     };
+
     this.getInitDataFetch(resultObj);
   }
 
   render() {
     const {list, defaultDay, rulerWidth} = this.state;
 
-    console.log(list);
+    //console.log(list);
     const ruler = (item, index) => {
       if(index === 0){
         return (

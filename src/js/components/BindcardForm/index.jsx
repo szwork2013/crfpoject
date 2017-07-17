@@ -150,6 +150,7 @@ console.log(path);
     let bankNumber=this.state.refBankCard.value.replace(/\s/g,'');
     CONFIGS.bindCard.bankNum=bankNumber;
     let params = {
+      'applicationSource': 'h5',
       'autoDeduct': CONFIGS.bindCard.switchStatus,//代扣
       'bankCardNo': bankNumber,//银行卡号
       'bankCode': CONFIGS.bindCard.bankCode,
