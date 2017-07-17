@@ -42,7 +42,7 @@ export default class SendSms extends Component {
 
   countDown(code) {
     this.clearInput();
-    let phoneNum = HandleRegex.hiddenMobile(CONFIGS.account.mobile);
+    let phoneNum = HandleRegex.hiddenMobile(CONFIGS.user.phone);
     this.setState({inputVerification: `已发送短信到${phoneNum}的手机`});
     let time = 60;
     clearInterval(this.state.timer);
@@ -81,10 +81,10 @@ export default class SendSms extends Component {
     this.setState({
       isLoading: true
     });
-    let path = `${CONFIGS.basePath}msg/${CONFIGS.account.mobile}`;
+    let path = `${CONFIGS.basePath}msg/${CONFIGS.user.phone}`;
     let params = {
       intent: CONFIGS.type[CONFIGS.sendSmsType],
-      phone: CONFIGS.account.mobile,
+      phone: CONFIGS.user.phone,
       type: code
     };
     let headers = {

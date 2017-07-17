@@ -39,6 +39,7 @@ module.exports = {
     showTelErrMsg:false,
     sendCount:1,
   },
+  user: {},
   sendSmsType: null,
   type: {
     s: 4,
