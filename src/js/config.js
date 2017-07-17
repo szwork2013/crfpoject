@@ -88,6 +88,8 @@ module.exports = {
     amount: 0,
     day: 0,
     period: 1,
+    currentAmountCount: 0,
+    sendSwitch: true,
   },
   currentAmount: 0,
   realAmount: 0,
@@ -104,7 +106,7 @@ module.exports = {
       failed: '对不起, 借款失败了, 请您稍后重试'
     },
     p: {
-      default: '话费充值一般2小时内到账（月初月末高峰期，24小时内到账均属正常情况），请耐心等待。如有疑问，请联系客服。',
+      default: '预计3分钟到达银行卡, 部分银行可能延迟, 以实际到账时间为准',
       success: '预计3分钟到达银行卡, 部分银行可能延迟, 以实际到账时间为准',
       failed: '对不起, 借款失败了, 请您稍后重试'
     },

@@ -38,7 +38,11 @@
   }
 
   .crf-swipes-content{
-    height:1.2rem;
+    height:1.18rem;
+  }
+
+  .crf-swipes-rulers{
+    z-index: 3;
   }
 }
 
@@ -60,6 +64,77 @@
         color:#646464;
       }
     }
+  }
+}
+
+.loan-rulers{
+  .crf-ruler{
+    width:18px;
+    span{
+      position: absolute;
+      top: -22px;
+      left: -9px;
+      font-size: 12px;
+    }
+  }
+
+  .crf-ruler:nth-of-type(5n):before, .crf-ruler:first-child:before{
+    height: 11px;
+    width: 1px;
+    opacity: 1;
+    background-color: #646464;
+  }
+}
+
+.day-swipes{
+  position: absolute;
+  .crf-ruler{
+    margin-top:24px;
+    .first-day{
+      position: absolute;
+      top: -25px;
+      left: -5px;
+      font-size: 12px;
+      width: 24px;
+    }
+    .under-line{
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+    }
+    .under-line:before{
+      content: "";
+      position: absolute;
+      height: 15px;
+      width: 1px;
+      bottom: -4px;
+      left: 4px;
+      background-color: #666;
+    }
+  }
+  .crf-ruler:before{
+    bottom: 4px;
+    background-color: #646464;
+    opacity: .3;
+  }
+  .crf-ruler:nth-of-type(5n):before, .crf-ruler:first-child:before{
+    height: 14px;
+    width: 1px;
+    bottom: 0;
+    background-color: #646464;
+  }
+
+}
+
+
+.loan-detail-list{
+  .am-table th, .am-table td{
+    padding:.1rem 0;
+    width:20%;
+  }
+  .am-table th:first-child, .am-table td:first-child{
+    text-align: left;
+    padding:.1rem 0;
   }
 }
 

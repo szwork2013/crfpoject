@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Nav, RulersLoan, RulersDay, Present, Coupons, Loading, LoanDetail } from 'app/components';
+import { Nav, RulersLoan, RulersDay, Loading, LoanDetail } from 'app/components';//Present, Coupons,
 import { Toast, WhiteSpace } from 'antd-mobile';
 import { hashHistory } from 'react-router';
-import Numeral from 'numeral';
+//import Numeral from 'numeral';
 import PubSub from 'pubsub-js';
 
 class Repay extends Component {
@@ -11,8 +11,6 @@ class Repay extends Component {
     CONFIGS.userId = this.props.location.query.ssoId;
     this.state = {
       title: '借款申请',
-      data: [],
-      couponsData: [],
       isLoading: true,
       loanData: {},
       dayData: {},
@@ -21,22 +19,21 @@ class Repay extends Component {
 
   componentDidMount() {
     _paq.push(['trackEvent', 'C_Page', 'E_P_Repay']);
-
     this.getQuotaFetch();//获取额度
   }
 
   async getQuotaFetch() {
     //https://m-ci.crfchina.com/h5_dubbo/loan/quota?kissoId=f9c36b0f4c034c0bb723fd67019dfdd0
-    let quotaPath = `${CONFIGS.loanPath}/quota?kissoId=${CONFIGS.ssoId}`;
+    const quotaPath = `${CONFIGS.loanPath}/quota?kissoId=${CONFIGS.ssoId}`;
 
     try {
       let fetchPromise = CRFFetch.Get(quotaPath);
       // 获取数据
       let result = await fetchPromise;
 
-      this.setState({
+      /*this.setState({
         isLoading: false
-      });
+      });*/
 
       if (result && !result.response) {
         //console.log(result);
@@ -51,7 +48,8 @@ class Repay extends Component {
          "usedLimit": 0
          }
         * */
-        const defaultData = this.defaultData(result.remainLimit/100);//设置标尺
+        console.log('重新拖动的时候不能触发这里');
+        let defaultData = this.defaultData(result.remainLimit/100);//设置标尺
 
         if(defaultData.defaultDay<=30){
           CONFIGS.loanData.period = 1;
@@ -64,9 +62,11 @@ class Repay extends Component {
         this.getInitDataFetch(defaultData);//获取额度列表
       }
     } catch (error) {
-      this.setState({
+      /*this.setState({
         isLoading: false
-      });
+      });*/
+      this.refs.loading.hide();
+
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
@@ -78,18 +78,27 @@ class Repay extends Component {
   }
 
   async getInitDataFetch(defaultData) {
+    let { defaultDay, remainLimit } = defaultData;
     let d = new Date();
 
-    let period = defaultData.defaultDay>30 ? 'M' : 'D';
+    let period = defaultDay>30 ? 'M' : 'D';
+    let periodDay ;
+    if(defaultDay<=30){
+      periodDay = defaultDay;
+    }else if(defaultDay<=60){
+      periodDay = 2;
+    }else if(defaultDay<=90){
+      periodDay = 3;
+    }
 
-    CONFIGS.loanData.amount = defaultData.remainLimit * 100;//分为单位
-    CONFIGS.loanData.day = defaultData.defaultDay;
+    CONFIGS.loanData.amount = remainLimit * 100;//分为单位
+    CONFIGS.loanData.day = defaultDay;
 
-    console.log(defaultData.remainLimit,'以分');
+    //console.log(remainLimit,'以分');
     const params={
       productNo: 'P2001002',//未动态传入
-      loanAmount: defaultData.remainLimit,
-      loanPeriod: defaultData.defaultDay,
+      loanAmount: remainLimit,
+      loanPeriod: periodDay,
       startTime: `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`,
       periodUnit: period,//D是短期，M是分期
       kissoId: CONFIGS.ssoId,
@@ -103,20 +112,16 @@ class Repay extends Component {
       // 获取数据
       let loanResult = await loanFetchPromise;
 
-      this.setState({
-        isLoading: false
-      });
+      this.refs.loading.hide();
 
       if (loanResult && !loanResult.response) {
-        //console.log(loanResult);
+        //console.log(loanResult,'+++++++++++++++1次');
         PubSub.publish('loanDetail:list', loanResult.detailList.LoanPlan);
       }
 
     } catch (error) {
 
-      this.setState({
-        isLoading: false
-      });
+      this.refs.loading.hide();
 
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
@@ -184,16 +189,16 @@ class Repay extends Component {
     this.loanSubmitFetch();
   }
 
-  setData(repayData) {
+  /*setData(repayData) {
     Object.assign(CONFIGS.repayData, repayData);
-    let repay = this.convertRepayData(repayData);
+    //let repay = this.convertRepayData(repayData);
     Object.assign(CONFIGS.rulerData, repay);
 
     this.setState({
       isLoading: false,
       data: repay
     });
-  }
+  }*/
 
   defaultData(remainLimit){
     let maxAmount = remainLimit/100;
@@ -204,9 +209,13 @@ class Repay extends Component {
       loanData.push(i*100);
     }
     let curAmount = maxAmount<16 ? maxAmount : 15;
+
+    CONFIGS.loanData.currentAmountCount = curAmount-1;
+
+    curAmount = curAmount*100;
     let loanList = {
       data: loanData,
-      currentAmount: curAmount*100
+      currentAmount: curAmount
     };
 
     //生成借款期限数组
@@ -226,6 +235,7 @@ class Repay extends Component {
     }
 
     let defaultDay = maxAmount<=5 ? 14 : 30;
+    //CONFIGS.loanData.defaultDay = defaultDay;
     let dayList = {
       data: dayData,
       currentDay: maxDay,
@@ -238,45 +248,9 @@ class Repay extends Component {
     });
 
     return {
-      remainLimit: curAmount*100,
+      remainLimit: curAmount,
       defaultDay: defaultDay,
     };
-  }
-
-  convertRepayData(repayData) {
-    let currentAmount = repayData.curr_amt;
-    let totalAmount = repayData.total_amt;
-    CONFIGS.currentAmount = Numeral(currentAmount).divide(100).value();
-
-    //mock
-    //CONFIGS.currentAmount=1200;
-
-    let leftData = [], rightData = [];
-    // 构造大于currentAmount的数组
-    while (currentAmount < totalAmount) {
-      let amount = Numeral(currentAmount).divide(100);
-      rightData.push(amount.value());
-      currentAmount = currentAmount + CONFIGS.defaultScale;
-    }
-    rightData.push(Numeral(totalAmount).divide(100).value());
-    // 构造小于currentAmount的数组
-    currentAmount = currentAmount - CONFIGS.defaultScale;
-    while (currentAmount > CONFIGS.defaultScale) {
-      let amount = Numeral(currentAmount).divide(100);
-      leftData.push(amount.value());
-      currentAmount = currentAmount - CONFIGS.defaultScale;
-    }
-    if (leftData.length > 0) {
-      leftData.push(Numeral(CONFIGS.defaultScale).divide(100).value());
-      leftData.sort(function(a, b) {
-        return a - b;
-      });
-    }
-    if(currentAmount > 0 && leftData.length === 0) {
-      leftData.push(CONFIGS.defaultScale);
-    }
-    let finalData = leftData.concat(rightData);
-    return finalData;
   }
 
   setMethodData(methodData) {
@@ -299,7 +273,8 @@ class Repay extends Component {
 
   render() {
     let props = { title: this.state.title};
-    let {isLoading, couponsData, loanData, dayData} = this.state;
+    let {isLoading, loanData, dayData} = this.state;
+    console.log(window.length++,'------------------------detail');
 
     return (
       <div className="loan-content gray-bg">
@@ -307,7 +282,7 @@ class Repay extends Component {
         <WhiteSpace />
         <RulersLoan list={loanData} />
         <WhiteSpace />
-        <RulersDay list={dayData} getInitDataFetch={this.getInitDataFetch.bind(this)} />
+        <RulersDay list={dayData} />
         <WhiteSpace />
         <LoanDetail />
         <footer>

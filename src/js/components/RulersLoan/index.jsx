@@ -4,6 +4,7 @@ import ReactSwipes from 'react-swipes';
 import {WhiteSpace} from 'antd-mobile';
 import Numeral from 'numeral';
 import PubSub from 'pubsub-js';
+import { hashHistory } from 'react-router';
 
 export default class Rulers extends Component {
   constructor(props, context) {
@@ -13,8 +14,7 @@ export default class Rulers extends Component {
       amount: 0,
       defaultAmount: 0,
       data: [],
-      rulerWidth: 9,
-      isDefault: true,
+      rulerWidth: 18,
     };
   }
 
@@ -45,8 +45,8 @@ export default class Rulers extends Component {
       rulerContainer.style.width = totalWidth + 'px';
       rulerContainer.style.marginLeft = offsetWidth + 'px';
       rulerContainer.style.marginRight = offsetWidth + 'px';
-      rulerContainer.style.transform = `translate3d(-${rulerOffsetWidth}px, 0, 0)`;
-      if (this.state.amount === this.state.defaultAmount) PubSub.publish('present:init', this.state.data[currentPoint]);
+      //rulerContainer.style.transform = `translate3d(-${rulerOffsetWidth}px, 0, 0)`;
+      //if (this.state.amount === this.state.defaultAmount) PubSub.publish('present:init', this.state.data[currentPoint]);
     }
   }
 
@@ -59,15 +59,6 @@ export default class Rulers extends Component {
     return currentPoint;
   }
 
-  handleReset() {
-    let currentPoint = this.getCurrentPoint();
-    this.setState({
-      amount: this.state.data[currentPoint],
-      title: CONFIGS.repayDefaultTitle,
-      isDefault: true
-    });
-  }
-
   /*showModal() {
     PubSub.publish('repayDetail:show', this.state.amount);
   }*/
@@ -77,44 +68,60 @@ export default class Rulers extends Component {
       distance: this.state.rulerWidth, // 每次移动的距离，卡片的真实宽度，需要计算
       currentPoint: this.getCurrentPoint(),// 初始位置，默认从0即第一个元素开始
       swTouchend: (ev) => {
-        let data = {
-          moved: ev.moved,
-          originalPoint: ev.originalPoint,
-          newPoint: ev.newPoint,
-          cancelled: ev.cancelled
-        };
-        let defaultValue = false;
-        if (this.state.data[ev.newPoint] === this.state.defaultAmount) {
-          defaultValue = true;
+
+        let currentAmount = this.state.data[ev.newPoint];
+        let currentAmountCount = currentAmount/100-1;
+        let crfRulerEle = doc.querySelectorAll('.loan-rulers .crf-ruler');
+
+        if(CONFIGS.loanData.currentAmountCount < 5){
+          crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>&nbsp;${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
+        }else{
+          crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
         }
-        this.setState({
-          amount: this.state.data[ev.newPoint],
-          /*title: CONFIGS.repayChangedTitle,*/
-          isDefault: defaultValue
-        });
-        CONFIGS.currentAmount = this.state.data[ev.newPoint];
-        let storage = window.localStorage;
-        storage.setItem('currentAmount', CONFIGS.currentAmount);
+
+        if(currentAmountCount===0 || currentAmountCount%5===4){
+          CONFIGS.loanData.currentAmountCount = currentAmountCount;
+          doc.querySelectorAll('.loan-rulers .crf-ruler')[currentAmountCount].innerHTML='';
+        }
+
+        this.refs.refAmount.innerHTML = `${Numeral(currentAmount).format('0, 0')}元`;//尺子使用setState会引起多次渲染
+
+        if(CONFIGS.currentAmount !== currentAmount){
+          CONFIGS.loanData.sendSwitch = true;
+          //PubSub.publish('ruleDay:set',currentAmount);
+          PubSub.publish('daySwipes:day',currentAmount)
+
+          CONFIGS.currentAmount = currentAmount;
+        }
+
         CONFIGS.realAmount = CONFIGS.currentAmount;
 
-        //console.log(this.state.data[ev.newPoint],'publish');
-        console.log('--------------------rulersDay',window.length++);
-        PubSub.publish('ruleDay:set',this.state.data[ev.newPoint]);
-
-        //PubSub.publish('present:init', this.state.data[ev.newPoint]);
       }
     };
 
     const ruler = (item, index) => {
+      let span = '';
+
+      if( index===0 || index%5===4 ){
+        if(index <= 8){
+          span = <span>&nbsp;{(index+1)*100}</span>;
+        }else{
+          span = <span>{(index+1)*100}</span>;
+        }
+        if(index === CONFIGS.loanData.currentAmountCount){
+          span = <span></span>;
+        }
+      }
+
       return (
-        <div key={index} className="crf-ruler"></div>
+        <div key={index} className="crf-ruler">
+          {span}
+        </div>
       );
     };
 
-    const {title, amount, isDefault} = this.state;
+    const {title, amount} = this.state;
     const formatAmount = Numeral(amount).format('0, 0');
-
-    //console.log(this.state,'this.state');
 
     return (
       <section className="crf-swipes">
@@ -122,7 +129,7 @@ export default class Rulers extends Component {
           <span className="crf-swipes-title-text">{title}</span>
         </div>
         <div className="crf-swipes-amount">
-          <span className="crf-swipes-amount-text">{formatAmount}元</span>
+          <span className="crf-swipes-amount-text" ref="refAmount">{formatAmount}元</span>
         </div>
         <div className="crf-swipes-content">
           <div className="crf-swipes-axis">
@@ -130,7 +137,7 @@ export default class Rulers extends Component {
           </div>
           <div className="crf-swipes-rulers">
             {(this.state.data.length > 0) &&
-              <ReactSwipes ref="rulers" className="crf-rulers" options={opt}>
+              <ReactSwipes ref="rulers" className="crf-rulers loan-rulers" options={opt}>
                 {this.state.data.map(ruler)}
               </ReactSwipes>
             }
