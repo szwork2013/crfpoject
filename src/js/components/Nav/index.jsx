@@ -98,7 +98,7 @@ export default class Nav extends Component {
     if (from === 'loan') { //from loan show finish
       leftEle = <span className={styles.dark} onClick={this.handleGoHome}>完成</span>
     } else {
-      leftEle = <span className={styles.navbarLeftIcon}><button className="trs-btn" onTouchTap={this.handleBack}></button></span>;
+      leftEle = <span className={styles.navbarLeftIcon}><button className="trs-btn" onClick={this.handleBack}></button></span>;
       //if(contractNo) title = CONFIGS.billType[type] + '动态';
     }
     return (

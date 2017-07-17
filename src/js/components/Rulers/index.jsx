@@ -32,8 +32,8 @@ export default class Rulers extends Component {
     let totalWidth = this.state.data.length * this.state.rulerWidth;
     let currentPoint = this.getCurrentPoint();
     let rulerOffsetWidth = currentPoint * this.state.rulerWidth;
-    let rulerContainer = document.getElementsByClassName('crf-rulers')[0];
-    let offsetWidth = (screen.width / 2 - 3.5);
+    let rulerContainer = document.querySelector('crf-rulers');
+    let offsetWidth = (document.body.offsetWidth / 2 - this.state.rulerWidth / 2);
     CONFIGS.currentAmount = this.state.defaultAmount;
     let storage = window.localStorage;
     storage.setItem('currentAmount', CONFIGS.currentAmount);
