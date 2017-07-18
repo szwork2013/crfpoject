@@ -66,8 +66,7 @@ export default class Coupons extends Component {
   async getFee(index) {
     let currentAmount = Numeral(CONFIGS.currentAmount).multiply(100).value();
     let path = `${CONFIGS.repayPath}/coupon?kissoId=${CONFIGS.userId}&repaymentAmount=${currentAmount}`;
-
-    let paramData = this.state.dataSource.getRowData(index,0);
+    let paramData = this.state.dataSource.getRowData(0, index);
     CONFIGS.selectCoupon = paramData;
     let params = {
       amt_type: 1,
@@ -109,6 +108,7 @@ export default class Coupons extends Component {
   }
 
   handleClick(e) {
+    e.stopPropagation();
     let index = parseInt(e.currentTarget.getAttribute('data-index'));
     this.getFee(index);
   }
@@ -131,20 +131,20 @@ export default class Coupons extends Component {
   }
 
   render() {
-    const header = () => {
+    let header = () => {
       let nums = this.state.dataSource.rowIdentities[0].length;
       return (
         <div className="coupon-can-use">可使用({nums})</div>
       );
     };
 
-    const rule = (item) => {
+    let rule = (item) => {
       return (
         <p>{item}</p>
       );
     };
 
-    const row = (rowData) => {
+    let row = (rowData) => {
       return (
         <div key={rowData.id} id={`row_${rowData.id}`}>
           <div className="coupon-row">

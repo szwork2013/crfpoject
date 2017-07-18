@@ -49,17 +49,17 @@ class Repay extends Component {
     Object.assign(CONFIGS.repayData, repayData);
     let repay = this.convertRepayData(repayData);
     Object.assign(CONFIGS.rulerData, repay);
-    this.setState({
-      isLoading: false,
-      data: repay
-    });
     if (repayData.total_amt === 0) {
       this.setState({
-        disable: true
+        disable: true,
+        isLoading: false,
+        data: repay
       });
     } else {
       this.setState({
-        disable: false
+        disable: false,
+        isLoading: false,
+        data: repay
       });
     }
   }
