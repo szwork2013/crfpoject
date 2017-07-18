@@ -29,7 +29,6 @@ export default class Rulers extends Component {
     this.setTextPosition();
     this.resetContainer();
     this.refs.rulers.swipes.transitionDuration = 0;
-    this.bindEvent();
   }
 
   componentDidMount() {
@@ -37,53 +36,61 @@ export default class Rulers extends Component {
     let height = ele.clientHeight - 1;
     let ruler = document.querySelector('.crf-swipes-axis-inner');
     ruler.style.height = height + 'px';
+    this.bindEvent();
   }
 
   bindEvent() {
     let ne = MonoEvent;
     let refWrap = ne('.crf-swipes-rulers');
-
-    let dayEl = doc.querySelector('.crf-rulers');
     let touchDoc = ne(document);
+    let startPoint = 0;
+    let endPoint = 0;
 
     refWrap.on('touchstart',(e) => {
+      let dayEl = doc.querySelector('.crf-rulers');
       let touch = e.touches[0];
       let disX = touch.pageX - dayEl.offsetLeft;
+      startPoint = disX;
+      let originPoint = this.state.data.indexOf(CONFIGS.currentAmount);
 
       touchDoc.on('touchmove', (e) => {
         let touch = e.touches[0];
-        let swipeLeft = touch.pageX - disX;//计算
-        this.setMoveFn(swipeLeft);//限定,使用
+        let disX = touch.pageX - dayEl.offsetLeft;
+        endPoint = disX;
+        let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
+        if (distance !== 0) {
+          let currentPoint = originPoint + distance;
+          if (currentPoint > (this.state.data.length - 1) || currentPoint < 0) {
+            if (currentPoint > this.state.data.length) {
+              currentPoint = (this.state.data.length - 1);
+            } else if (currentPoint < 0) {
+              currentPoint = 0;
+            }
+          }
+          this.refs.rulers.swipes.moveToPoint(currentPoint);
+        }
       });
 
-      touchDoc.on('touchend', ()=>{
+      touchDoc.on('touchend', () => {
         touchDoc.un('touchend');
         touchDoc.un('touchmove');
-        //this.endFn();
+        let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
+        if (distance !== 0) {
+          let currentPoint = originPoint + distance;
+          if (currentPoint > (this.state.data.length - 1) || currentPoint < 0) {
+            if (currentPoint > this.state.data.length) {
+              currentPoint = (this.state.data.length - 1);
+            } else if (currentPoint < 0) {
+              currentPoint = 0;
+            }
+          }
+          this.setRulerState(currentPoint);
+          this.refs.rulers.swipes.moveToPoint(currentPoint);
+        }
       });
 
       return false;
     });
-  }
-
-  setMoveFn(swipeLeft) {
-    console.log(swipeLeft);
-    // const refDaySwipes = doc.querySelector('.crf-rulers');
-    //
-    // let clientWidth50 = parseFloat(doc.documentElement.clientWidth / 2);
-    // let rulerWidth50 = this.state.rulerWidth / 2;
-    // let leftMax = clientWidth50 - rulerWidth50;
-    // let refDaySwipes50 = parseFloat(refDaySwipes.style.width) - clientWidth50 - rulerWidth50;
-    // console.log(refDaySwipes50);
-    //
-    // if(swipeLeft <= -refDaySwipes50){
-    //   swipeLeft = -refDaySwipes50;
-    // }
-    // if(swipeLeft > leftMax){
-    //   swipeLeft = leftMax;
-    // }
-    //
-    // refDaySwipes.style.marginLeft = swipeLeft + 'px';
   }
 
   resetContainer() {
@@ -139,6 +146,24 @@ export default class Rulers extends Component {
     container.style.marginLeft = marginLeft;
   }
 
+  setRulerState(point) {
+    let defaultValue = false;
+    if (this.state.data[point] === this.state.defaultAmount) {
+      defaultValue = true;
+    }
+    this.setState({
+      amount: this.state.data[point],
+      title: CONFIGS.repayChangedTitle,
+      isDefault: defaultValue
+    });
+    CONFIGS.currentAmount = this.state.data[point];
+    let storage = window.localStorage;
+    storage.setItem('currentAmount', CONFIGS.currentAmount);
+    CONFIGS.realAmount = CONFIGS.currentAmount;
+    PubSub.publish('present:init', this.state.data[point]);
+    this.setTextPosition();
+  }
+
   render() {
     const opt = {
       distance: this.state.rulerWidth, // 每次移动的距离，卡片的真实宽度，需要计算
@@ -150,21 +175,7 @@ export default class Rulers extends Component {
           newPoint: ev.newPoint,
           cancelled: ev.cancelled
         }
-        let defaultValue = false;
-        if (this.state.data[ev.newPoint] === this.state.defaultAmount) {
-          defaultValue = true;
-        }
-        this.setState({
-          amount: this.state.data[ev.newPoint],
-          title: CONFIGS.repayChangedTitle,
-          isDefault: defaultValue
-        });
-        CONFIGS.currentAmount = this.state.data[ev.newPoint];
-        let storage = window.localStorage;
-        storage.setItem('currentAmount', CONFIGS.currentAmount);
-        CONFIGS.realAmount = CONFIGS.currentAmount;
-        PubSub.publish('present:init', this.state.data[ev.newPoint]);
-        this.setTextPosition();
+        this.setRulerState(ev.newPoint);
       }
     };
 
