@@ -23,20 +23,15 @@ class Repay extends Component {
   }
 
   async getQuotaFetch() {
-    //https://m-ci.crfchina.com/h5_dubbo/loan/quota?kissoId=f9c36b0f4c034c0bb723fd67019dfdd0
-    const quotaPath = `${CONFIGS.loanPath}/quota?kissoId=${CONFIGS.ssoId}`;
-
     const productNo = 'P2001002';
     const periodPath = `${CONFIGS.productPath}/params?kissoId=${CONFIGS.ssoId}&productNo=${productNo}`;
 
     try {
-      let quotaFetchPromise = CRFFetch.Get(quotaPath);
       let periodFetchPromise = CRFFetch.Get(periodPath);
       // 获取数据
-      let quotaResult = await quotaFetchPromise;
       let periodResult = await periodFetchPromise;
 
-      if (quotaResult && !quotaResult.response && periodResult && !periodResult.response) {
+      if (periodResult && !periodResult.response) {
         /*
         * {
          "code": "000000",
@@ -53,7 +48,7 @@ class Repay extends Component {
 
         //console.log(periodResult.productions.length,quotaResult.remainLimit,'************************************');
         //let defaultData = this.defaultData(quotaResult.remainLimit/100);//设置标尺，传入可用额度
-        let defaultData = this.defaultData(periodResult);//需要确认是否length就是最大金额，还要考虑2期3期，是否能替代quota接口
+        let defaultData = this.defaultData(periodResult);//考虑2期3期
 
         this.getInitDataFetch(defaultData);//获取额度列表
       }
@@ -120,7 +115,8 @@ class Repay extends Component {
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
-            Toast.info(data.message);
+            //Toast.info(data.message);
+            PubSub.publish('loanDetail:list', data.message);
           });
         }
       }, () => {
@@ -260,7 +256,7 @@ class Repay extends Component {
 
   setMethodData(methodData) {
     Object.assign(CONFIGS.method, methodData);
-    console.log(CONFIGS.method,'CONFIGS.method');
+    //console.log(CONFIGS.method,'CONFIGS.method');
     this.refs.loading.hide();
     let path = 'loanconfirm';
     hashHistory.push({

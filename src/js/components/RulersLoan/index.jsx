@@ -73,6 +73,7 @@ export default class Rulers extends Component {
         let currentAmountCount = currentAmount/100-1;
         let crfRulerEle = doc.querySelectorAll('.loan-rulers .crf-ruler');
 
+        console.log(CONFIGS.loanData.currentAmountCount,'CONFIGS.loanData.currentAmountCount-------------');
         if(CONFIGS.loanData.currentAmountCount < 5){
           crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>&nbsp;${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
         }else{

@@ -99,7 +99,7 @@ export default class Rulers extends Component {
           <div className="crf-swipes-axis">
             <div className="crf-swipes-axis-inner"></div>
           </div>
-          <div className="crf-swipes-rulers">
+          <div className="crf-swipes-rulers loan-ruler-day">
             {/*(this.state.data.length > 0) &&
               <ReactSwipes ref="rulers" className="crf-rulersDay" options={opt}>
                 {this.state.data.map(ruler)}
