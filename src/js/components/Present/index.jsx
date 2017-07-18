@@ -18,14 +18,12 @@ export default class Present extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      data: nextProps.list
-    });
-  }
-
   componentDidMount() {
     this.pubsub_token_present = PubSub.subscribe('present:init', function(topic, val) {
+      this.setState({coupon: {
+        real: 0,
+        total: 0
+      }});
       this.getCoupons(val);
     }.bind(this));
 

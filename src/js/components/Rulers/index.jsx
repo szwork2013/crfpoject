@@ -5,6 +5,8 @@ import {WhiteSpace} from 'antd-mobile';
 import Numeral from 'numeral';
 import PubSub from 'pubsub-js';
 
+import '../../utils/common/monoevent';
+
 export default class Rulers extends Component {
   constructor(props, context) {
     super(props, context);
@@ -26,6 +28,8 @@ export default class Rulers extends Component {
   componentDidUpdate() {
     this.setTextPosition();
     this.resetContainer();
+    this.refs.rulers.swipes.transitionDuration = 0;
+    this.bindEvent();
   }
 
   componentDidMount() {
@@ -33,6 +37,53 @@ export default class Rulers extends Component {
     let height = ele.clientHeight - 1;
     let ruler = document.querySelector('.crf-swipes-axis-inner');
     ruler.style.height = height + 'px';
+  }
+
+  bindEvent() {
+    let ne = MonoEvent;
+    let refWrap = ne('.crf-swipes-rulers');
+
+    let dayEl = doc.querySelector('.crf-rulers');
+    let touchDoc = ne(document);
+
+    refWrap.on('touchstart',(e) => {
+      let touch = e.touches[0];
+      let disX = touch.pageX - dayEl.offsetLeft;
+
+      touchDoc.on('touchmove', (e) => {
+        let touch = e.touches[0];
+        let swipeLeft = touch.pageX - disX;//计算
+        this.setMoveFn(swipeLeft);//限定,使用
+      });
+
+      touchDoc.on('touchend', ()=>{
+        touchDoc.un('touchend');
+        touchDoc.un('touchmove');
+        //this.endFn();
+      });
+
+      return false;
+    });
+  }
+
+  setMoveFn(swipeLeft) {
+    console.log(swipeLeft);
+    // const refDaySwipes = doc.querySelector('.crf-rulers');
+    //
+    // let clientWidth50 = parseFloat(doc.documentElement.clientWidth / 2);
+    // let rulerWidth50 = this.state.rulerWidth / 2;
+    // let leftMax = clientWidth50 - rulerWidth50;
+    // let refDaySwipes50 = parseFloat(refDaySwipes.style.width) - clientWidth50 - rulerWidth50;
+    // console.log(refDaySwipes50);
+    //
+    // if(swipeLeft <= -refDaySwipes50){
+    //   swipeLeft = -refDaySwipes50;
+    // }
+    // if(swipeLeft > leftMax){
+    //   swipeLeft = leftMax;
+    // }
+    //
+    // refDaySwipes.style.marginLeft = swipeLeft + 'px';
   }
 
   resetContainer() {
@@ -73,7 +124,7 @@ export default class Rulers extends Component {
       title: CONFIGS.repayDefaultTitle,
       isDefault: true
     });
-    this.refs.rulers.swipes.currentPoint = currentPoint;
+    this.refs.rulers.swipes.moveToPoint(currentPoint);
     this.setTextPosition();
   }
 
