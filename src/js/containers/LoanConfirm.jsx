@@ -30,10 +30,7 @@ class RepayConfirm extends Component {
   }
 
   componentDidMount() {
-    //this.getInitData();
-    console.log(this.props);
 
-    //this.getBankInfo();
     this.getInitData();
 
     this.getActivityFetch();

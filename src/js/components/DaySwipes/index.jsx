@@ -63,6 +63,7 @@ export default class DaySwipes extends Component {
   }
 
   maxDay(amount){
+    console.log(CONFIGS.loanPeriod.productions)
     let resetDay;
 
     if(amount<=500){
@@ -79,6 +80,7 @@ export default class DaySwipes extends Component {
   }
 
   setListData(val){
+
     let resetDay = this.maxDay(val);//resetDay是根据规则返回的最大日期期限
 
     let arr=[];

@@ -29,7 +29,7 @@ export default class SendSms extends Component {
     let status = this.refs.verificationNum.classList.contains('click-disable');
     this.refs.smsText && this.refs.smsText.classList.remove(styles.error);
     if (!status) {
-      if(this.props.pathname&&this.props.pathname.indexOf('loanconfirm')>-1){
+      if(this.props.pathname && this.props.pathname.indexOf('loanconfirm')>-1){
         if(CONFIGS.loanData.isAgree){
           this.getVerification(0);
         }else{
@@ -215,7 +215,7 @@ export default class SendSms extends Component {
       "agreementName": CONFIGS.method.agreementName,
       "agreementVersion": CONFIGS.method.agreementGroupVer,
       "bankCardNo": CONFIGS.account.bankCardNo,
-      "billTerm": CONFIGS.loanData.period,
+      "billTerm": CONFIGS.loanData.period,//1、2、3还是M、D
       "code": this.refs.smsNum.value,
       "deviceType": "H5_24",
       "loanDays": CONFIGS.loanData.day,

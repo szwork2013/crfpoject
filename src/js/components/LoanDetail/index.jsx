@@ -34,7 +34,7 @@ export default class RepayDetail extends Component {
         }
       };
 
-      data.forEach(function(value,index) {
+      data.forEach((value,index) => {
         allData['0'].list.push({
           "day": value.currBillDate,
           "principal": value.currStartMstAtm,
@@ -69,7 +69,6 @@ export default class RepayDetail extends Component {
       let item = data[index];
 
       let table;
-      console.log(message,'message');
       if(!message){
         table = <Table
           className={styles.loanTable}
@@ -82,8 +81,6 @@ export default class RepayDetail extends Component {
         this.state.message = '';
         doc.querySelector('.loan-submit-btn').classList.add('disabled');
       }
-
-      //2期
 
       return (
         <div key={index} className={styles.loanContainer}>
