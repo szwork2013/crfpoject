@@ -44,7 +44,7 @@ export default class Result extends Component {
     if (status === 'failed') {
       statusText = `${name}失败`;
     } else if (this.state.status === 'success') {
-      statusText = `${name}成功`;
+      statusText = this.state.isLoanConfirm ? `${name}已发放` : `${name}成功`;
     } else {
       statusText = `${name}申请成功`;
     }

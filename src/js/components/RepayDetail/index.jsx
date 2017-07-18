@@ -182,6 +182,7 @@ export default class RepayDetail extends Component {
         </div>
       );
     };
+
     return (
       <Modal
         className="crf-repay-modal"

@@ -29,7 +29,13 @@ class ResultPage extends Component {
   }
 
   async getInitData() {
+
     let path = `${CONFIGS.repayPath}/dynamics?kissoId=${CONFIGS.userId}&repayNo=${this.state.contractNo}`;
+
+    if(this.props.location.state&&this.props.location.state.currentPath === 'loanconfirm'){
+      path = `${CONFIGS.loanPath}/dynamics?kissoId=${CONFIGS.ssoId}&loanNo=CRF01884667554126655488`;
+    }
+
     try {
       let fetchPromise = CRFFetch.Get(path);
       // 获取数据
@@ -63,6 +69,7 @@ class ResultPage extends Component {
   }
 
   setStatus(result) {
+    console.log(result,'result loan');
     this.setState({dataList: result});
     if (result[result.length - 1].process_status === 's') {
       this.setState({status: 2});
@@ -94,12 +101,24 @@ class ResultPage extends Component {
     } else if (this.state.status === 2) {
       data.status = 'success';
     }
+
+    if(this.props.location.state&&this.props.location.state.currentPath === 'loanconfirm'){
+      data.isLoanConfirm = true;
+    }
+
     return data;
   }
 
   render() {
     const data = this.getStatus();
     let props = {title: `${data.name}动态`, status: this.state.status, contractNo: this.state.contractNo, from: this.state.from, type: this.state.type};
+
+    let loanClassName = '';
+    if(this.props.location.state&&this.props.location.state.currentPath === 'loanconfirm'){
+      props.status = 3;//借款暂不显示
+      loanClassName = 'loan-text-color';
+    }
+
     const {isLoading} = this.state;
 
     return (
@@ -107,7 +126,7 @@ class ResultPage extends Component {
         <Nav data={props} />
         <WhiteSpace />
         <Result data={data} />
-        <ResultSteps data={this.state} />
+        <ResultSteps data={this.state} loanClassName={loanClassName} />
         <Loading show={isLoading} />
       </section>
     )

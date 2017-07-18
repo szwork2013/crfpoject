@@ -9,7 +9,8 @@ export default class Result extends Component {
     super(props, context);
     this.state = {
       status: props.data.status,
-      dataList: props.data.dataList
+      dataList: props.data.dataList,
+      loanClassName: props.loanClassName,
     }
   }
 
@@ -18,7 +19,7 @@ export default class Result extends Component {
   }
 
   render() {
-    const {status, dataList} = this.state;
+    const {status, dataList, loanClassName} = this.state;
 
     const step = (item, index) => {
       let styleName = '';
@@ -32,7 +33,7 @@ export default class Result extends Component {
       )
     };
     const realSteps = (
-      <Steps current={dataList.length - 1}>
+      <Steps current={dataList.length - 1} className={loanClassName}>
         {dataList.map(step)}
       </Steps>
     );

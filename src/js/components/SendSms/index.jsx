@@ -35,7 +35,15 @@ export default class SendSms extends Component {
     let status = this.refs.verificationNum.classList.contains('click-disable');
     this.refs.smsText && this.refs.smsText.classList.remove(styles.error);
     if (!status) {
-      this.getVerification(0); //0 文本
+      if(this.props.pathname && this.props.pathname.indexOf('loanconfirm')>-1){
+        if(CONFIGS.loanData.isAgree){
+          this.getVerification(0);
+        }else{
+          Toast.info('请勾选协议');
+        }
+      }else{
+        this.getVerification(0); //0 文本
+      }
     }
   }
 
@@ -43,7 +51,12 @@ export default class SendSms extends Component {
     this.refs.smsText && this.refs.smsText.classList.add('hide');
     this.refs.smsSoundTextMain && this.refs.smsSoundTextMain.classList.add('hide');
     this.refs.verificationNum && this.refs.verificationNum.classList.contains('click-disable');
-    this.getVerification(1); // 1 声音
+
+    if(this.props.pathname&&this.props.pathname.indexOf('loanconfirm')>-1){
+      CONFIGS.loanData.isAgree&&this.getVerification(1);
+    }else{
+      this.getVerification(1); // 1 声音
+    }
   }
 
   countDown(code) {
@@ -196,8 +209,87 @@ export default class SendSms extends Component {
       this.refs.smsNum.blur();
       currentValue = currentStr.substring(0, 6);
       setTimeout(() => {
-        this.submitLoan(currentValue);
+        console.log(currentValue);
+        if(this.props.pathname&&this.props.pathname.indexOf('loanconfirm')>-1){
+          this.submitFetch();
+        }else{
+          this.submitLoan(currentValue);
+        }
       }, 200);
+    }
+  }
+
+  async submitFetch(){
+    //https://m-ci.crfchina.com/h5_dubbo/loan?kissoId=370486f0d16742b38138f3dc1839efcb
+    let loanPath = `${CONFIGS.loanPath}?kissoId=${CONFIGS.ssoId}`;
+    let params = {
+      "agreementGroup": CONFIGS.method.agreementGroup,
+      "agreementName": CONFIGS.method.agreementName,
+      "agreementVersion": CONFIGS.method.agreementGroupVer,
+      "bankCardNo": CONFIGS.account.bankCardNo,
+      "billTerm": CONFIGS.loanData.period,//1、2、3还是M、D
+      "code": this.refs.smsNum.value,
+      "deviceType": "H5_24",
+      "loanDays": CONFIGS.loanData.day,
+      "loanNo": CONFIGS.method.loanNo,
+      "productNo": "P2001002",
+      "totalPrincipal": CONFIGS.loanData.amount,//传值的时候以 分 为单位
+    };
+
+    /*
+    * {
+     "agreementGroup": "p2p",
+     "agreementName": "服务协议",
+     "agreementVersion": "2.0.2",
+     "bankCardNo": "6216612600003455182",
+     "billTerm": 1,//分期
+     "code": "string",
+     "deviceType": "H5_24",//固定
+     "loanDays": 0,
+     "loanNo": "string",
+     "productNo": "p2001002",
+     "totalPrincipal": 0
+     }
+     * */
+
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    console.log(params);
+    try {
+      let fetchPromise = CRFFetch.Put(loanPath, JSON.stringify(params), headers);
+      // 获取数据
+      let result = await fetchPromise;
+      let path = 'result';
+
+      result=result.json();
+      result.then((data)=>{
+        if (data && !data.response) {
+          console.log(data.result,'loan submit');
+
+          //hash
+          hashHistory.push({
+            pathname: path,
+            query: {
+              ssoId: CONFIGS.userId,
+              contractNo: data.rcs_repay_no,
+              cash: CONFIGS.method.repayTotalAmt,
+              type: CONFIGS.sendSmsType,
+            },
+            state: {
+              currentPath: 'loanconfirm',
+            }
+          });
+        }
+      });
+    } catch (err) {
+      CRFFetch.handleError(err,Toast,()=>{
+        if(err.response.status==400){
+          err.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      });
     }
   }
 
@@ -266,7 +358,7 @@ export default class SendSms extends Component {
       });
       let errorStatus = {
         status: error.response.status
-      }
+      };
       let msgs = error.body;
       let status = error.response.status;
       msgs.then((data) => {

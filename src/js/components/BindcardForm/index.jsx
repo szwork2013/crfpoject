@@ -72,7 +72,7 @@ console.log(path);
         CONFIGS.userName=result.userName;
         CONFIGS.idNo=result.idNo;
         console.log(result.randomNumber);
-        if(result.randomNumber>=0){
+        if(result.randomNumber>=50000){
           userPhone=result.phone;
           CONFIGS.bindCard.phoneNumStatus=true;
         }
@@ -150,6 +150,7 @@ console.log(path);
     let bankNumber=this.state.refBankCard.value.replace(/\s/g,'');
     CONFIGS.bindCard.bankNum=bankNumber;
     let params = {
+      'applicationSource': 'h5',
       'autoDeduct': CONFIGS.bindCard.switchStatus,//代扣
       'bankCardNo': bankNumber,//银行卡号
       'bankCode': CONFIGS.bindCard.bankCode,
@@ -399,7 +400,7 @@ console.log(path);
           <button className={styles.formNextButton + " " + (CONFIGS.bindCard.notSubmit?styles.btnDisabled:'')}
                   onClick={this.handleSubmit.bind(this)} ref="refFormNextBtn">确认提交
           </button>
-          <Contract getContractEle={this.setContractEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)}/>
+          <Contract curPath="/" getContractEle={this.setContractEle.bind(this)} removeDisabled={this.removeDisabled.bind(this)}/>
         </div>
 
       </section>
