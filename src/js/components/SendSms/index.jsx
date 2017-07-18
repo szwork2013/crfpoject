@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Toast } from 'antd-mobile';
 import { Loading } from 'app/components';
 import { hashHistory } from 'react-router';
+import Numeral from 'numeral';
 import styles from './index.scss';
 
 export default class SendSms extends Component {
@@ -299,7 +300,7 @@ export default class SendSms extends Component {
         code: this.refs.smsNum.value,
         deviceType: 'H5_24',
         repayChannel: 'FTS',
-        repaymentAmount: CONFIGS.realAmount + CONFIGS.selectCoupon.offsetedCouponPrice,
+        repaymentAmount: Numeral(CONFIGS.realAmount).multiply(100).value() + CONFIGS.selectCoupon.offsetedCouponPrice,
         couponList: JSON.stringify(couponData)
       };
     } else {
@@ -307,7 +308,7 @@ export default class SendSms extends Component {
         code: this.refs.smsNum.value,
         deviceType: 'H5_24',
         repayChannel: 'FTS',
-        repaymentAmount: CONFIGS.realAmount
+        repaymentAmount: Numeral(CONFIGS.realAmount).multiply(100).value()
       };
     }
 

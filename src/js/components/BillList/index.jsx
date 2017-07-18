@@ -158,6 +158,15 @@ export default class BillList extends Component {
     // let category = 'C_ConsumptionBorrowResult';
     // let eventName = 'E_ConsumptionBorrowResult';
     // _paq.push(['trackEvent', category, eventName, '借款结果页']);
+    let origin = window.location.origin + window.location.pathname;
+    let url = `${origin}/#/`;
+    let storge = window.localStorage;
+    storge.setItem('crf-origin-url', '');
+    let from = storge.getItem('crf-origin-url');
+    if (from && from !== '') {
+      window.location.href = from;
+      return;
+    }
     let path = 'result';
     hashHistory.push({
       pathname: path,
