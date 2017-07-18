@@ -51,6 +51,8 @@ export default class Coupons extends Component {
   showCoupons() {
     this.refs.couponsSection.classList.remove('hide');
     this.refs.couponsSection.classList.add('show');
+    let container = document.querySelector('.coupons-list-content');
+    container.style.height = (document.documentElement.offsetHeight - 100) + 'px';
   }
 
   closeCoupons() {

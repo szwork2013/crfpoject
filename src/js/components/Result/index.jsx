@@ -39,7 +39,6 @@ export default class Result extends Component {
   render() {
     let { status, cash, type, name } = this.state;
     let modalStyle = {width: '90%'};
-    console.log(cash);
     let formatCash = Numeral(cash).divide(100).format('0, 0.00');
     let statusText = '';
     if (status === 'failed') {
@@ -47,7 +46,7 @@ export default class Result extends Component {
     } else if (this.state.status === 'success') {
       statusText = `${name}成功`;
     } else {
-      statusText = `${name}提交成功`;
+      statusText = `${name}申请成功`;
     }
     return (
       <div className={styles.root}>

@@ -26,6 +26,7 @@ export default class Rulers extends Component {
   componentDidUpdate() {
     this.setTextPosition();
     this.resetContainer();
+    this.refs.rulers.swipes.transitionDuration = 0;
   }
 
   componentDidMount() {
@@ -73,7 +74,7 @@ export default class Rulers extends Component {
       title: CONFIGS.repayDefaultTitle,
       isDefault: true
     });
-    this.refs.rulers.swipes.currentPoint = currentPoint;
+    this.refs.rulers.swipes.moveToPoint(currentPoint);
     this.setTextPosition();
   }
 

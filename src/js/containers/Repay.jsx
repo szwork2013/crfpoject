@@ -11,7 +11,6 @@ class Repay extends Component {
     this.state = {
       title: '我要还款',
       data: [],
-      couponsData: [],
       isLoading: true,
       disable: true
     };
@@ -155,7 +154,7 @@ class Repay extends Component {
 
   render() {
     let props = { title: this.state.title};
-    let {isLoading, couponsData, disable} = this.state;
+    let {isLoading, disable} = this.state;
     let buttonClass = '';
     if (disable) {
       buttonClass = 'disable-btn'
@@ -172,7 +171,7 @@ class Repay extends Component {
         <WhiteSpace />
         <Rulers list={data} />
         <WhiteSpace />
-        <Present list={couponsData} />
+        <Present />
         <Coupons />
         <footer>
           <button className={buttonClass} onClick={this.handleClick.bind(this)}>立即还款</button>
