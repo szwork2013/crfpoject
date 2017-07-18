@@ -28,6 +28,13 @@ export default class Rulers extends Component {
     this.resetContainer();
   }
 
+  componentDidMount() {
+    let ele = document.querySelector('.crf-swipes-content');
+    let height = ele.clientHeight - 1;
+    let ruler = document.querySelector('.crf-swipes-axis-inner');
+    ruler.style.height = height + 'px';
+  }
+
   resetContainer() {
     let totalWidth = this.state.data.length * this.state.rulerWidth;
     let currentPoint = this.getCurrentPoint();
@@ -66,6 +73,7 @@ export default class Rulers extends Component {
       title: CONFIGS.repayDefaultTitle,
       isDefault: true
     });
+    this.refs.rulers.swipes.currentPoint = currentPoint;
     this.setTextPosition();
   }
 
