@@ -28,6 +28,7 @@ export default class Nav extends Component {
   }
 
   handleBack() {
+    console.log(this.state);
     let couponsContainer = document.getElementsByClassName('coupons-container')[0];
 
     if (couponsContainer && couponsContainer.classList.contains('show')) {
@@ -38,7 +39,7 @@ export default class Nav extends Component {
       let refUrl=CONFIGS.referrerUrl;
       let lnHash=location.hash;
 
-      if(refUrl.indexOf('#/loan?')>-1 ){  //话费页
+      if (refUrl.indexOf('#/loan?') > -1) {  //话费页
         if(lnHash.indexOf('supportcard')>-1||lnHash.indexOf('contract')>-1){
 
           /*let path = '/?' + CONFIGS.referrerUrl;
@@ -55,7 +56,13 @@ export default class Nav extends Component {
       } else { //首页
         if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/rebindcard?')>-1 || lnHash.indexOf('#/success?')>-1){
           location.href=refUrl;
-        }else{
+        } else if (lnHash.indexOf('#/result?') > -1) { //结果页
+          let storge = window.localStorage;
+          let url = storge.getItem('crf-origin-url');
+          if (url && url !== '') {
+            window.location.href = url;
+          }
+        } else{
           hashHistory.goBack();
         }
       }
@@ -91,9 +98,9 @@ export default class Nav extends Component {
       rootClass = styles.child;
     }*/
     let rightEle = null;
-    if (status === 2) { //2 show
-      rightEle = <span className={styles.dark} onClick={this.handleDetail}>明细</span>
-    }
+    // if (status === 2) { //2 show
+    //   rightEle = <span className={styles.dark} onClick={this.handleDetail}>明细</span>
+    // }
     let leftEle = null;
     if (from === 'loan') { //from loan show finish
       leftEle = <span className={styles.dark} onClick={this.handleGoHome}>完成</span>
