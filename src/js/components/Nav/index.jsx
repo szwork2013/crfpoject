@@ -28,7 +28,6 @@ export default class Nav extends Component {
   }
 
   handleBack() {
-    console.log(this.state);
     let couponsContainer = document.getElementsByClassName('coupons-container')[0];
 
     if (couponsContainer && couponsContainer.classList.contains('show')) {
@@ -61,6 +60,8 @@ export default class Nav extends Component {
           let url = storge.getItem('crf-origin-url');
           if (url && url !== '') {
             window.location.href = url;
+          } else {
+            hashHistory.goBack();
           }
         } else{
           hashHistory.goBack();

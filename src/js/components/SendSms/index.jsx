@@ -24,6 +24,11 @@ export default class SendSms extends Component {
     this.handleSendSMS = this.handleSendSMS.bind(this);
     this.sendSound = this.sendSound.bind(this);
     this.checkNumberLength = this.checkNumberLength.bind(this);
+    this.reload = this.reload.bind(this);
+  }
+
+  reload() {
+    window.location.reload();
   }
 
   getVerificationNum(e) {
@@ -106,9 +111,12 @@ export default class SendSms extends Component {
       this.setState({
         isLoading: false
       });
-      let msgs = error.body;
-      msgs.then((data) => {
-        Toast.info(data.message);
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
       });
     }
   }
@@ -152,6 +160,9 @@ export default class SendSms extends Component {
         this.refs.smsText && this.refs.smsText.classList.remove('hide');
         this.refs.smsSoundTextMain && this.refs.smsSoundTextMain.classList.add('hide');
         this.refs.smsSoundTextSub && this.refs.smsSoundTextSub.classList.add('hide');
+        break;
+      case 401:
+        CRFLogin.initialize(this.reload);
         break;
       case 500:
         Toast.info(result.message);
