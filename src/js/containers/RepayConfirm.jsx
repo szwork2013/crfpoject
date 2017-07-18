@@ -55,14 +55,17 @@ class RepayConfirm extends Component {
     let currentAmount = Numeral(this.props.location.query.realAmount).multiply(100).value();
     let accountPath = `${CONFIGS.basePath}fts/${this.state.kissoId}/borrower_open_account`;
     let methodPath = `${CONFIGS.repayPath}/method?kissoId=${this.state.kissoId}&repayAmount=${currentAmount}`;
+    let userPath = `${CONFIGS.basePath}/user?kissoId=${this.state.kissoId}`;
     try {
       let fetchAccountPromise = CRFFetch.Get(accountPath);
       let fetchMethodPromise = CRFFetch.Get(methodPath);
+      let fetchUserPromise = CRFFetch.Get(userPath);
       // 获取数据
       let accountResult = await fetchAccountPromise;
       let methodResult = await fetchMethodPromise;
-      if (accountResult && !accountResult.response && methodResult && !methodResult.response) {
-        this.setData(accountResult, methodResult);
+      let userResult = await fetchUserPromise;
+      if (accountResult && !accountResult.response && methodResult && !methodResult.response && userResult && !userResult.response) {
+        this.setData(accountResult, methodResult, userResult);
       }
     } catch (error) {
       this.setState({
@@ -86,10 +89,11 @@ class RepayConfirm extends Component {
     }
   }
 
-  setData(accountData, methodData) {
+  setData(accountData, methodData, userData) {
     Object.assign(CONFIGS.account, accountData);
     Object.assign(CONFIGS.method, methodData);
-    let way = `${accountData.bankName}(${accountData.bankCardNo.slice(-4)})`;
+    Object.assign(CONFIGS.user, userData);
+    let way = `${accountData.bankName}卡(${accountData.bankCardNo.slice(-4)})`;
     let currentAmount = Numeral(methodData.repayTotalAmt).divide(100).value();
     let currentFee = Numeral(methodData.channelFee).divide(100).value();
     this.setState({
@@ -137,7 +141,7 @@ class RepayConfirm extends Component {
         <Nav data={props} />
         <WhiteSpace />
         <List className="crf-list crf-confirm">
-          <Item extra={`${way}卡`}>还款方式</Item>
+          <Item extra={`${way}`}>还款方式</Item>
           <Item extra={totalAmount()}>还款金额</Item>
         </List>
         <WhiteSpace />
