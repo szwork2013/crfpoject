@@ -104,7 +104,6 @@ class Repay extends Component {
       this.refs.loading.hide();
 
       if (loanResult && !loanResult.response) {
-        //console.log(loanResult,'+++++++++++++++1次');
         PubSub.publish('loanDetail:list', loanResult.detailList.LoanPlan);
       }
 
@@ -115,7 +114,6 @@ class Repay extends Component {
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
-            //Toast.info(data.message);
             PubSub.publish('loanDetail:list', data.message);
           });
         }
@@ -250,7 +248,6 @@ class Repay extends Component {
 
       }
     }
-
 
     CONFIGS.loanData.dragDay = dayArray.length;
     CONFIGS.loanData.dayArrayLength = dayArray.length;

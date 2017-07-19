@@ -69,7 +69,7 @@ export default class DaySwipes extends Component {
 
     let period;
     let periodDay;
-    console.log(defaultDay,remainLimit,'default day------------00000000000000---------');
+    //console.log(defaultDay,remainLimit,'default day------------00000000000000---------');
     if(CONFIGS.loanData.period > 1 && defaultDay > 30){
       period = 'M';
       periodDay = CONFIGS.loanData.period;
