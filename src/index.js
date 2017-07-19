@@ -5,7 +5,6 @@ import {hashHistory} from 'react-router';
 import {default as App} from './js/index';
 import RedBox from 'redbox-react';
 
-global.doc = window.document;
 require('./js/utils/device/index.es6');
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -31,12 +30,12 @@ if (process.env.NODE_ENV === 'development') {
     <HotReloader errorReporter={RedBox}>
       <App history={hashHistory}/>
     </HotReloader>,
-    doc.getElementById('app')
+    document.getElementById('app')
   );
   renderRoot();
   if (module.hot) {
     module.hot.accept('./js/containers/index', renderRoot);
   }
 } else {
-  render(<App history={hashHistory}/>, doc.getElementById('app'));
+  render(<App history={hashHistory}/>, document.getElementById('app'));
 }

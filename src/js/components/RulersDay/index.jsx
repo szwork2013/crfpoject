@@ -22,44 +22,6 @@ export default class Rulers extends Component {
   }
 
   componentDidUpdate() {
-
-    /*this.pubsub_token = PubSub.subscribe('ruleDay:set', (topic, val)=> {
-      //console.log('--------------------rulersDay',window.length++);
-      let resetDay;
-
-      if(val<=500){
-        resetDay=14;
-      }else if(val<=1500){
-        resetDay=30;
-      }else if(val<=2500){
-        resetDay=60;
-      }else{
-        resetDay=90;
-      }
-
-      let arr=[];
-      for(let i=1;i<=resetDay;i++){
-        arr.push(i);
-      }
-
-      let resultObj = {
-        remainLimit: val,
-        defaultDay: resetDay,
-      };
-
-      if(CONFIGS.loanData.sendSwitch){
-        //设置
-        if(this.state.day !== resetDay){
-          this.setState({
-            data:arr,
-            day:resetDay,
-            //defaultDay:resetDay,
-          });
-        }
-      }
-
-    });*/
-
     this.resetContainer();//？
   }
 

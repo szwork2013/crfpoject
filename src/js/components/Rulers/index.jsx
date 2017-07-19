@@ -47,7 +47,7 @@ export default class Rulers extends Component {
     let endPoint = 0;
 
     refWrap.on('touchstart',(e) => {
-      let dayEl = doc.querySelector('.crf-rulers');
+      let dayEl = document.querySelector('.crf-rulers');
       let touch = e.touches[0];
       let disX = touch.pageX - dayEl.offsetLeft;
       startPoint = disX;

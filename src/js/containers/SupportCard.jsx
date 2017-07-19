@@ -18,7 +18,7 @@ export default class Rebind extends Component {
 
     this.getBankJson();
 
-    doc.body.scrollTop=0;//屏幕下拉后点击跳转页面顶部也跟着下拉
+    document.body.scrollTop=0;//屏幕下拉后点击跳转页面顶部也跟着下拉
   }
 
   async sendLocationFetch(storageName,version){
