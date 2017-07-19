@@ -45,6 +45,7 @@ class ResultPage extends Component {
         this.setState({
           isLoading: false
         });
+        console.log(result,path);
         this.setStatus(result);
       }
     } catch (error) {

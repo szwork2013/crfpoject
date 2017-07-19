@@ -274,7 +274,12 @@ class Repay extends Component {
   }
 
   setMethodData(methodData) {
+    console.log(methodData,'methodData//////////**********');
     Object.assign(CONFIGS.method, methodData);
+    !CONFIGS.method.repayTotalAmt && (CONFIGS.method.repayTotalAmt = CONFIGS.loanData.amount);
+    /*
+    *
+    * */
     //console.log(CONFIGS.method,'CONFIGS.method');
     this.refs.loading.hide();
     let path = 'loanconfirm';
