@@ -28,7 +28,7 @@ export default class DaySwipes extends Component {
     this.bindEvent();
 
     this.pubsub_token = PubSub.subscribe('daySwipes:day', function(topic, val) {
-      console.log('day swipes detail ---------------',val);
+      //console.log('day swipes detail ---------------',val);
       this.setListData(val);
     }.bind(this));
   }
@@ -38,6 +38,26 @@ export default class DaySwipes extends Component {
 
     //销毁监听的事件
     PubSub.unsubscribe(this.pubsub_token);
+  }
+
+  componentDidUpdate(){
+    const refDaySwipes = doc.querySelector('.day-swipes');
+    const screenHalf = doc.documentElement.clientWidth/2 + this.state.rulerWidth/2;
+    setTimeout(()=>{
+      const refDayText = doc.querySelector('.ref-day').innerText;
+
+      let currentDay;
+      if(refDayText.indexOf('期') > -1){
+        currentDay = parseFloat(refDayText) * 30;
+      }else{
+        currentDay = parseFloat(refDayText);
+      }
+
+      let defaultLeft = parseFloat(screenHalf) - (currentDay * this.state.rulerWidth);
+      if(parseInt(refDaySwipes.style.left) !== defaultLeft){
+        refDaySwipes.style.left =  defaultLeft + 'px';
+      }
+    },0);
   }
 
   async getInitDataFetch(defaultData) {
@@ -121,21 +141,20 @@ export default class DaySwipes extends Component {
   bindEvent(){
     const ne = MonoEvent;
     const refWrap = ne('.loan-ruler-day');
-
-    const dayEl = doc.querySelector('.day-swipes');
     const touchDoc = ne(document);
+    const dayEl = doc.querySelector('.day-swipes');
 
-    refWrap.on('touchstart',(e)=>{
+    refWrap.on('touchstart',(e) => {
       let touch = e.touches[0];
       let disX = touch.pageX - dayEl.offsetLeft;
 
-      touchDoc.on('touchmove', (e)=>{
+      touchDoc.on('touchmove', (e) => {
         let touch = e.touches[0];
         let swipeLeft = touch.pageX - disX;//计算
         this.setMoveFn(swipeLeft);//限定,使用
       });
 
-      touchDoc.on('touchend', ()=>{
+      touchDoc.on('touchend', () => {
         touchDoc.un('touchend');
         touchDoc.un('touchmove');
         this.endFn();
@@ -165,13 +184,17 @@ export default class DaySwipes extends Component {
 
   maxDay(amount){
     //console.log(CONFIGS.loanPeriod.productions,amount,'------');  //设置期限，设置count
-    console.log(CONFIGS.loanPeriod.productions[amount/100-1]);
+    //console.log(CONFIGS.loanPeriod.productions[amount/100-1]);
     //{loanAmount: "1000", periodArray: null, dayArray: Array(30)}
     //{loanAmount: "1000", periodArray: [2], dayArray: Array(30)}
 
     let maxDay;
 
     let productData = CONFIGS.loanPeriod.productions[amount/100-1];
+
+    //mock
+    productData = {loanAmount: "1000", periodArray: [2], dayArray: null};
+
 
     if(productData.periodArray === null){
       if(productData.dayArray === null){
@@ -186,10 +209,10 @@ export default class DaySwipes extends Component {
       CONFIGS.loanData.period = productData.periodArray.length + 1;//数组为[2],表示2期；为[2,3]表示3期,问清楚以后是否为[2,3,4]
       maxDay = (productData.periodArray.length + 1) * 30;//2期为60天，3期90天
       if(productData.dayArray === null){
-        //显示期数，只能拖动期数的范围，不能拖动天数
+        //显示期数，只能拖动期数的范围，(30-60] || (30-90]
 
       }else{
-        //有期数也有天数，拖动范围最大
+        //有期数也有天数，拖动范围最大,大于30天，显示期数
 
       }
     }
@@ -197,30 +220,74 @@ export default class DaySwipes extends Component {
     return maxDay;
   }
 
-  setListData(val){
+  setListData(val){//val是最后拖动金额
     let resetDay = this.maxDay(val);//resetDay是根据规则返回的最大日期期限 14 30 60 90
-
     let dayArray = CONFIGS.loanPeriod.productions[CONFIGS.currentAmount/100-1].dayArray;
 
+    console.log(CONFIGS.loanData.touchEndDay,resetDay,dayArray.length,'***********end day**********');
+
+    let defaultDay;
+    let resetDefault = false;
+    if(dayArray.length > CONFIGS.loanData.touchEndDay){
+      defaultDay = CONFIGS.loanData.touchEndDay;
+      resetDefault = true;
+    }else{
+      defaultDay = resetDay;
+      CONFIGS.loanData.touchEndDay = resetDay;
+    }
+
+
     let resultObj = {
-      defaultDay: resetDay,//14 30 60 90
+      defaultDay: defaultDay,//14 30 60 90
       remainLimit: val,//100-无穷
     };
-
-    //console.log(this.state.list.length , dayArray.length,'//////////************------------');
-
     this.setState({
       list: dayArray,//arr是计算出来的日期数组,dayArray是接口返回的日期数组
-      defaultDay: resetDay,
+      defaultDay: defaultDay,
     });
 
     //当最后拖拽结束的日期 大于 金额最大期限天数 则显示日期为最大期限天数
-    if(CONFIGS.loanData.touchEndDay > dayArray.length){
+    const refDay = doc.querySelector('.ref-day');
 
+    /*
+    * 当滑动借款金额 由大变小
+     最大期限没变，当前期限也不变。
+     变了则变成最大金额
+
+     当滑动借款金额 由小变大
+     期限不变，不管最大期限是否有变
+    * */
+    let endDay;
+    if(val > CONFIGS.loanData.amount){//由小变大
+      endDay = '';
+    }else{//由大变小；或者相等，不变
+
+      if(dayArray.length < CONFIGS.loanData.dragDay || CONFIGS.loanData.dayArrayLength > dayArray.length){ //以前大于现在
+        //金额对应最大期限，当前期限
+        endDay = dayArray.length;
+        CONFIGS.loanData.dayArrayLength = dayArray.length;
+
+        //当CONFIGS.loanData.dragDay大于dayArray的时候
+        CONFIGS.loanData.dragDay = dayArray.length;
+      }else{
+        //console.log('最大期限，当前期限',CONFIGS.loanData.dragDay,defaultDay);
+        if(resetDefault){
+          endDay = defaultDay;
+        }else{
+          endDay = CONFIGS.loanData.dragDay;
+        }
+      }
+
+    }
+    console.log('dragDay:'+CONFIGS.loanData.dragDay,'val:'+val,'dayArray:'+dayArray.length,(refDay.innerText));
+
+    this.setRefDay(endDay,dayArray,resetDay);
+    /*if(dayArray.length !== parseInt(refDay.innerText)){
       this.setRefDay(dayArray.length);
     }
-    /*else{
-      this.setRefDay(resetDay);
+
+    if(CONFIGS.loanData.touchEndDay > dayArray.length){
+      this.setRefDay(dayArray.length);
     }*/
 
     this.getInitDataFetch(resultObj);
@@ -237,11 +304,14 @@ export default class DaySwipes extends Component {
     let dayIndex = Math.round((total - parseFloat(refDaySwipes.style.left)) / this.state.rulerWidth + 1);
     let dayLeft = total - (dayIndex - 1) * 9;
 
-    console.log(this.maxDay(CONFIGS.currentAmount),'maxDay------------------');
+    CONFIGS.loanData.dragDay = dayIndex;
+
     let maxDay = this.maxDay(CONFIGS.currentAmount);
     if(dayIndex > maxDay){
       dayIndex = maxDay;
     }
+
+    CONFIGS.loanData.touchEndDay = dayIndex;
 
     if(dayIndex === 1){
       doc.querySelector('.first-day').innerHTML='';
@@ -252,7 +322,7 @@ export default class DaySwipes extends Component {
 
     this.setRefDay(dayIndex);
 
-    CONFIGS.loanData.touchEndDay = dayIndex;
+    //console.log(dayIndex,CONFIGS.loanData.touchEndDay,'-----------dayIndex-------------');
 
     let resultObj = {
       remainLimit: CONFIGS.currentAmount,
@@ -262,13 +332,23 @@ export default class DaySwipes extends Component {
     this.getInitDataFetch(resultObj);
   }
 
-  setRefDay(day){
+  setRefDay(day,dayArray,defaultDay){
     const refDay = doc.querySelector('.ref-day');
-    if(day>30){
-      refDay.innerHTML=`${CONFIGS.loanData.period}期`;
+    if(day > 30){
+      refDay.innerHTML = `${CONFIGS.loanData.period}期`;
     }else{
-      refDay.innerHTML=`${day}天`;
+      if(day){
+        refDay.innerHTML = `${day}天`;
+      }else{
+        console.log(dayArray,defaultDay,'this.setState');
+        //设置swipe的left的距离,  当只有2、3期的时候
+        this.setState({
+          list: dayArray,
+          defaultDay: defaultDay,
+        });
+      }
     }
+
   }
 
   render() {

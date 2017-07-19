@@ -93,6 +93,8 @@ module.exports = {
     currentAmountCount: 0,
     sendSwitch: true,
     touchEndDay: 0,
+    dragDay: 0,
+    dayArrayLength: 0,
   },
   currentAmount: 0,
   realAmount: 0,
