@@ -193,7 +193,7 @@ export default class DaySwipes extends Component {
     let productData = CONFIGS.loanPeriod.productions[amount/100-1];
 
     //mock
-    productData = {loanAmount: "1000", periodArray: [2], dayArray: null};
+    //productData = {loanAmount: "1000", periodArray: [2], dayArray: null};
 
 
     if(productData.periodArray === null){
@@ -223,8 +223,8 @@ export default class DaySwipes extends Component {
   setListData(val){//val是最后拖动金额
     let resetDay = this.maxDay(val);//resetDay是根据规则返回的最大日期期限 14 30 60 90
     let dayArray = CONFIGS.loanPeriod.productions[CONFIGS.currentAmount/100-1].dayArray;
-
-    console.log(CONFIGS.loanData.touchEndDay,resetDay,dayArray.length,'***********end day**********');
+    let periodArray = CONFIGS.loanPeriod.productions[CONFIGS.currentAmount/100-1].periodArray;
+    //console.log(CONFIGS.loanData.touchEndDay,resetDay,dayArray.length,'***********end day**********');
 
     let defaultDay;
     let resetDefault = false;
@@ -236,7 +236,15 @@ export default class DaySwipes extends Component {
       CONFIGS.loanData.touchEndDay = resetDay;
     }
 
+    if(Object.prototype.toString.call(periodArray) === '[object Array]'){
+      let maxArray = [];
+      for(let i = 0; i < (periodArray.length+1)*30; i++){
+        maxArray.push(i);
+      }
+      dayArray = maxArray;
+    }
 
+    console.log(defaultDay,resetDay,dayArray.length,'---------------set list data---------------');
     let resultObj = {
       defaultDay: defaultDay,//14 30 60 90
       remainLimit: val,//100-无穷

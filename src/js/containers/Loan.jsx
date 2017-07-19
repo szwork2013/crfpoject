@@ -205,7 +205,6 @@ class Repay extends Component {
 
     CONFIGS.loanData.currentAmountCount = curAmount-1;
 
-
     curAmount = curAmount*100;
     let loanList = {
       data: loanData,//根据最大金额生成金额的数组
@@ -217,18 +216,32 @@ class Repay extends Component {
 
     let productData = periodResult.productions[curAmount/100-1];
 
+    let dayArray;
+    //mock
+    //productData = {loanAmount: "1000", periodArray: [2], dayArray: null};
+
+
     if(productData.periodArray === null){
       if(productData.dayArray === null){
         //默认显示30天，天数不能拖动，显示错误信息，不能提交
         maxDay = 30;
+        dayArray = new Array(30);
       }else{
         //一般情况，只有1期，拖动dayArray的天数
         CONFIGS.loanData.period = 1;
         maxDay = productData.dayArray.length;
+        dayArray = productData.dayArray;
       }
     }else{
       CONFIGS.loanData.period = productData.periodArray.length + 1;//数组为[2],表示2期；为[2,3]表示3期,问清楚以后是否为[2,3,4]
       maxDay = (productData.periodArray.length + 1) * 30;
+
+      let maxArray = [];
+      for(let i = 0; i < CONFIGS.loanData.period*30; i++){
+        maxArray.push(i);
+      }
+      dayArray = maxArray;
+
       if(productData.dayArray === null){
         //显示期数，只能拖动期数的范围，不能拖动天数
 
@@ -238,12 +251,13 @@ class Repay extends Component {
       }
     }
 
-    CONFIGS.loanData.dragDay = productData.dayArray.length;
-    CONFIGS.loanData.dayArrayLength = productData.dayArray.length;
-    CONFIGS.loanData.touchEndDay = productData.dayArray.length;
+
+    CONFIGS.loanData.dragDay = dayArray.length;
+    CONFIGS.loanData.dayArrayLength = dayArray.length;
+    CONFIGS.loanData.touchEndDay = dayArray.length;
 
     let dayList = {
-      data: productData.dayArray,//接口返回的天数
+      data: dayArray,//接口返回的天数
       currentDay: maxDay,//根据最大金额生成最大的天数
       defaultDay: defaultDay,//默认日期，按照规则只有14跟30天
     };
