@@ -22,8 +22,8 @@
   display: inline-block;
   > a {
     display: block;
-    width: .34rem;
-    height: .34rem;
+    width: .40rem;
+    height: .40rem;
     margin-left: .08rem;
     background: url(../images/reset-loan.png) no-repeat;
     background-size: contain;
@@ -35,6 +35,7 @@
   font-size: .9rem;
   line-height: 1rem;
   margin-right: .1rem;
+  font-family: "Helvetica Neue";
 }
 
 .crf-swipes-amount-link {
@@ -52,15 +53,15 @@
 .crf-swipes-content {
   position: relative;
   width: 100%;
-  height: 2.38rem;
+  height: 114px;
   border-bottom: 1px solid #909090;
 }
 
 .crf-swipes-rulers {
   position: absolute;
   width: 100%;
-  height: 100%;
-  top: 1px;
+  height: 114px;
+  top: 0;
   z-index: 1;
   overflow: hidden;
   -webkit-transform: translateZ(0);
@@ -86,6 +87,7 @@
     left: 50%;
     transform: translate(-50%, 0);
     width: .22rem;
+    height: 113px;
     background: url(../images/axis.png) no-repeat;
     background-size: contain;
     z-index: 99;
