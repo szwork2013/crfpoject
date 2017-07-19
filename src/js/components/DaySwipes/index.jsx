@@ -69,7 +69,7 @@ export default class DaySwipes extends Component {
 
     let period;
     let periodDay;
-    console.log(defaultDay,'default day------------00000000000000---------');
+    console.log(defaultDay,remainLimit,'default day------------00000000000000---------');
     if(CONFIGS.loanData.period > 1 && defaultDay > 30){
       period = 'M';
       periodDay = CONFIGS.loanData.period;
@@ -104,6 +104,7 @@ export default class DaySwipes extends Component {
       PubSub.publish('loading:hide');
 
       if (loanResult && !loanResult.response) {
+        //loanResult = {"code":"1004","message":"用户无权限使用借款产品"};
         PubSub.publish('loanDetail:list', loanResult.detailList.LoanPlan);
       }
 
@@ -194,10 +195,6 @@ export default class DaySwipes extends Component {
 
     let productData = CONFIGS.loanPeriod.productions[amount/100-1];
 
-    //mock
-    //productData = {loanAmount: "1000", periodArray: [2], dayArray: null};
-
-
     if(productData.periodArray === null){
       if(productData.dayArray === null){
         //默认显示30天，天数不能拖动，  显示错误信息，不能提交
@@ -249,7 +246,7 @@ export default class DaySwipes extends Component {
       CONFIGS.loanData.touchEndDay = resetDay;
     }
 
-    console.log(defaultDay,resetDay,dayArray.length,'---------------set list data---------------');
+    //console.log(defaultDay,resetDay,dayArray.length,'---------------set list data setState---------------');
     let resultObj = {
       defaultDay: defaultDay,//14 30 60 90
       remainLimit: val,//100-无穷
@@ -291,7 +288,7 @@ export default class DaySwipes extends Component {
       }
 
     }
-    //console.log('dragDay:'+CONFIGS.loanData.dragDay,'val:'+val,'dayArray:'+dayArray.length,(refDay.innerText));
+    console.log('dragDay:'+CONFIGS.loanData.dragDay,'val:'+val,'endDay:'+endDay,'*/*/*/*/*/*');
 
     this.setRefDay(endDay,dayArray,resetDay);
 
@@ -339,13 +336,21 @@ export default class DaySwipes extends Component {
 
   setRefDay(day,dayArray,defaultDay){
     const refDay = document.querySelector('.ref-day');
+
+    console.log(day,dayArray,defaultDay,'*******----this.setRefDay----******');
     if(day > 30){
       refDay.innerHTML = `${CONFIGS.loanData.period}期`;
+      console.log(dayArray,defaultDay,'*******************this.setState**************');
+      //设置swipe的left的距离,  当只有2、3期的时候
+      /*this.setState({
+        list: dayArray,
+        defaultDay: defaultDay,
+      });*/
     }else{
       if(day){
         refDay.innerHTML = `${day}天`;
       }else{
-        console.log(dayArray,defaultDay,'this.setState');
+        console.log(dayArray,defaultDay,'*******************this.setState**************');
         //设置swipe的left的距离,  当只有2、3期的时候
         this.setState({
           list: dayArray,
