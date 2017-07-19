@@ -36,6 +36,7 @@ class Repay extends Component {
         isLoading: false
       });
       CRFFetch.handleError(error, Toast, () => {
+        console.log(error);
         if (error.response.status === 400) {
           error.body.then(data => {
             Toast.info(data.message);

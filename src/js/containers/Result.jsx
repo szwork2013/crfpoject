@@ -16,7 +16,8 @@ class ResultPage extends Component {
       from: this.props.location.query.source || '',
       cash: this.props.location.query.cash || 0,
       isLoading: true,
-      dataList: []
+      dataList: [],
+      title: ''
     };
   }
 
@@ -69,23 +70,24 @@ class ResultPage extends Component {
   }
 
   setStatus(result) {
-    console.log(result,'result loan');
-    this.setState({dataList: result});
     if (result[result.length - 1].process_status === 's') {
-      this.setState({status: 2});
+      this.setState({dataList: result, status: 2, title: result[result.length - 1].trace_content});
       clearInterval(this.timer);
       _paq.push(['trackEvent', 'C_RepayResult', 'E_P_Repay_Successed', '还款成功']);
     } else if(result[result.length - 1].process_status === 'f' || result[result.length - 1].process_status === 'p' || result[result.length - 1].process_status === 'n') {
-      this.setState({status: 1});
+      this.setState({dataList: result, status: 1, title: result[result.length - 1].trace_content});
       clearInterval(this.timer);
       _paq.push(['trackEvent', 'C_RepayResult', 'E_SubmitRepay_Failed', '还款失败']);
+    } else {
+      this.setState({dataList: result, title: result[result.length - 1].trace_content});
     }
   }
 
   getStatus() {
     let data = {
       cash: this.state.cash,
-      type: this.state.type
+      type: this.state.type,
+      title: this.state.title
     };
     if (this.state.source === 'loan') {
       data.name = '交易';
@@ -105,7 +107,6 @@ class ResultPage extends Component {
     if(this.props.location.state&&this.props.location.state.currentPath === 'loanconfirm'){
       data.isLoanConfirm = true;
     }
-
     return data;
   }
 

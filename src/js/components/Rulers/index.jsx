@@ -28,15 +28,11 @@ export default class Rulers extends Component {
   componentDidUpdate() {
     this.setTextPosition();
     this.resetContainer();
-    this.refs.rulers.swipes.transitionDuration = 0;
+    this.refs.rulers && (this.refs.rulers.swipes.transitionDuration = 0);
   }
 
   componentDidMount() {
-    let ele = document.querySelector('.crf-swipes-content');
-    let height = ele.clientHeight - 1;
-    let ruler = document.querySelector('.crf-swipes-axis-inner');
-    ruler.style.height = height + 'px';
-    this.bindEvent();
+    //this.bindEvent();
   }
 
   bindEvent() {
@@ -52,6 +48,7 @@ export default class Rulers extends Component {
       let disX = touch.pageX - dayEl.offsetLeft;
       startPoint = disX;
       let originPoint = this.state.data.indexOf(CONFIGS.currentAmount);
+      console.log(originPoint)
 
       touchDoc.on('touchmove', (e) => {
         let touch = e.touches[0];
@@ -84,8 +81,9 @@ export default class Rulers extends Component {
               currentPoint = 0;
             }
           }
-          this.setRulerState(currentPoint);
+          console.log(distance);
           this.refs.rulers.swipes.moveToPoint(currentPoint);
+          this.setRulerState(currentPoint);
         }
       });
 
@@ -169,12 +167,6 @@ export default class Rulers extends Component {
       distance: this.state.rulerWidth, // 每次移动的距离，卡片的真实宽度，需要计算
       currentPoint: this.getCurrentPoint(),// 初始位置，默认从0即第一个元素开始
       swTouchend: (ev) => {
-        let data = {
-          moved: ev.moved,
-          originalPoint: ev.originalPoint,
-          newPoint: ev.newPoint,
-          cancelled: ev.cancelled
-        }
         this.setRulerState(ev.newPoint);
       }
     };
