@@ -71,8 +71,8 @@ console.log(path);
         CONFIGS.userId=result.crfUid;
         CONFIGS.userName=result.userName;
         CONFIGS.idNo=result.idNo;
-        console.log(result.randomNumber);
-        if(result.randomNumber>=50000){
+
+        if(!result.openModifyPhone){
           userPhone=result.phone;
           CONFIGS.bindCard.phoneNumStatus=true;
         }

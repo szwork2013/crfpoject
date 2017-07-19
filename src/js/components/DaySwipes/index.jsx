@@ -55,6 +55,7 @@ export default class DaySwipes extends Component {
 
       let defaultLeft = parseFloat(screenHalf) - (currentDay * this.state.rulerWidth);
       if(parseInt(refDaySwipes.style.left) !== defaultLeft){
+        //console.log(defaultLeft,currentDay,'update-=-=-=-=');
         refDaySwipes.style.left =  defaultLeft + 'px';
       }
     },0);
@@ -68,7 +69,8 @@ export default class DaySwipes extends Component {
 
     let period;
     let periodDay;
-    if(CONFIGS.loanData.period > 1){
+    console.log(defaultDay,'default day------------00000000000000---------');
+    if(CONFIGS.loanData.period > 1 && defaultDay > 30){
       period = 'M';
       periodDay = CONFIGS.loanData.period;
     }else{
@@ -222,7 +224,8 @@ export default class DaySwipes extends Component {
 
   setListData(val){//val是最后拖动金额
     let resetDay = this.maxDay(val);//resetDay是根据规则返回的最大日期期限 14 30 60 90
-    let dayArray = CONFIGS.loanPeriod.productions[CONFIGS.currentAmount/100-1].dayArray;
+    //console.log(CONFIGS.currentAmount,CONFIGS.loanPeriod.productions[CONFIGS.currentAmount/100-1],val,resetDay);
+    let dayArray = CONFIGS.loanPeriod.productions[CONFIGS.currentAmount/100-1].dayArray || [];//如果为null则返回空数组
     let periodArray = CONFIGS.loanPeriod.productions[CONFIGS.currentAmount/100-1].periodArray;
     //console.log(CONFIGS.loanData.touchEndDay,resetDay,dayArray.length,'***********end day**********');
 
@@ -242,6 +245,8 @@ export default class DaySwipes extends Component {
         maxArray.push(i);
       }
       dayArray = maxArray;
+      defaultDay = resetDay;
+      CONFIGS.loanData.touchEndDay = resetDay;
     }
 
     console.log(defaultDay,resetDay,dayArray.length,'---------------set list data---------------');
@@ -255,13 +260,12 @@ export default class DaySwipes extends Component {
     });
 
     //当最后拖拽结束的日期 大于 金额最大期限天数 则显示日期为最大期限天数
-    const refDay = document.querySelector('.ref-day');
+    //const refDay = document.querySelector('.ref-day');
 
     /*
     * 当滑动借款金额 由大变小
      最大期限没变，当前期限也不变。
      变了则变成最大金额
-
      当滑动借款金额 由小变大
      期限不变，不管最大期限是否有变
     * */
@@ -287,16 +291,9 @@ export default class DaySwipes extends Component {
       }
 
     }
-    console.log('dragDay:'+CONFIGS.loanData.dragDay,'val:'+val,'dayArray:'+dayArray.length,(refDay.innerText));
+    //console.log('dragDay:'+CONFIGS.loanData.dragDay,'val:'+val,'dayArray:'+dayArray.length,(refDay.innerText));
 
     this.setRefDay(endDay,dayArray,resetDay);
-    /*if(dayArray.length !== parseInt(refDay.innerText)){
-      this.setRefDay(dayArray.length);
-    }
-
-    if(CONFIGS.loanData.touchEndDay > dayArray.length){
-      this.setRefDay(dayArray.length);
-    }*/
 
     this.getInitDataFetch(resultObj);
   }
