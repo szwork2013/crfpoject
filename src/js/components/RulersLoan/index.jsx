@@ -27,11 +27,11 @@ export default class Rulers extends Component {
   }
 
   componentDidMount() {
-    let ele = document.querySelector('.loan-swipes-content');
+   /*let ele = document.querySelector('.loan-swipes-content');
     let height = ele.clientHeight - 1;
     let ruler = document.querySelector('.loan-swipes-content .crf-swipes-axis-inner');
-    ruler.style.height = height + 'px';
-    this.bindEvent();
+    ruler.style.height = height + 'px';*/
+    //this.bindEvent();
   }
 
   bindEvent() {
