@@ -153,7 +153,7 @@ export default class Rulers extends Component {
 
         if(CONFIGS.currentAmount !== currentAmount){
           CONFIGS.loanData.sendSwitch = true;
-          //console.log(currentAmount,'拖动完成的金额');
+          //console.log(currentAmount,'*********拖动完成的金额***********');
           PubSub.publish('daySwipes:day',currentAmount);
 
           CONFIGS.currentAmount = currentAmount;
