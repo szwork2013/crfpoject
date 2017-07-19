@@ -265,8 +265,9 @@ export default class SendSms extends Component {
       result=result.json();
       result.then((data)=>{
         if (data && !data.response) {
-          console.log(data.result,'loan submit');
-
+          console.log(data,'loan submit');
+          console.log(CONFIGS.method.repayTotalAmt,'CONFIGS.method.repayTotalAmt');
+          //{status: 3, loanNo: "CRF01887603953490489344"}
           //hash
           hashHistory.push({
             pathname: path,
@@ -338,6 +339,7 @@ export default class SendSms extends Component {
         });
         let path = 'result';
         let res = result.json();
+
         res.then((data) => {
           hashHistory.push({
             pathname: path,
