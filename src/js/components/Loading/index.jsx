@@ -20,11 +20,11 @@ export default class Loading extends Component {
     let topHeight = 0;
 
     if (!Common.isWeChat()) {
-      topHeight = doc.querySelector('nav').offsetHeight;
+      topHeight = document.querySelector('nav').offsetHeight;
     }
     this.setState({
       maskHeight: {
-        height: doc.documentElement.clientHeight - topHeight + 'px'
+        height: document.documentElement.clientHeight - topHeight + 'px'
       }
     });
 

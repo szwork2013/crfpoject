@@ -14,7 +14,7 @@ export default class Success extends Component {
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Contract']);
 
-    doc.body.scrollTop=0;//屏幕下拉后点击跳转页面顶部也跟着下拉
+    document.body.scrollTop=0;//屏幕下拉后点击跳转页面顶部也跟着下拉
 
     this.setFrameHeight();
   }
@@ -23,7 +23,7 @@ export default class Success extends Component {
       return parseFloat(getComputedStyle(obj,null)["height"]);
     };
 
-    let frameHeight = doc.documentElement.clientHeight - getHeight(doc.querySelector('.am-whitespace')) - getHeight(doc.querySelector('nav'));
+    let frameHeight = document.documentElement.clientHeight - getHeight(document.querySelector('.am-whitespace')) - getHeight(document.querySelector('nav'));
 
     this.setState({
       height:frameHeight+'px'

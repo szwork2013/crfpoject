@@ -75,11 +75,11 @@ export default class RepayDetail extends Component {
           columns={columns}
           dataSource={item.list}
         />;
-        doc.querySelector('.loan-submit-btn').classList.remove('disabled');
+        document.querySelector('.loan-submit-btn').classList.remove('disabled');
       }else{
         table = <div className="error-message">{message}</div>;
         this.state.message = '';
-        doc.querySelector('.loan-submit-btn').classList.add('disabled');
+        document.querySelector('.loan-submit-btn').classList.add('disabled');
       }
 
       return (

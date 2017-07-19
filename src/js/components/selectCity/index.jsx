@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Picker, List, Toast} from 'antd-mobile';
 import {createForm} from 'rc-form';
-//const doc=document;
+
 
 
 class SelectCity extends React.Component {
@@ -74,7 +74,7 @@ class SelectCity extends React.Component {
     //默认位置
     //const defaultCode={initialValue: [CONFIGS.bindCard.cityCode, CONFIGS.bindCard.areaCode]};
     let defaultCode;
-    if(CONFIGS.bindCard.cityCode===''&&CONFIGS.bindCard.areaCode===''){
+    if(CONFIGS.bindCard.cityCode==='' && CONFIGS.bindCard.areaCode===''){
       defaultCode={initialValue: []};
     }else{
       defaultCode={initialValue: [CONFIGS.bindCard.cityCode, CONFIGS.bindCard.areaCode]};
