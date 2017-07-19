@@ -73,7 +73,7 @@ export default class Rulers extends Component {
         let currentAmountCount = currentAmount/100-1;
         let crfRulerEle = doc.querySelectorAll('.loan-rulers .crf-ruler');
 
-        console.log(CONFIGS.loanData.currentAmountCount,'CONFIGS.loanData.currentAmountCount-------------');
+        //console.log(CONFIGS.loanData.currentAmountCount,'CONFIGS.loanData.currentAmountCount-------------');
         if(CONFIGS.loanData.currentAmountCount < 5){
           crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>&nbsp;${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
         }else{
@@ -89,7 +89,7 @@ export default class Rulers extends Component {
 
         if(CONFIGS.currentAmount !== currentAmount){
           CONFIGS.loanData.sendSwitch = true;
-          console.log(currentAmount,'拖动完成的金额');
+          //console.log(currentAmount,'拖动完成的金额');
           PubSub.publish('daySwipes:day',currentAmount);
 
           CONFIGS.currentAmount = currentAmount;

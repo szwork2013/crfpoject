@@ -205,6 +205,7 @@ class Repay extends Component {
 
     CONFIGS.loanData.currentAmountCount = curAmount-1;
 
+
     curAmount = curAmount*100;
     let loanList = {
       data: loanData,//根据最大金额生成金额的数组
@@ -236,6 +237,10 @@ class Repay extends Component {
 
       }
     }
+
+    CONFIGS.loanData.dragDay = productData.dayArray.length;
+    CONFIGS.loanData.dayArrayLength = productData.dayArray.length;
+    CONFIGS.loanData.touchEndDay = productData.dayArray.length;
 
     let dayList = {
       data: productData.dayArray,//接口返回的天数
