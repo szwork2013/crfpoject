@@ -12,6 +12,7 @@ export default class Result extends Component {
       cash: props.data.cash,
       type: props.data.type,
       name: props.data.name,
+      title: props.data.title,
       modal: false,
       showPhone: 1
     }
@@ -37,21 +38,13 @@ export default class Result extends Component {
   }
 
   render() {
-    let { status, cash, type, name } = this.state;
+    let { status, cash, type, name, title } = this.state;
     let modalStyle = {width: '90%'};
     let formatCash = Numeral(cash).divide(100).format('0, 0.00');
-    let statusText = '';
-    if (status === 'failed') {
-      statusText = `${name}失败`;
-    } else if (this.state.status === 'success') {
-      statusText = this.state.isLoanConfirm ? `${name}已发放` : `${name}成功`;
-    } else {
-      statusText = `${name}申请成功`;
-    }
     return (
       <div className={styles.root}>
         <div className={`${styles.resultStatus} ${styles[status]}`}></div>
-        <div className={styles.resultTitle}>{statusText}</div>
+        <div className={styles.resultTitle}>{title}</div>
         <div className={`${styles.resultCash} number`}>{formatCash}元</div>
         <div className={styles.resultMessage}>
           <span className={styles.resultMessageText}>{CONFIGS.resultDetail[type][status]}</span>
