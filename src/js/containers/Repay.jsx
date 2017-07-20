@@ -18,9 +18,7 @@ class Repay extends Component {
 
   componentDidMount() {
     _paq.push(['trackEvent', 'C_Page', 'E_P_Repay']);
-    //this.getInitData();
-    let data = {"result":"000000","fail_reason":null,"business_result_code":"000000","business_result_msg":"业务处理成功","partner_id":"CRF0000001","partner_user_id":"b6b846613b2219f626c85ac73e3bafbd","org_id":"CRF01","channel":"xhd","bill_date":"2017-08-10","curr_amt":100221,"total_amt":273554,"min_normal_loan_time":"","overdue_flag":"N","first_loan_flag":null};
-    this.setData(data);
+    this.getInitData();
   }
 
   async getInitData() {
