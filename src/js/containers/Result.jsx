@@ -32,7 +32,7 @@ class ResultPage extends Component {
   async getInitData() {
 
     let path = `${CONFIGS.repayPath}/dynamics?kissoId=${CONFIGS.userId}&repayNo=${this.state.contractNo}`;
-    console.log(CONFIGS.method.loanNo);
+
     if(this.props.location.state && this.props.location.state.currentPath === 'loanconfirm'){
       path = `${CONFIGS.loanPath}/dynamics?kissoId=${CONFIGS.ssoId}&loanNo=${this.state.contractNo}`;
     }
@@ -48,7 +48,6 @@ class ResultPage extends Component {
         this.setStatus(result);
       }
     } catch (error) {
-      console.log(error);
       this.setState({
         isLoading: false
       });

@@ -50,7 +50,7 @@ class Repay extends Component {
         * */
 
         //mock
-        /*periodResult = {"productions":[{"loanAmount":"100","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"200","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"300","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"400","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"500","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"600","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"700","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"800","periodArray":[2],"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]}],"contractName":"信而富现金贷借款服务协议","contractVersion":"0.01","result":"0","message":"成功","contractUrl":"https://app-ci.crfchina.com/h5/contract/loanContract/0.01.html"};*/
+        /*periodResult = {"productions":[{"loanAmount":"100","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"200","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"300","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"400","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"500","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"600","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"700","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"800","periodArray":[2,3,4,5,6],"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]}],"contractName":"信而富现金贷借款服务协议","contractVersion":"0.01","result":"0","message":"成功","contractUrl":"https://app-ci.crfchina.com/h5/contract/loanContract/0.01.html"};*/
 
         Object.assign(CONFIGS.loanPeriod,periodResult);//借款金额对应的数组
 
@@ -113,8 +113,8 @@ class Repay extends Component {
       if (loanResult && !loanResult.response) {
 
         //mock
-        /*loanResult = {"channel":"xhd","detailList":{"loanScale":{"contract_name":"信而富现金贷借款服务协议","contract_version":"0.01","day_scale":"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|","errorMessag":"","loan_amount_max":"800.0","loan_amount_min":"100.0","loan_amount_step":"100.0","period_amount_min":"50.0","period_limit":"1600","period_scale":"","result":"0","return_ability":"5000","used_limit":"4200.0"},"LoanPlan":[{"currBillDate":"2017-08-19","currCountMstAtm":"843.40","currEndMstAtm":"0.00","currInterest":"14.40","currMstAtm":"800.00","currStartMstAtm":"800.00","handleFee":"29.00","period":"1"}],"LoanClause":{"billDate":"2017-08-19","channelFee":"","countMstAtm":"843.40","dInterestRate":"0.0006","dOverDueRate":"2.0000","dailyFreeHandFeeTimes":"3","handingFeeFix":"29.00","interestFreeDays":"3","loanAmount":"800.00","loanPeriod":"30","mInterestRate":"0.0180","mOverDueRate":"60.0000","monthFreeHandFeeTimes":"30","overDueFreeDays":"3","periodYN":"A","productVersion":"1","startTime":"2017-7-20","totalInterestFee":"14.40","totalRtnAmount":"800.00","yInterestRate":""}},"result":"0","errMsg":""};
-        */
+        /*loanResult = {"channel":"xhd","detailList":{"loanScale":{"contract_name":"信而富现金贷借款服务协议","contract_version":"0.01","day_scale":"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|","errorMessag":"","loan_amount_max":"800.0","loan_amount_min":"100.0","loan_amount_step":"100.0","period_amount_min":"50.0","period_limit":"1600","period_scale":"","result":"0","return_ability":"5000","used_limit":"4200.0"},"LoanPlan":[{"currBillDate":"2017-08-19","currCountMstAtm":"843.40","currEndMstAtm":"0.00","currInterest":"14.40","currMstAtm":"800.00","currStartMstAtm":"800.00","handleFee":"29.00","period":"1"}],"LoanClause":{"billDate":"2017-08-19","channelFee":"","countMstAtm":"843.40","dInterestRate":"0.0006","dOverDueRate":"2.0000","dailyFreeHandFeeTimes":"3","handingFeeFix":"29.00","interestFreeDays":"3","loanAmount":"800.00","loanPeriod":"30","mInterestRate":"0.0180","mOverDueRate":"60.0000","monthFreeHandFeeTimes":"30","overDueFreeDays":"3","periodYN":"A","productVersion":"1","startTime":"2017-7-20","totalInterestFee":"14.40","totalRtnAmount":"800.00","yInterestRate":""}},"result":"0","errMsg":""};*/
+
         PubSub.publish('loanDetail:list', loanResult.detailList.LoanPlan);
       }
 
@@ -142,7 +142,7 @@ class Repay extends Component {
   }
 
   async loanSubmitFetch(){
-    console.log(CONFIGS.loanData.amount,'以分');
+    //console.log(CONFIGS.loanData.amount,'以分');
     const params={
       loanAmount: CONFIGS.loanData.amount,//金额
       loanDays: CONFIGS.loanData.day,//借款天数
@@ -159,7 +159,7 @@ class Repay extends Component {
       if (result && !result.response) {
         this.refs.loading.hide();
 
-        console.log(result);
+        //console.log(result);
         this.setMethodData(result);
       }
     } catch (error) {
@@ -285,7 +285,7 @@ class Repay extends Component {
   }
 
   setMethodData(methodData) {
-    console.log(methodData.loanNo,'methodData//////////**********');
+    //(methodData.loanNo,'methodData//////////**********');
     Object.assign(CONFIGS.method, methodData);
     !CONFIGS.method.repayTotalAmt && (CONFIGS.method.repayTotalAmt = CONFIGS.loanData.amount);
     /*
@@ -309,7 +309,7 @@ class Repay extends Component {
   render() {
     let props = { title: this.state.title};
     let {isLoading, loanData, dayData} = this.state;
-    console.log(window.length++,'------------------------detail');
+    //console.log(window.length++,'------------------------detail');
 
     let contentClassName = "loan-content gray-bg";
 

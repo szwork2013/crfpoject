@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactSwipes from 'react-swipes';
+//import ReactSwipes from 'react-swipes';
 import Numeral from 'numeral';
 import PubSub from 'pubsub-js';
 
@@ -15,124 +15,87 @@ export default class Rulers extends Component {
       data: [],
       rulerWidth: 18,
     };
+    this.el={
+      amountIndex: 0,
+      halfClientWidth: parseFloat(document.documentElement.clientWidth/2),
+      halfRulerWidth: this.state.rulerWidth/2,
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({data: nextProps.list.data, amount: nextProps.list.currentAmount, defaultAmount: nextProps.list.currentAmount});
+    this.setState({data: nextProps.list.data, amount: nextProps.list.currentAmount, defaultAmount: nextProps.list.currentAmount/100});
+    CONFIGS.currentAmount = nextProps.list.currentAmount;
   }
 
-  componentDidUpdate() {
-    this.resetContainer();
-    this.refs.rulers.swipes.transitionDuration = 0;
-  }
 
   componentDidMount() {
-   /*let ele = document.querySelector('.loan-swipes-content');
-    let height = ele.clientHeight - 1;
-    let ruler = document.querySelector('.loan-swipes-content .crf-swipes-axis-inner');
-    ruler.style.height = height + 'px';*/
     this.bindEvent();
+  }
+
+  componentWillUnmount() {
+    this.removeEvent();
+  }
+
+  removeEvent(){
+    const ne = MonoEvent;
+    const refDaySwipes = ne('.amount-swipes');
+    refDaySwipes.un('touchstart');
+    refDaySwipes.un('touchmove');
+    refDaySwipes.un('touchend');
   }
 
   bindEvent() {
     let ne = MonoEvent;
     let refWrap = ne('.loan-amount-rulers');
     let touchDoc = ne(document);
-    let startPoint = 0;
-    let endPoint = 0;
+
+    const dayEl = document.querySelector('.amount-swipes');
 
     refWrap.on('touchstart',(e) => {
-      let dayEl = document.querySelector('.crf-rulers');
       let touch = e.touches[0];
-      startPoint = touch.pageX;//- dayEl.offsetLeft;
-      let originPoint = this.state.data.indexOf(CONFIGS.currentAmount);
-      console.log('touch');
+      let disX = touch.pageX - dayEl.offsetLeft;
+
       touchDoc.on('touchmove', (e) => {
         let touch = e.touches[0];
-        endPoint = touch.pageX;// - dayEl.offsetLeft;
-        let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
-        if (distance !== 0) {
-          let currentPoint = originPoint + distance;
-          if (currentPoint > (this.state.data.length - 1) || currentPoint < 0) {
-            if (currentPoint > this.state.data.length) {
-              currentPoint = (this.state.data.length - 1);
-            } else if (currentPoint < 0) {
-              currentPoint = 0;
-            }
-          }
-          this.refs.rulers.swipes.moveToPoint(currentPoint);
-        }
+        let swipeLeft = touch.pageX - disX;//计算
+        this.setTouchMove(swipeLeft);//限定,使用
       });
 
       touchDoc.on('touchend', () => {
         touchDoc.un('touchend');
         touchDoc.un('touchmove');
-        let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
-        if (distance !== 0) {
-          let currentPoint = originPoint + distance;
-          if (currentPoint > (this.state.data.length - 1) || currentPoint < 0) {
-            if (currentPoint > this.state.data.length) {
-              currentPoint = (this.state.data.length - 1);
-            } else if (currentPoint < 0) {
-              currentPoint = 0;
-            }
-          }
-          this.setRulerState();
-          this.setTouchEnd(currentPoint);
-          this.refs.rulers.swipes.moveToPoint(currentPoint);
-        }
+        this.setTouchEnd();
       });
 
       return false;
     });
   }
 
-  setRulerState(point) {
-    /*this.setState({
-      amount: this.state.data[point],
-    });*/
-    CONFIGS.currentAmount = this.state.data[point];
-    /*let storage = window.localStorage;
-    storage.setItem('currentAmount', CONFIGS.currentAmount);*/
-    CONFIGS.realAmount = CONFIGS.currentAmount;
-    //PubSub.publish('present:init', this.state.data[point]);
-  }
+  setTouchMove(swipeLeft){
+    const refDaySwipes = document.querySelector('.amount-swipes');
 
-  resetContainer() {
-    let totalWidth = this.state.data.length * this.state.rulerWidth;
-    let currentPoint = this.getCurrentPoint();
-    let rulerOffsetWidth = currentPoint * this.state.rulerWidth;
-    let rulerContainer = document.getElementsByClassName('crf-rulers')[0];
-    let offsetWidth = (screen.width / 2 - 3.5);
-    CONFIGS.currentAmount = this.state.defaultAmount;
-    let storage = window.localStorage;
-    storage.setItem('currentAmount', CONFIGS.currentAmount);
-    CONFIGS.realAmount = CONFIGS.currentAmount;
+    let leftMax = this.el.halfClientWidth - this.el.halfRulerWidth;
+    const refDaySwipes50 = parseFloat(refDaySwipes.style.width) - this.el.halfClientWidth - this.el.halfRulerWidth;
 
-    //console.log(totalWidth,currentPoint,rulerContainer,offsetWidth);
-    if (rulerContainer) {
-      rulerContainer.style.width = totalWidth + 'px';
-      rulerContainer.style.marginLeft = offsetWidth + 'px';
-      rulerContainer.style.marginRight = offsetWidth + 'px';
-      //rulerContainer.style.transform = `translate3d(-${rulerOffsetWidth}px, 0, 0)`;
-      //if (this.state.amount === this.state.defaultAmount) PubSub.publish('present:init', this.state.data[currentPoint]);
+    if(swipeLeft <= -refDaySwipes50){
+      swipeLeft = -refDaySwipes50;
     }
-  }
-
-  getCurrentPoint() {
-    let currentPoint = 0;
-    if (this.state.data.length !== 0) {
-      //let currentData = this.state.data;
-      currentPoint = this.state.data.indexOf(this.state.defaultAmount);
+    if(swipeLeft > leftMax){
+      swipeLeft = leftMax;
     }
-    return currentPoint;
+
+    this.el.amountIndex = Math.round((this.el.halfClientWidth - swipeLeft - this.el.halfRulerWidth) / this.state.rulerWidth);
+
+    refDaySwipes.style.left = swipeLeft + 'px';
   }
 
-  setTouchEnd(currentPoint){
-    let currentAmount = this.state.data[currentPoint];
-    let currentAmountCount = currentAmount/100-1;
-    let crfRulerEle = document.querySelectorAll('.loan-rulers .crf-ruler');
+  setTouchEnd(){
+    console.log(CONFIGS.loanData.currentAmountCount);
+    let currentAmount = (this.el.amountIndex+1) * 100;
+    let currentAmountCount = this.el.amountIndex;
 
+    //金额是5的倍数则隐藏
+    let crfRulerEle = document.querySelectorAll('.crf-loan-swipes .crf-ruler');
     if(CONFIGS.loanData.currentAmountCount < 5){
       crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>&nbsp;${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
     }else{
@@ -140,17 +103,21 @@ export default class Rulers extends Component {
         crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
       }
     }
-
     if(currentAmountCount === 0 || currentAmountCount%5 === 4){
       CONFIGS.loanData.currentAmountCount = currentAmountCount;
       crfRulerEle[currentAmountCount].innerHTML='';
     }
 
-    this.refs.refAmount.innerHTML = `${Numeral(currentAmount).format('0, 0')}元`;//尺子使用setState可能会引起多次渲染
+    this.refs.refAmount.innerHTML = `${Numeral(currentAmount).format('0, 0')}元`;
+
+    //移动一个格子
+    const refDaySwipes = document.querySelector('.amount-swipes');
+    let swipeLeft = this.el.halfClientWidth - ((this.el.amountIndex+1) * this.state.rulerWidth) + this.state.rulerWidth/2;
+    refDaySwipes.style.left = swipeLeft + 'px';
 
     if(CONFIGS.currentAmount !== currentAmount){
       CONFIGS.loanData.sendSwitch = true;
-      //console.log(currentAmount,'*********拖动完成的金额***********');
+
       PubSub.publish('daySwipes:day',currentAmount);
 
       CONFIGS.currentAmount = currentAmount;
@@ -160,15 +127,6 @@ export default class Rulers extends Component {
   }
 
   render() {
-    const opt = {
-      distance: this.state.rulerWidth, // 每次移动的距离，卡片的真实宽度，需要计算
-      currentPoint: this.getCurrentPoint(),// 初始位置，默认从0即第一个元素开始
-      swTouchend: (ev) => {
-
-        //setTouchEnd()
-
-      }
-    };
 
     const ruler = (item, index) => {
       let span = '';
@@ -191,11 +149,23 @@ export default class Rulers extends Component {
       );
     };
 
-    const {title, amount} = this.state;
+    const {title, amount, data, defaultAmount, rulerWidth} = this.state;
+
     const formatAmount = Numeral(amount).format('0, 0');
 
+    let totalWidth = data.length * rulerWidth;
+    let defaultWidth = defaultAmount * rulerWidth - rulerWidth / 2;
+    let defaultLeft = this.el.halfClientWidth - defaultWidth;
+
+    console.log(defaultWidth,data.length);
+    let amountSwipesStyle={
+      width: totalWidth,
+      height: '100%',
+      left: defaultLeft,
+    };
+
     return (
-      <section className="crf-swipes">
+      <section className="crf-swipes crf-loan-swipes">
         <div className="crf-swipes-title">
           <span className="crf-swipes-title-text">{title}</span>
         </div>
@@ -207,11 +177,9 @@ export default class Rulers extends Component {
             <div className="crf-swipes-axis-inner"></div>
           </div>
           <div className="crf-swipes-rulers loan-amount-rulers">
-            {(this.state.data.length > 0) &&
-              <ReactSwipes ref="rulers" className="crf-rulers loan-rulers" options={opt}>
-                {this.state.data.map(ruler)}
-              </ReactSwipes>
-            }
+            <div className="amount-swipes" style={amountSwipesStyle} ref="refAmountSwipes">
+              {(data.length > 0) && data.map(ruler)}
+            </div>
           </div>
         </div>
       </section>
