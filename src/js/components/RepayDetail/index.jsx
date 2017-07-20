@@ -155,10 +155,10 @@ export default class RepayDetail extends Component {
     const formatFees = Numeral(amount).format('0, 0.00');
     const modalStyle = {width: '90%'};
     const columns = [
-      { title: '还款', dataIndex: 'amt', key: 'amt' },
-      { title: '本金', dataIndex: 'principal', key: 'principal'},
-      { title: '手续费', dataIndex: 'fees', key: 'fees'},
-      { title: '利息', dataIndex: 'interest', key: 'interest'},
+      { title: '还款', dataIndex: 'amt', key: 'amt', width: '1.5rem' },
+      { title: '本金', dataIndex: 'principal', key: 'principal', width: '1.5rem'},
+      { title: '手续费', dataIndex: 'fees', key: 'fees', width: '1.5rem'},
+      { title: '利息', dataIndex: 'interest', key: 'interest', width: '1.5rem'},
       { title: '状态', dataIndex: 'flag', key: 'flag', width: '1.5rem', className: 'status' }
     ];
     const content = (index) => {
