@@ -44,6 +44,8 @@ export default class DaySwipes extends Component {
   componentDidUpdate(){
     const refDaySwipes = document.querySelector('.day-swipes');
     const screenHalf = document.documentElement.clientWidth/2 + this.state.rulerWidth/2;
+
+    //页面更新的时候确保left的值不会超出边界
     setTimeout(()=>{
       const refDayText = document.querySelector('.ref-day').innerText;
 
@@ -56,7 +58,6 @@ export default class DaySwipes extends Component {
 
       let defaultLeft = parseFloat(screenHalf) - (currentDay * this.state.rulerWidth);
       if(parseInt(refDaySwipes.style.left) !== defaultLeft){
-        //console.log(defaultLeft,currentDay,'update-=-=-=-=');
         refDaySwipes.style.left =  defaultLeft + 'px';
       }
     },0);
@@ -135,7 +136,7 @@ export default class DaySwipes extends Component {
 
   removeEvent(){
     const ne = MonoEvent;
-    const refDaySwipes = ne('.day-swipes');
+    const refDaySwipes = ne('.loan-ruler-day');
     refDaySwipes.un('touchstart');
     refDaySwipes.un('touchmove');
     refDaySwipes.un('touchend');
@@ -186,12 +187,11 @@ export default class DaySwipes extends Component {
     let total = clientWidth50 - rulerWidth50;
     let dayIndex = Math.round((total - parseFloat(refDaySwipes.style.left)) / this.state.rulerWidth + 1);
 
-    console.log(CONFIGS.loanData.period);
     let resultDay;
     if(dayIndex <= 30){
       resultDay = `${dayIndex}天`;
     }else{
-      resultDay = `${CONFIGS.loanData.period}期`;
+      resultDay = `${Math.ceil(dayIndex/30)}期`;
     }
 
     refDay.innerHTML = resultDay;
@@ -321,6 +321,7 @@ export default class DaySwipes extends Component {
 
     CONFIGS.loanData.dragDay = dayIndex;
 
+    console.log(CONFIGS.currentAmount,'CONFIGS.currentAmount');
     let maxDay = this.maxDay(CONFIGS.currentAmount);
     if(dayIndex > maxDay){
       dayIndex = maxDay;
@@ -352,13 +353,7 @@ export default class DaySwipes extends Component {
 
     //console.log(day,dayArray,defaultDay,'*******----this.setRefDay----******');
     if(day > 30){
-      refDay.innerHTML = `${CONFIGS.loanData.period}期`;
-      //console.log(dayArray,defaultDay,'*******************this.setState**************');
-      //设置swipe的left的距离,  当只有2、3期的时候
-      /*this.setState({
-        list: dayArray,
-        defaultDay: defaultDay,
-      });*/
+      refDay.innerHTML = `${Math.ceil(day/30)}期`;
     }else{
       if(day){
         refDay.innerHTML = `${day}天`;

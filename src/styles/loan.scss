@@ -53,6 +53,7 @@
 
   .crf-swipes-rulers{
     z-index: 3;
+    height:100%;
   }
 
   .disabled{
@@ -81,9 +82,10 @@
   }
 }
 
-.loan-rulers{
+.loan-amount-rulers{
   .crf-ruler{
     width:18px;
+    margin-top: 46px;
     span{
       position: absolute;
       top: -22px;
@@ -100,6 +102,23 @@
   }
 }
 
+.loan-swipes-content{
+  .crf-swipes-axis{
+    z-index: 4;
+  }
+}
+
+.amount-swipes{
+  position: absolute;
+  .crf-ruler{
+    span{
+      left:-5px;
+    }
+  }
+  .crf-ruler:before{
+    left:8.5px;
+  }
+}
 .day-swipes{
   position: absolute;
   .crf-ruler{

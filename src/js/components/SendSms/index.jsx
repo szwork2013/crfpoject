@@ -211,8 +211,8 @@ export default class SendSms extends Component {
       this.refs.smsNum.blur();
       currentValue = currentStr.substring(0, 6);
       setTimeout(() => {
-        console.log(currentValue);
-        if(this.props.pathname&&this.props.pathname.indexOf('loanconfirm')>-1){
+        //console.log(currentValue);
+        if(this.props.pathname && this.props.pathname.indexOf('loanconfirm')>-1){
           this.submitFetch();
         }else{
           this.submitLoan(currentValue);
