@@ -128,6 +128,7 @@ export default class SendSms extends Component {
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
+            code === 1 && this.showSound();
             Toast.info(data.message);
           });
         }
