@@ -104,7 +104,6 @@ class Repay extends Component {
       this.refs.loading.hide();
 
       if (loanResult && !loanResult.response) {
-        //console.log(loanResult,'+++++++++++++++1次');
         PubSub.publish('loanDetail:list', loanResult.detailList.LoanPlan);
       }
 
@@ -115,7 +114,6 @@ class Repay extends Component {
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
-            //Toast.info(data.message);
             PubSub.publish('loanDetail:list', data.message);
           });
         }
@@ -194,6 +192,9 @@ class Repay extends Component {
 
   defaultData(periodResult){
     //let maxAmount = remainLimit/100;
+    //这里规则要改，会出现2期
+
+
     let maxAmount = periodResult.productions.length;
 
     //生成借款数组
@@ -251,7 +252,6 @@ class Repay extends Component {
       }
     }
 
-
     CONFIGS.loanData.dragDay = dayArray.length;
     CONFIGS.loanData.dayArrayLength = dayArray.length;
     CONFIGS.loanData.touchEndDay = dayArray.length;
@@ -300,8 +300,14 @@ class Repay extends Component {
     let {isLoading, loanData, dayData} = this.state;
     console.log(window.length++,'------------------------detail');
 
+    let contentClassName = "loan-content gray-bg";
+
+    if(document.documentElement.clientWidth >= 360){
+      contentClassName += ' adaptTable';
+    }
+
     return (
-      <div className="loan-content gray-bg">
+      <div className={contentClassName}>
         <Nav data={props} />
         <WhiteSpace />
         <RulersLoan list={loanData} />
