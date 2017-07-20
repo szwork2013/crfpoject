@@ -192,6 +192,9 @@ class Repay extends Component {
 
   defaultData(periodResult){
     //let maxAmount = remainLimit/100;
+    //这里规则要改，会出现2期
+
+
     let maxAmount = periodResult.productions.length;
 
     //生成借款数组
@@ -297,8 +300,14 @@ class Repay extends Component {
     let {isLoading, loanData, dayData} = this.state;
     console.log(window.length++,'------------------------detail');
 
+    let contentClassName = "loan-content gray-bg";
+
+    if(document.documentElement.clientWidth >= 360){
+      contentClassName += ' adaptTable';
+    }
+
     return (
-      <div className="loan-content gray-bg">
+      <div className={contentClassName}>
         <Nav data={props} />
         <WhiteSpace />
         <RulersLoan list={loanData} />

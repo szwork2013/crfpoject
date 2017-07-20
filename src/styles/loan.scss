@@ -7,7 +7,7 @@
 
 .loan-content {
   height: 100%;
-  
+  background-color: #fff;
   footer{
     position: static;
   }
@@ -145,7 +145,6 @@
 .loan-detail-list{
   .am-table th, .am-table td{
     padding:.1rem 0;
-    width:20%;
   }
   .am-table th:first-child, .am-table td:first-child{
     text-align: left;
@@ -158,3 +157,11 @@
 }
 
 
+
+.adaptTable{
+  .loan-detail-list{
+    .am-table th, .am-table td{
+      width:20%;
+    }
+  }
+}

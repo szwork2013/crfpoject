@@ -31,6 +31,7 @@ export default class DaySwipes extends Component {
       //console.log('day swipes detail ---------------',val);
       this.setListData(val);
     }.bind(this));
+
   }
 
   componentWillUnmount() {
@@ -116,7 +117,6 @@ export default class DaySwipes extends Component {
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
-            //Toast.info(data.message);
             PubSub.publish('loanDetail:list', data.message);
           });
         }
@@ -183,40 +183,6 @@ export default class DaySwipes extends Component {
     }
 
     refDaySwipes.style.left = swipeLeft + 'px';
-  }
-
-  maxDay(amount){
-    //console.log(CONFIGS.loanPeriod.productions,amount,'------');  //设置期限，设置count
-    //console.log(CONFIGS.loanPeriod.productions[amount/100-1]);
-    //{loanAmount: "1000", periodArray: null, dayArray: Array(30)}
-    //{loanAmount: "1000", periodArray: [2], dayArray: Array(30)}
-
-    let maxDay;
-
-    let productData = CONFIGS.loanPeriod.productions[amount/100-1];
-
-    if(productData.periodArray === null){
-      if(productData.dayArray === null){
-        //默认显示30天，天数不能拖动，  显示错误信息，不能提交
-        maxDay = 30;
-      }else{
-        //一般情况，只有1期，拖动dayArray的天数
-        CONFIGS.loanData.period = 1;
-        maxDay = productData.dayArray.length;
-      }
-    }else{
-      CONFIGS.loanData.period = productData.periodArray.length + 1;//数组为[2],表示2期；为[2,3]表示3期,问清楚以后是否为[2,3,4]
-      maxDay = (productData.periodArray.length + 1) * 30;//2期为60天，3期90天
-      if(productData.dayArray === null){
-        //显示期数，只能拖动期数的范围，(30-60] || (30-90]
-
-      }else{
-        //有期数也有天数，拖动范围最大,大于30天，显示期数
-
-      }
-    }
-
-    return maxDay;
   }
 
   setListData(val){//val是最后拖动金额
@@ -293,6 +259,40 @@ export default class DaySwipes extends Component {
     this.setRefDay(endDay,dayArray,resetDay);
 
     this.getInitDataFetch(resultObj);
+  }
+
+  maxDay(amount){
+    //console.log(CONFIGS.loanPeriod.productions,amount,'------');  //设置期限，设置count
+    //console.log(CONFIGS.loanPeriod.productions[amount/100-1]);
+    //{loanAmount: "1000", periodArray: null, dayArray: Array(30)}
+    //{loanAmount: "1000", periodArray: [2], dayArray: Array(30)}
+
+    let maxDay;
+
+    let productData = CONFIGS.loanPeriod.productions[amount/100-1];
+
+    if(productData.periodArray === null){
+      if(productData.dayArray === null){
+        //默认显示30天，天数不能拖动，  显示错误信息，不能提交
+        maxDay = 30;
+      }else{
+        //一般情况，只有1期，拖动dayArray的天数
+        CONFIGS.loanData.period = 1;
+        maxDay = productData.dayArray.length;
+      }
+    }else{
+      CONFIGS.loanData.period = productData.periodArray.length + 1;//数组为[2],表示2期；为[2,3]表示3期,问清楚以后是否为[2,3,4]
+      maxDay = (productData.periodArray.length + 1) * 30;//2期为60天，3期90天
+      if(productData.dayArray === null){
+        //显示期数，只能拖动期数的范围，(30-60] || (30-90]
+
+      }else{
+        //有期数也有天数，拖动范围最大,大于30天，显示期数
+
+      }
+    }
+
+    return maxDay;
   }
 
   endFn(){
