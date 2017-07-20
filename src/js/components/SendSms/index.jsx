@@ -223,6 +223,8 @@ export default class SendSms extends Component {
   async submitFetch(){
     //https://m-ci.crfchina.com/h5_dubbo/loan?kissoId=370486f0d16742b38138f3dc1839efcb
     let loanPath = `${CONFIGS.loanPath}?kissoId=${CONFIGS.ssoId}`;
+
+    console.log(CONFIGS.method.loanNo,'CONFIGS.method.loanNo');
     let params = {
       "agreementGroup": CONFIGS.method.agreementGroup,
       "agreementName": CONFIGS.method.agreementName,
@@ -274,7 +276,7 @@ export default class SendSms extends Component {
             pathname: path,
             query: {
               ssoId: CONFIGS.userId,
-              contractNo: data.rcs_repay_no,
+              contractNo: data.loanNo,
               cash: CONFIGS.method.repayTotalAmt,
               type: CONFIGS.sendSmsType,
             },

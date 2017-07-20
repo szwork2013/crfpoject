@@ -111,7 +111,6 @@ class Repay extends Component {
       this.refs.loading.hide();
 
       if (loanResult && !loanResult.response) {
-        console.log(JSON.stringify(loanResult));
 
         //mock
         /*loanResult = {"channel":"xhd","detailList":{"loanScale":{"contract_name":"信而富现金贷借款服务协议","contract_version":"0.01","day_scale":"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|","errorMessag":"","loan_amount_max":"800.0","loan_amount_min":"100.0","loan_amount_step":"100.0","period_amount_min":"50.0","period_limit":"1600","period_scale":"","result":"0","return_ability":"5000","used_limit":"4200.0"},"LoanPlan":[{"currBillDate":"2017-08-19","currCountMstAtm":"843.40","currEndMstAtm":"0.00","currInterest":"14.40","currMstAtm":"800.00","currStartMstAtm":"800.00","handleFee":"29.00","period":"1"}],"LoanClause":{"billDate":"2017-08-19","channelFee":"","countMstAtm":"843.40","dInterestRate":"0.0006","dOverDueRate":"2.0000","dailyFreeHandFeeTimes":"3","handingFeeFix":"29.00","interestFreeDays":"3","loanAmount":"800.00","loanPeriod":"30","mInterestRate":"0.0180","mOverDueRate":"60.0000","monthFreeHandFeeTimes":"30","overDueFreeDays":"3","periodYN":"A","productVersion":"1","startTime":"2017-7-20","totalInterestFee":"14.40","totalRtnAmount":"800.00","yInterestRate":""}},"result":"0","errMsg":""};
@@ -159,6 +158,8 @@ class Repay extends Component {
       let result = await fetchMethodPromise;
       if (result && !result.response) {
         this.refs.loading.hide();
+
+        console.log(result);
         this.setMethodData(result);
       }
     } catch (error) {
@@ -284,7 +285,7 @@ class Repay extends Component {
   }
 
   setMethodData(methodData) {
-    console.log(methodData,'methodData//////////**********');
+    console.log(methodData.loanNo,'methodData//////////**********');
     Object.assign(CONFIGS.method, methodData);
     !CONFIGS.method.repayTotalAmt && (CONFIGS.method.repayTotalAmt = CONFIGS.loanData.amount);
     /*
