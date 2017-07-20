@@ -36,7 +36,6 @@ class Repay extends Component {
         isLoading: false
       });
       CRFFetch.handleError(error, Toast, () => {
-        console.log(error);
         if (error.response.status === 400) {
           error.body.then(data => {
             Toast.info(data.message);
@@ -114,7 +113,13 @@ class Repay extends Component {
       }
     } catch (error) {
       this.refs.loading.hide();
-      let msgs = error.body;
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      });
     }
   }
 
