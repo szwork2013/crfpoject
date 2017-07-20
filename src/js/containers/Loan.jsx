@@ -18,7 +18,7 @@ class Repay extends Component {
   }
 
   componentDidMount() {
-    _paq.push(['trackEvent', 'C_Page', 'E_P_Repay']);
+    _paq.push(['trackEvent', 'C_Page', 'E_P_Loan']);
     this.getQuotaFetch();//获取额度
 
     //窄的手机屏幕
@@ -49,9 +49,11 @@ class Repay extends Component {
          }
         * */
 
+        //mock
+        /*periodResult = {"productions":[{"loanAmount":"100","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"200","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"300","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"400","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"500","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"600","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"700","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"800","periodArray":[2],"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]}],"contractName":"信而富现金贷借款服务协议","contractVersion":"0.01","result":"0","message":"成功","contractUrl":"https://app-ci.crfchina.com/h5/contract/loanContract/0.01.html"};*/
+
         Object.assign(CONFIGS.loanPeriod,periodResult);//借款金额对应的数组
 
-        //console.log(periodResult.productions.length,quotaResult.remainLimit,'************************************');
         //let defaultData = this.defaultData(quotaResult.remainLimit/100);//设置标尺，传入可用额度
         let defaultData = this.defaultData(periodResult);//考虑2期3期
 
@@ -109,6 +111,11 @@ class Repay extends Component {
       this.refs.loading.hide();
 
       if (loanResult && !loanResult.response) {
+        console.log(JSON.stringify(loanResult));
+
+        //mock
+        /*loanResult = {"channel":"xhd","detailList":{"loanScale":{"contract_name":"信而富现金贷借款服务协议","contract_version":"0.01","day_scale":"1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|","errorMessag":"","loan_amount_max":"800.0","loan_amount_min":"100.0","loan_amount_step":"100.0","period_amount_min":"50.0","period_limit":"1600","period_scale":"","result":"0","return_ability":"5000","used_limit":"4200.0"},"LoanPlan":[{"currBillDate":"2017-08-19","currCountMstAtm":"843.40","currEndMstAtm":"0.00","currInterest":"14.40","currMstAtm":"800.00","currStartMstAtm":"800.00","handleFee":"29.00","period":"1"}],"LoanClause":{"billDate":"2017-08-19","channelFee":"","countMstAtm":"843.40","dInterestRate":"0.0006","dOverDueRate":"2.0000","dailyFreeHandFeeTimes":"3","handingFeeFix":"29.00","interestFreeDays":"3","loanAmount":"800.00","loanPeriod":"30","mInterestRate":"0.0180","mOverDueRate":"60.0000","monthFreeHandFeeTimes":"30","overDueFreeDays":"3","periodYN":"A","productVersion":"1","startTime":"2017-7-20","totalInterestFee":"14.40","totalRtnAmount":"800.00","yInterestRate":""}},"result":"0","errMsg":""};
+        */
         PubSub.publish('loanDetail:list', loanResult.detailList.LoanPlan);
       }
 
@@ -157,8 +164,6 @@ class Repay extends Component {
     } catch (error) {
       this.refs.loading.hide();
 
-      //mock
-      //this.setMethodData({});
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
@@ -211,14 +216,14 @@ class Repay extends Component {
 
     CONFIGS.loanData.currentAmountCount = curAmount-1;
 
-    curAmount = curAmount*100;
+    curAmount = curAmount * 100;
     let loanList = {
       data: loanData,//根据最大金额生成金额的数组
       currentAmount: curAmount,//默认金额，大于15默认显示15
     };//当max大于15时，data跟currentAmount不会对应，data.length大于currentAmount
 
     let maxDay;
-    let defaultDay = maxAmount<=5 ? 14 : 30;//还有可能是null，金额是一定有的
+    let defaultDay = maxAmount<=5 ? 14 : 30;//金额是一定有的
 
     let productData = periodResult.productions[curAmount/100-1];
 
@@ -321,7 +326,7 @@ class Repay extends Component {
         <WhiteSpace />
         <LoanDetail />
         <footer>
-          <button className="loan-submit-btn" onClick={this.handleClick.bind(this)} ref="refLoanSubmit">提交申请</button>
+          <button className="loan-submit-btn disabled" onClick={this.handleClick.bind(this)} ref="refLoanSubmit">提交申请</button>
         </footer>
         <Loading ref="loading" show={isLoading} />
       </div>

@@ -31,7 +31,7 @@ export default class Rulers extends Component {
     let height = ele.clientHeight - 1;
     let ruler = document.querySelector('.loan-swipes-content .crf-swipes-axis-inner');
     ruler.style.height = height + 'px';*/
-    //this.bindEvent();
+    this.bindEvent();
   }
 
   bindEvent() {
@@ -44,12 +44,12 @@ export default class Rulers extends Component {
     refWrap.on('touchstart',(e) => {
       let dayEl = document.querySelector('.crf-rulers');
       let touch = e.touches[0];
-      startPoint = touch.pageX - dayEl.offsetLeft;
+      startPoint = touch.pageX;//- dayEl.offsetLeft;
       let originPoint = this.state.data.indexOf(CONFIGS.currentAmount);
-
+      console.log('touch');
       touchDoc.on('touchmove', (e) => {
         let touch = e.touches[0];
-        endPoint = touch.pageX - dayEl.offsetLeft;
+        endPoint = touch.pageX;// - dayEl.offsetLeft;
         let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
         if (distance !== 0) {
           let currentPoint = originPoint + distance;
@@ -77,7 +77,8 @@ export default class Rulers extends Component {
               currentPoint = 0;
             }
           }
-          this.setRulerState(currentPoint);
+          this.setRulerState();
+          this.setTouchEnd(currentPoint);
           this.refs.rulers.swipes.moveToPoint(currentPoint);
         }
       });
@@ -127,39 +128,44 @@ export default class Rulers extends Component {
     return currentPoint;
   }
 
+  setTouchEnd(currentPoint){
+    let currentAmount = this.state.data[currentPoint];
+    let currentAmountCount = currentAmount/100-1;
+    let crfRulerEle = document.querySelectorAll('.loan-rulers .crf-ruler');
+
+    if(CONFIGS.loanData.currentAmountCount < 5){
+      crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>&nbsp;${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
+    }else{
+      if(CONFIGS.loanData.currentAmountCount%5 === 0 || CONFIGS.loanData.currentAmountCount%5 === 4){
+        crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
+      }
+    }
+
+    if(currentAmountCount === 0 || currentAmountCount%5 === 4){
+      CONFIGS.loanData.currentAmountCount = currentAmountCount;
+      crfRulerEle[currentAmountCount].innerHTML='';
+    }
+
+    this.refs.refAmount.innerHTML = `${Numeral(currentAmount).format('0, 0')}元`;//尺子使用setState可能会引起多次渲染
+
+    if(CONFIGS.currentAmount !== currentAmount){
+      CONFIGS.loanData.sendSwitch = true;
+      //console.log(currentAmount,'*********拖动完成的金额***********');
+      PubSub.publish('daySwipes:day',currentAmount);
+
+      CONFIGS.currentAmount = currentAmount;
+    }
+
+    CONFIGS.realAmount = CONFIGS.currentAmount;
+  }
+
   render() {
     const opt = {
       distance: this.state.rulerWidth, // 每次移动的距离，卡片的真实宽度，需要计算
       currentPoint: this.getCurrentPoint(),// 初始位置，默认从0即第一个元素开始
       swTouchend: (ev) => {
 
-        let currentAmount = this.state.data[ev.newPoint];
-        let currentAmountCount = currentAmount/100-1;
-        let crfRulerEle = document.querySelectorAll('.loan-rulers .crf-ruler');
-
-        //console.log(CONFIGS.loanData.currentAmountCount,'CONFIGS.loanData.currentAmountCount-------------');
-        if(CONFIGS.loanData.currentAmountCount < 5){
-          crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>&nbsp;${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
-        }else{
-          crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
-        }
-
-        if(currentAmountCount===0 || currentAmountCount%5===4){
-          CONFIGS.loanData.currentAmountCount = currentAmountCount;
-          document.querySelectorAll('.loan-rulers .crf-ruler')[currentAmountCount].innerHTML='';
-        }
-
-        this.refs.refAmount.innerHTML = `${Numeral(currentAmount).format('0, 0')}元`;//尺子使用setState可能会引起多次渲染
-
-        if(CONFIGS.currentAmount !== currentAmount){
-          CONFIGS.loanData.sendSwitch = true;
-          //console.log(currentAmount,'*********拖动完成的金额***********');
-          PubSub.publish('daySwipes:day',currentAmount);
-
-          CONFIGS.currentAmount = currentAmount;
-        }
-
-        CONFIGS.realAmount = CONFIGS.currentAmount;
+        //setTouchEnd()
 
       }
     };
