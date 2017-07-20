@@ -21,9 +21,9 @@
   }
 
 
-  doc.setTitle = function(t) {
-    doc.title = t;
-    var i = doc.createElement('iframe');
+  document.setTitle = function(t) {
+    document.title = t;
+    var i = document.createElement('iframe');
     i.src = '//m.baidu.com/favicon.ico';
     i.style.display = 'none';
     i.onload = function() {
@@ -31,6 +31,6 @@
         i.remove();
       }, 9)
     };
-    doc.body.appendChild(i);
+    document.body.appendChild(i);
   };
 })();

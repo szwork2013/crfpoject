@@ -45,7 +45,7 @@ console.log(path);
     this.bindEvent();
 
     //开户所在地
-    const amListExtra=doc.querySelector('.am-list-extra');
+    const amListExtra=document.querySelector('.am-list-extra');
     if (amListExtra.innerHTML!=='开户行所在地') {
       amListExtra.classList.add('color-323232');
     }
@@ -71,8 +71,8 @@ console.log(path);
         CONFIGS.userId=result.crfUid;
         CONFIGS.userName=result.userName;
         CONFIGS.idNo=result.idNo;
-        console.log(result.randomNumber);
-        if(result.randomNumber>=50000){
+
+        if(!result.openModifyPhone){
           userPhone=result.phone;
           CONFIGS.bindCard.phoneNumStatus=true;
         }
@@ -321,13 +321,13 @@ console.log(path);
 
   bindEvent(){
     //select city
-    const amListExtra=doc.querySelector('.am-list-extra');
+    const amListExtra=document.querySelector('.am-list-extra');
 
     if(amListExtra.innerHTML.indexOf(',')>0){
       amListExtra.innerHTML=amListExtra.innerHTML.replace(/,/g,'&nbsp;');
     }
 
-    doc.onclick = function (e) {
+    document.onclick = function (e) {
       if (e.target.classList.contains('am-picker-popup-header-right')) {
         amListExtra.classList.add('color-323232');
         amListExtra.innerHTML=amListExtra.innerHTML.replace(/,/g,'&nbsp;');
@@ -353,7 +353,7 @@ console.log(path);
   }
 
   removeDisabled() {
-    if (CONFIGS.bindCard.bankCardNumStatus && CONFIGS.bindCard.phoneNumStatus && doc.querySelector('.am-list-extra').innerHTML !== '开户行所在地'&&(!this.state.refAgree.classList.contains('un-agree'))) {
+    if (CONFIGS.bindCard.bankCardNumStatus && CONFIGS.bindCard.phoneNumStatus && document.querySelector('.am-list-extra').innerHTML !== '开户行所在地'&&(!this.state.refAgree.classList.contains('un-agree'))) {
       this.refs.refFormNextBtn.classList.remove(styles.btnDisabled);
       CONFIGS.bindCard.notSubmit=false;
     }else{

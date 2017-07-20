@@ -49,6 +49,13 @@ export default class RepayDetail extends Component {
         data:allData
       });
     }else{
+      if(!this.state.data['0']){
+        this.setState({
+          data: [{}],
+          message: data,
+        });
+        return;
+      }
       this.setState({
         message: data,
       });
@@ -57,7 +64,6 @@ export default class RepayDetail extends Component {
 
   render() {
     const { data, message} = this.state;
-
     const columns = [
       { title: '应还款日', dataIndex: 'day', key: 'day' },
       { title: '本金', dataIndex: 'principal', key: 'principal'},
@@ -75,11 +81,11 @@ export default class RepayDetail extends Component {
           columns={columns}
           dataSource={item.list}
         />;
-        doc.querySelector('.loan-submit-btn').classList.remove('disabled');
+        document.querySelector('.loan-submit-btn').classList.remove('disabled');
       }else{
         table = <div className="error-message">{message}</div>;
         this.state.message = '';
-        doc.querySelector('.loan-submit-btn').classList.add('disabled');
+        document.querySelector('.loan-submit-btn').classList.add('disabled');
       }
 
       return (

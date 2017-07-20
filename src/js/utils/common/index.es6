@@ -19,7 +19,7 @@ let Common={
   },
   isAdapt:function(){
     let adapt;
-    if (screen.availWidth/screen.availHeight >= 0.659 || doc.body.scrollWidth/doc.body.scrollHeight >= 0.659 || screen.availWidth <= 320) {
+    if (screen.availWidth/screen.availHeight >= 0.659 || document.body.scrollWidth/document.body.scrollHeight >= 0.659 || screen.availWidth <= 320) {
       adapt=true;
     }
     return adapt;
@@ -46,9 +46,9 @@ let Common={
     return str;
   },
   setDocTitle:function(title){
-    doc.title = title;
+    document.title = title;
     if(Common.isWeChat()){
-      doc.setTitle(title);
+      document.setTitle(title);
     }
   },
   customPopState:function(fn){

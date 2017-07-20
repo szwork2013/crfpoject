@@ -54,16 +54,17 @@ class RepayConfirm extends Component {
   async getInitData() {
     ///h5_dubbo/user?kissoId=f9c36b0f4c034c0bb723fd67019dfdd0 获取手机号
     let accountPath = `${CONFIGS.ftsPath}/${CONFIGS.ssoId}/borrower_open_account`;
-
+    let userPath = `${CONFIGS.basePath}/user?kissoId=${CONFIGS.ssoId}`;
     try {
       let fetchAccountPromise = CRFFetch.Get(accountPath);
-
+      let userPromise = CRFFetch.Get(userPath);
       // 获取数据
       let accountResult = await fetchAccountPromise;
+      let userResult = await userPromise;
 
-      if (accountResult && !accountResult.response) {
+      if (userResult && !userResult.response && accountResult && !accountResult.response) {
         this.refs.loading.hide();
-        this.setData(accountResult);
+        this.setData(accountResult,userResult);
       }
     } catch (error) {
       this.refs.loading.hide();
@@ -86,8 +87,9 @@ class RepayConfirm extends Component {
     }
   }
 
-  setData(accountData) {
+  setData(accountData,userResult) {
     Object.assign(CONFIGS.account, accountData);
+    Object.assign(CONFIGS.user, userResult);
     let way = `${accountData.bankName}(${accountData.bankCardNo.slice(-4)})`;
 
     this.setState({
