@@ -79,7 +79,7 @@ class Repay extends Component {
     }
     rightData.push(Numeral(totalAmount).divide(100).value());
     // 构造小于currentAmount的数组
-    currentAmount = currentAmount - CONFIGS.defaultScale;
+    currentAmount = repayData.curr_amt - CONFIGS.defaultScale;
     while (currentAmount > CONFIGS.defaultScale) {
       let amount = Numeral(currentAmount).divide(100);
       leftData.push(amount.value());
