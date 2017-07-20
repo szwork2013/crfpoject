@@ -32,7 +32,7 @@ export default class Rulers extends Component {
   }
 
   componentDidMount() {
-    //this.bindEvent();
+    this.bindEvent();
   }
 
   bindEvent() {
@@ -43,16 +43,14 @@ export default class Rulers extends Component {
     let endPoint = 0;
 
     refWrap.on('touchstart',(e) => {
-      let dayEl = doc.querySelector('.crf-rulers');
       let touch = e.touches[0];
-      let disX = touch.pageX - dayEl.offsetLeft;
+      let disX = touch.pageX;
       startPoint = disX;
       let originPoint = this.state.data.indexOf(CONFIGS.currentAmount);
-      console.log(originPoint)
 
       touchDoc.on('touchmove', (e) => {
         let touch = e.touches[0];
-        let disX = touch.pageX - dayEl.offsetLeft;
+        let disX = touch.pageX;
         endPoint = disX;
         let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
         if (distance !== 0) {
@@ -81,9 +79,8 @@ export default class Rulers extends Component {
               currentPoint = 0;
             }
           }
-          console.log(distance);
-          this.refs.rulers.swipes.moveToPoint(currentPoint);
           this.setRulerState(currentPoint);
+          this.refs.rulers.swipes.moveToPoint(currentPoint);
         }
       });
 
@@ -167,7 +164,7 @@ export default class Rulers extends Component {
       distance: this.state.rulerWidth, // 每次移动的距离，卡片的真实宽度，需要计算
       currentPoint: this.getCurrentPoint(),// 初始位置，默认从0即第一个元素开始
       swTouchend: (ev) => {
-        this.setRulerState(ev.newPoint);
+        //this.setRulerState(ev.newPoint);
       }
     };
 
