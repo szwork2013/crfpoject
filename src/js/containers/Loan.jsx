@@ -20,6 +20,11 @@ class Repay extends Component {
   componentDidMount() {
     _paq.push(['trackEvent', 'C_Page', 'E_P_Repay']);
     this.getQuotaFetch();//获取额度
+
+    //窄的手机屏幕
+    if(document.documentElement.clientWidth < 360){
+      document.querySelector('body').classList.add('gray-bg');
+    }
   }
 
   async getQuotaFetch() {
