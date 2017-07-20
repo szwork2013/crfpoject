@@ -169,6 +169,7 @@ export default class DaySwipes extends Component {
 
   setMoveFn(swipeLeft){
     const refDaySwipes = document.querySelector('.day-swipes');
+    const refDay = document.querySelector('.ref-day');
 
     let clientWidth50 = parseFloat(document.documentElement.clientWidth/2);
     let rulerWidth50 = this.state.rulerWidth/2;
@@ -182,6 +183,18 @@ export default class DaySwipes extends Component {
       swipeLeft = leftMax;
     }
 
+    let total = clientWidth50 - rulerWidth50;
+    let dayIndex = Math.round((total - parseFloat(refDaySwipes.style.left)) / this.state.rulerWidth + 1);
+
+    console.log(CONFIGS.loanData.period);
+    let resultDay;
+    if(dayIndex <= 30){
+      resultDay = `${dayIndex}天`;
+    }else{
+      resultDay = `${CONFIGS.loanData.period}期`;
+    }
+
+    refDay.innerHTML = resultDay;
     refDaySwipes.style.left = swipeLeft + 'px';
   }
 
@@ -254,7 +267,7 @@ export default class DaySwipes extends Component {
       }
 
     }
-    console.log('dragDay:'+CONFIGS.loanData.dragDay,'val:'+val,'endDay:'+endDay,'*/*/*/*/*/*');
+    //console.log('dragDay:'+CONFIGS.loanData.dragDay,'val:'+val,'endDay:'+endDay,'*/*/*/*/*/*');
 
     this.setRefDay(endDay,dayArray,resetDay);
 
@@ -337,10 +350,10 @@ export default class DaySwipes extends Component {
   setRefDay(day,dayArray,defaultDay){
     const refDay = document.querySelector('.ref-day');
 
-    console.log(day,dayArray,defaultDay,'*******----this.setRefDay----******');
+    //console.log(day,dayArray,defaultDay,'*******----this.setRefDay----******');
     if(day > 30){
       refDay.innerHTML = `${CONFIGS.loanData.period}期`;
-      console.log(dayArray,defaultDay,'*******************this.setState**************');
+      //console.log(dayArray,defaultDay,'*******************this.setState**************');
       //设置swipe的left的距离,  当只有2、3期的时候
       /*this.setState({
         list: dayArray,
@@ -350,7 +363,7 @@ export default class DaySwipes extends Component {
       if(day){
         refDay.innerHTML = `${day}天`;
       }else{
-        console.log(dayArray,defaultDay,'*******************this.setState**************');
+        //console.log(dayArray,defaultDay,'*******************this.setState**************');
         //设置swipe的left的距离,  当只有2、3期的时候
         this.setState({
           list: dayArray,

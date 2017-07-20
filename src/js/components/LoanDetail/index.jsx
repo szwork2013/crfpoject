@@ -73,6 +73,7 @@ export default class RepayDetail extends Component {
     ];
     const content = (index) => {
       let item = data[index];
+      const loanSubmitBtn = document.querySelector('.loan-submit-btn');
 
       let table;
       if(!message){
@@ -81,11 +82,11 @@ export default class RepayDetail extends Component {
           columns={columns}
           dataSource={item.list}
         />;
-        document.querySelector('.loan-submit-btn').classList.remove('disabled');
+        loanSubmitBtn.classList.remove('disabled');
       }else{
         table = <div className="error-message">{message}</div>;
         this.state.message = '';
-        document.querySelector('.loan-submit-btn').classList.add('disabled');
+        loanSubmitBtn.classList.add('disabled');
       }
 
       return (
