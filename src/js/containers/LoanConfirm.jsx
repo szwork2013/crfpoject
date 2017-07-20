@@ -90,7 +90,7 @@ class RepayConfirm extends Component {
   setData(accountData,userResult) {
     Object.assign(CONFIGS.account, accountData);
     Object.assign(CONFIGS.user, userResult);
-    let way = `${accountData.bankName}(${accountData.bankCardNo.slice(-4)})`;
+    let way = `${accountData.bankName}卡(${accountData.bankCardNo.slice(-4)})`;
 
     this.setState({
       way: way,

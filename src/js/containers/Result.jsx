@@ -32,9 +32,9 @@ class ResultPage extends Component {
   async getInitData() {
 
     let path = `${CONFIGS.repayPath}/dynamics?kissoId=${CONFIGS.userId}&repayNo=${this.state.contractNo}`;
-
-    if(this.props.location.state&&this.props.location.state.currentPath === 'loanconfirm'){
-      path = `${CONFIGS.loanPath}/dynamics?kissoId=${CONFIGS.ssoId}&loanNo=CRF01884667554126655488`;
+    console.log(CONFIGS.method.loanNo);
+    if(this.props.location.state && this.props.location.state.currentPath === 'loanconfirm'){
+      path = `${CONFIGS.loanPath}/dynamics?kissoId=${CONFIGS.ssoId}&loanNo=${this.state.contractNo}`;
     }
 
     try {
@@ -48,6 +48,7 @@ class ResultPage extends Component {
         this.setStatus(result);
       }
     } catch (error) {
+      console.log(error);
       this.setState({
         isLoading: false
       });
@@ -70,16 +71,18 @@ class ResultPage extends Component {
   }
 
   setStatus(result) {
-    if (result[result.length - 1].process_status === 's') {
-      this.setState({dataList: result, status: 2, title: result[result.length - 1].trace_content});
-      clearInterval(this.timer);
-      _paq.push(['trackEvent', 'C_RepayResult', 'E_P_Repay_Successed', '还款成功']);
-    } else if(result[result.length - 1].process_status === 'f' || result[result.length - 1].process_status === 'p' || result[result.length - 1].process_status === 'n') {
-      this.setState({dataList: result, status: 1, title: result[result.length - 1].trace_content});
-      clearInterval(this.timer);
-      _paq.push(['trackEvent', 'C_RepayResult', 'E_SubmitRepay_Failed', '还款失败']);
-    } else {
-      this.setState({dataList: result, title: result[result.length - 1].trace_content});
+    if(result.length !== 0) {
+      if (result[result.length - 1].process_status === 's') {
+        this.setState({dataList: result, status: 2, title: result[result.length - 1].trace_content});
+        clearInterval(this.timer);
+        _paq.push(['trackEvent', 'C_RepayResult', 'E_P_Repay_Successed', '还款成功']);
+      } else if (result[result.length - 1].process_status === 'f' || result[result.length - 1].process_status === 'p' || result[result.length - 1].process_status === 'n') {
+        this.setState({dataList: result, status: 1, title: result[result.length - 1].trace_content});
+        clearInterval(this.timer);
+        _paq.push(['trackEvent', 'C_RepayResult', 'E_SubmitRepay_Failed', '还款失败']);
+      } else {
+        this.setState({dataList: result, title: result[result.length - 1].trace_content});
+      }
     }
   }
 
