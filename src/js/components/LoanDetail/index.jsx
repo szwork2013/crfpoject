@@ -37,7 +37,7 @@ export default class RepayDetail extends Component {
       data.forEach((value,index) => {
         allData['0'].list.push({
           "day": value.currBillDate,
-          "principal": value.currStartMstAtm,
+          "principal": value.currMstAtm,
           "fees": value.handleFee,
           "interest": value.currInterest,
           "repay": value.currCountMstAtm,

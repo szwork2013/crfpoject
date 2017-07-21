@@ -12,12 +12,10 @@ export default class DaySwipes extends Component {
       list: props.list,
       defaultDay: props.defaultDay,
     };
-    /*this.touchEl = {
-      startX: 0,
-      prevX: 0,
-      moveX: 0,
-      defaultLeft: 0,
-    }*/
+    this.el={
+      halfClientWidth: parseFloat(document.documentElement.clientWidth/2),
+      halfRulerWidth: this.state.rulerWidth/2,
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -43,7 +41,7 @@ export default class DaySwipes extends Component {
 
   componentDidUpdate(){
     const refDaySwipes = document.querySelector('.day-swipes');
-    const screenHalf = document.documentElement.clientWidth/2 + this.state.rulerWidth/2;
+    const screenHalf = this.el.halfClientWidth + this.el.halfRulerWidth;
 
     //页面更新的时候确保left的值不会超出边界
     setTimeout(()=>{
@@ -155,27 +153,25 @@ export default class DaySwipes extends Component {
       touchDoc.on('touchmove', (e) => {
         let touch = e.touches[0];
         let swipeLeft = touch.pageX - disX;//计算
-        this.setMoveFn(swipeLeft);//限定,使用
+        this.setTouchMove(swipeLeft);//限定,使用
       });
 
       touchDoc.on('touchend', () => {
         touchDoc.un('touchend');
         touchDoc.un('touchmove');
-        this.endFn();
+        this.setTouchEnd();
       });
 
       return false;
     });
   }
 
-  setMoveFn(swipeLeft){
+  setTouchMove(swipeLeft){
     const refDaySwipes = document.querySelector('.day-swipes');
     const refDay = document.querySelector('.ref-day');
 
-    let clientWidth50 = parseFloat(document.documentElement.clientWidth/2);
-    let rulerWidth50 = this.state.rulerWidth/2;
-    let leftMax = clientWidth50 - rulerWidth50;
-    const refDaySwipes50 = parseFloat(refDaySwipes.style.width) - clientWidth50 - rulerWidth50;
+    let leftMax = this.el.halfClientWidth - this.el.halfRulerWidth;
+    const refDaySwipes50 = parseFloat(refDaySwipes.style.width) - this.el.halfClientWidth - this.el.halfRulerWidth;
 
     if(swipeLeft <= -refDaySwipes50){
       swipeLeft = -refDaySwipes50;
@@ -184,7 +180,7 @@ export default class DaySwipes extends Component {
       swipeLeft = leftMax;
     }
 
-    let total = clientWidth50 - rulerWidth50;
+    let total = this.el.halfClientWidth - this.el.halfRulerWidth;
     let dayIndex = Math.round((total - parseFloat(refDaySwipes.style.left)) / this.state.rulerWidth + 1);
 
     let resultDay;
@@ -308,14 +304,12 @@ export default class DaySwipes extends Component {
     return maxDay;
   }
 
-  endFn(){
+  setTouchEnd(){
     const refDaySwipes = this.refs.refDaySwipes;
-    const clientWidth50 = document.documentElement.clientWidth/2;
-    const rulerWidth50 = this.state.rulerWidth/2;
 
     //this.touchEl.defaultLeft = 0;
 
-    let total = clientWidth50 - rulerWidth50;
+    let total = this.el.halfClientWidth - this.el.halfRulerWidth;
     let dayIndex = Math.round((total - parseFloat(refDaySwipes.style.left)) / this.state.rulerWidth + 1);
     let dayLeft = total - (dayIndex - 1) * 9;
 
@@ -392,8 +386,7 @@ export default class DaySwipes extends Component {
 
     let totalWidth = list.length * rulerWidth;
     let defaultWidth = defaultDay * rulerWidth - rulerWidth / 2;
-    const clientWidth50 = parseFloat(document.documentElement.clientWidth/2);
-    let defaultLeft = clientWidth50 - defaultWidth;
+    let defaultLeft = this.el.halfClientWidth - defaultWidth;
 
     //this.touchEl.defaultLeft = defaultLeft;
 
