@@ -90,7 +90,7 @@ export default class Present extends Component {
           </div>
         );
       };
-      let realAmount = CONFIGS.currentAmount - formatCoupon;
+      let realAmount = Numeral(Numeral(CONFIGS.currentAmount).multiply(100).value() - Numeral(coupon.real).multiply(100).value()).divide(100).format('0, 0.00');
       CONFIGS.realAmount = realAmount;
       let realAmountSpan = () => {
         return (

@@ -38,17 +38,18 @@ export default class Rulers extends Component {
   bindEvent() {
     let ne = MonoEvent;
     let refWrap = ne('.crf-swipes-rulers');
-    let touchDoc = ne(document);
     let startPoint = 0;
     let endPoint = 0;
+    let originPoint = 0;
+    refWrap.on('swipeLeft swipeRight', () => {
+      refWrap.on('touchstart',(e) => {
+        let touch = e.touches[0];
+        let disX = touch.pageX;
+        startPoint = disX;
+        originPoint = this.state.data.indexOf(CONFIGS.currentAmount);
+      });
 
-    refWrap.on('touchstart',(e) => {
-      let touch = e.touches[0];
-      let disX = touch.pageX;
-      startPoint = disX;
-      let originPoint = this.state.data.indexOf(CONFIGS.currentAmount);
-
-      touchDoc.on('touchmove', (e) => {
+      refWrap.on('touchmove', (e) => {
         let touch = e.touches[0];
         let disX = touch.pageX;
         endPoint = disX;
@@ -66,9 +67,7 @@ export default class Rulers extends Component {
         }
       });
 
-      touchDoc.on('touchend', () => {
-        touchDoc.un('touchend');
-        touchDoc.un('touchmove');
+      refWrap.on('touchend', (e) => {
         let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
         if (distance !== 0) {
           let currentPoint = originPoint + distance;
@@ -83,8 +82,9 @@ export default class Rulers extends Component {
           this.refs.rulers.swipes.moveToPoint(currentPoint);
         }
       });
-
-      return false;
+    });
+    refWrap.on('tap doubleTap', () => {
+      refWrap.un('touchstart touchmove touchend');
     });
   }
 
