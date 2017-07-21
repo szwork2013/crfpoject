@@ -117,7 +117,7 @@
 
     eventHooks.doubleTap = {
 
-      types: ['touchstart', 'touchend', 'click'],
+      types: ['touchstart', 'touchend'],
 
       setup: function (options) {
         var originalHandle = options.handle,
@@ -923,7 +923,7 @@
                 result = handles[j];
 
                 // 将缓存的附加数据添加到event对象中
-                if (result.extraData || fireData) {
+                if ((result && result.extraData) || fireData) {
                   if (result.extraData) {
                     event.extraData = {};
 
@@ -955,7 +955,7 @@
                   delete event.extraData;
                 }
 
-                if (result.handle.call(target, event) === false) {
+                if (result && (result.handle.call(target, event) === false)) {
                   event.preventDefault();
                   event.stopPropagation();
                 }
