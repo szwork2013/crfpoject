@@ -7,12 +7,17 @@
 
 .loan-content {
   height: 100%;
+  .detail-list{
+    min-height: 3.5rem;
+    margin-bottom:.2rem;
+  }
   footer{
     position: static;
+    padding:.3rem;
   }
 
   .am-table{
-    height: 68px;
+    height: 2.6rem;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
   }
