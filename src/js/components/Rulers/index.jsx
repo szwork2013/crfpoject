@@ -47,40 +47,48 @@ export default class Rulers extends Component {
         let disX = touch.pageX;
         startPoint = disX;
         originPoint = this.state.data.indexOf(CONFIGS.currentAmount);
-      });
 
-      refWrap.on('touchmove', (e) => {
-        let touch = e.touches[0];
-        let disX = touch.pageX;
-        endPoint = disX;
-        let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
-        if (distance !== 0) {
-          let currentPoint = originPoint + distance;
-          if (currentPoint > (this.state.data.length - 1) || currentPoint < 0) {
-            if (currentPoint > this.state.data.length) {
-              currentPoint = (this.state.data.length - 1);
-            } else if (currentPoint < 0) {
-              currentPoint = 0;
+        refWrap.on('touchmove', (e) => {
+          let touch = e.touches[0];
+          let disX = touch.pageX;
+          endPoint = disX;
+          let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
+          if (distance !== 0) {
+            let currentPoint = originPoint + distance;
+            if (currentPoint > (this.state.data.length - 1) || currentPoint < 0) {
+              if (currentPoint > this.state.data.length) {
+                currentPoint = (this.state.data.length - 1);
+              } else if (currentPoint < 0) {
+                currentPoint = 0;
+              }
+            }
+            if (currentPoint !== originPoint) {
+              this.setRulerState(currentPoint, 'move');
+              this.refs.rulers.swipes.moveToPoint(currentPoint);
             }
           }
-          this.refs.rulers.swipes.moveToPoint(currentPoint);
-        }
-      });
+        });
 
-      refWrap.on('touchend', (e) => {
-        let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
-        if (distance !== 0) {
-          let currentPoint = originPoint + distance;
-          if (currentPoint > (this.state.data.length - 1) || currentPoint < 0) {
-            if (currentPoint > this.state.data.length) {
-              currentPoint = (this.state.data.length - 1);
-            } else if (currentPoint < 0) {
-              currentPoint = 0;
+        refWrap.on('touchend', (e) => {
+          refWrap.un('touchend touchmove');
+          let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
+          if (distance !== 0) {
+            let currentPoint = originPoint + distance;
+            if (currentPoint > (this.state.data.length - 1) || currentPoint < 0) {
+              if (currentPoint > this.state.data.length) {
+                currentPoint = (this.state.data.length - 1);
+              } else if (currentPoint < 0) {
+                currentPoint = 0;
+              }
+            }
+            if (currentPoint !== originPoint) {
+              this.setRulerState(currentPoint);
+              this.refs.rulers.swipes.moveToPoint(currentPoint);
             }
           }
-          this.setRulerState(currentPoint);
-          this.refs.rulers.swipes.moveToPoint(currentPoint);
-        }
+        });
+
+        return false;
       });
     });
     refWrap.on('tap doubleTap', () => {
@@ -141,7 +149,7 @@ export default class Rulers extends Component {
     container.style.marginLeft = marginLeft;
   }
 
-  setRulerState(point) {
+  setRulerState(point, type) {
     let defaultValue = false;
     if (this.state.data[point] === this.state.defaultAmount) {
       defaultValue = true;
@@ -152,10 +160,12 @@ export default class Rulers extends Component {
       isDefault: defaultValue
     });
     CONFIGS.currentAmount = this.state.data[point];
-    let storage = window.localStorage;
-    storage.setItem('currentAmount', CONFIGS.currentAmount);
     CONFIGS.realAmount = CONFIGS.currentAmount;
-    PubSub.publish('present:init', this.state.data[point]);
+    if (type !== 'move') {
+      let storage = window.localStorage;
+      storage.setItem('currentAmount', CONFIGS.currentAmount);
+      PubSub.publish('present:init', this.state.data[point]);
+    }
     this.setTextPosition();
   }
 
