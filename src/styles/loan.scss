@@ -11,6 +11,12 @@
     position: static;
   }
 
+  .am-table{
+    height: 68px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .error-message{
     padding: .2rem 0 .4rem .2rem;
     color: #fa4548;
