@@ -55,8 +55,8 @@ export default class Rulers extends Component {
           let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
           if (distance !== 0) {
             let currentPoint = originPoint + distance;
-            if (currentPoint > (this.state.data.length - 1) || currentPoint < 0) {
-              if (currentPoint > this.state.data.length) {
+            if (currentPoint >= (this.state.data.length - 1) || currentPoint < 0) {
+              if (currentPoint >= this.state.data.length) {
                 currentPoint = (this.state.data.length - 1);
               } else if (currentPoint < 0) {
                 currentPoint = 0;
@@ -74,8 +74,8 @@ export default class Rulers extends Component {
           let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
           if (distance !== 0) {
             let currentPoint = originPoint + distance;
-            if (currentPoint > (this.state.data.length - 1) || currentPoint < 0) {
-              if (currentPoint > this.state.data.length) {
+            if (currentPoint >= (this.state.data.length - 1) || currentPoint < 0) {
+              if (currentPoint >= this.state.data.length) {
                 currentPoint = (this.state.data.length - 1);
               } else if (currentPoint < 0) {
                 currentPoint = 0;
@@ -150,6 +150,7 @@ export default class Rulers extends Component {
   }
 
   setRulerState(point, type) {
+    console.log(point);
     let defaultValue = false;
     if (this.state.data[point] === this.state.defaultAmount) {
       defaultValue = true;
