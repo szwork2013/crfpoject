@@ -109,7 +109,7 @@ export default class Rulers extends Component {
     if (this.refs.rulers) {
       this.refs.rulers.style.width = totalWidth + 'px';
       this.refs.rulers.style.left = `${offsetLeft}px`;
-      if (this.state.amount === this.state.defaultAmount) PubSub.publish('present:init', this.state.data[currentPoint]);
+      //if (this.state.amount === this.state.defaultAmount) PubSub.publish('present:init', this.state.data[currentPoint]);
     }
   }
 
