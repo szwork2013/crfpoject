@@ -81,6 +81,11 @@ button {
 }
 
 .coupon-left {
+  display: box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-box;
+  display: -o-box;
   width: 100px;
   border-radius: .1rem 0 0 .1rem;
   text-align: center;
