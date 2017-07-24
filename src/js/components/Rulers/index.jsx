@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactSwipes from 'react-swipes';
 import {RepayDetail} from 'app/components';
 import {WhiteSpace} from 'antd-mobile';
 import Numeral from 'numeral';
@@ -28,72 +27,76 @@ export default class Rulers extends Component {
   componentDidUpdate() {
     this.setTextPosition();
     this.resetContainer();
-    this.refs.rulers && (this.refs.rulers.swipes.transitionDuration = 0);
   }
 
   componentDidMount() {
     this.bindEvent();
   }
 
+  componentWillUnmount() {
+    this.removeEvent();
+  }
+
+  removeEvent() {
+    const ne = MonoEvent;
+    const swipes = ne('.crf-swipes-rulers');
+    swipes.un('touchstart');
+    swipes.un('touchmove');
+    swipes.un('touchend');
+  }
+
   bindEvent() {
     let ne = MonoEvent;
     let refWrap = ne('.crf-swipes-rulers');
-    let startPoint = 0;
-    let endPoint = 0;
-    let originPoint = 0;
-    refWrap.on('swipeLeft swipeRight', () => {
-      refWrap.on('touchstart',(e) => {
+    let touchDoc = ne(document);
+
+    let rulerEl = document.querySelector('.crf-rulers');
+
+    refWrap.on('touchstart',(e) => {
+      let touch = e.touches[0];
+      let disX = touch.pageX - this.refs.rulers.offsetLeft;
+
+      touchDoc.on('touchmove', (e) => {
         let touch = e.touches[0];
-        let disX = touch.pageX;
-        startPoint = disX;
-        originPoint = this.state.data.indexOf(CONFIGS.currentAmount);
-
-        refWrap.on('touchmove', (e) => {
-          let touch = e.touches[0];
-          let disX = touch.pageX;
-          endPoint = disX;
-          let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
-          if (distance !== 0) {
-            let currentPoint = originPoint + distance;
-            if (currentPoint >= (this.state.data.length - 1) || currentPoint < 0) {
-              if (currentPoint >= this.state.data.length) {
-                currentPoint = (this.state.data.length - 1);
-              } else if (currentPoint < 0) {
-                currentPoint = 0;
-              }
-            }
-            if (currentPoint !== originPoint) {
-              this.setRulerState(currentPoint, 'move');
-              this.refs.rulers.swipes.moveToPoint(currentPoint);
-            }
-          }
-        });
-
-        refWrap.on('touchend', (e) => {
-          refWrap.un('touchend touchmove');
-          let distance = parseInt((startPoint - endPoint) / this.state.rulerWidth);
-          if (distance !== 0) {
-            let currentPoint = originPoint + distance;
-            if (currentPoint >= (this.state.data.length - 1) || currentPoint < 0) {
-              if (currentPoint >= this.state.data.length) {
-                currentPoint = (this.state.data.length - 1);
-              } else if (currentPoint < 0) {
-                currentPoint = 0;
-              }
-            }
-            if (currentPoint !== originPoint) {
-              this.setRulerState(currentPoint);
-              this.refs.rulers.swipes.moveToPoint(currentPoint);
-            }
-          }
-        });
-
-        return false;
+        let swipeLeft = touch.pageX - disX; //计算
+        this.setTouchMove(swipeLeft); //限定,使用
       });
+
+      touchDoc.on('touchend', () => {
+        touchDoc.un('touchend');
+        touchDoc.un('touchmove');
+        this.setTouchEnd();
+      });
+
+      return false;
     });
-    refWrap.on('tap doubleTap', () => {
-      refWrap.un('touchstart touchmove touchend');
-    });
+  }
+
+  setTouchMove(swipeLeft) {
+    let leftMax = parseFloat(document.documentElement.clientWidth / 2) - this.state.rulerWidth / 2;
+    let swipes = parseFloat(this.refs.rulers.style.width) - leftMax;
+
+    if (swipeLeft <= -swipes) {
+      swipeLeft = -swipes;
+    }
+    if (swipeLeft > leftMax) {
+      swipeLeft = leftMax;
+    }
+    let currentPoint = Math.round((leftMax - swipeLeft) / this.state.rulerWidth);
+    if (currentPoint >= this.state.data.length) {
+      currentPoint = (this.state.data.length - 1);
+    } else if (currentPoint < 0) {
+      currentPoint = 0;
+    }
+    this.setRulerState(currentPoint, 'move');
+    this.refs.rulers.style.left = swipeLeft + 'px';
+  }
+
+  setTouchEnd() {
+    let currentPoint = this.getCurrentPoint();
+    let swipeLeft = parseFloat(document.documentElement.clientWidth / 2) - ((currentPoint + 1) * this.state.rulerWidth) + this.state.rulerWidth / 2;
+    this.setRulerState(currentPoint);
+    this.refs.rulers.style.left = swipeLeft + 'px';
   }
 
   resetContainer() {
@@ -101,7 +104,7 @@ export default class Rulers extends Component {
     let currentPoint = this.getCurrentPoint();
     let rulerOffsetWidth = currentPoint * this.state.rulerWidth;
     let rulerContainer = document.querySelector('.crf-rulers');
-    let offsetWidth = (document.body.offsetWidth / 2 - this.state.rulerWidth / 2);
+    let offsetLeft = parseFloat(document.documentElement.clientWidth / 2) - (rulerOffsetWidth - this.state.rulerWidth / 2);
     CONFIGS.currentAmount = this.state.defaultAmount;
     let storage = window.localStorage;
     storage.setItem('currentAmount', CONFIGS.currentAmount);
@@ -109,32 +112,28 @@ export default class Rulers extends Component {
 
     if (rulerContainer) {
       rulerContainer.style.width = totalWidth + 'px';
-      rulerContainer.style.marginLeft = offsetWidth + 'px';
-      rulerContainer.style.marginRight = offsetWidth + 'px';
-      rulerContainer.style.transform = `translate3d(-${rulerOffsetWidth}px, 0, 0)`;
+      rulerContainer.style.left = `-${offsetLeft}px`;
       if (this.state.amount === this.state.defaultAmount) PubSub.publish('present:init', this.state.data[currentPoint]);
     }
   }
 
   getCurrentPoint() {
     let currentPoint = 0;
-    if (this.state.data.length === 0) {
-
-    } else {
+    if (this.state.data.length !== 0) {
       let currentData = this.state.data;
-      currentPoint = this.state.data.indexOf(this.state.defaultAmount);
+      currentPoint = this.state.data.indexOf(this.state.amount);
     }
     return currentPoint;
   }
 
   handleReset() {
-    let currentPoint = this.getCurrentPoint();
     this.setState({
-      amount: this.state.data[currentPoint],
+      amount: this.state.defaultAmount,
       title: CONFIGS.repayDefaultTitle,
       isDefault: true
     });
-    this.refs.rulers.swipes.moveToPoint(currentPoint);
+    let swipeLeft = parseFloat(document.documentElement.clientWidth / 2) - ((this.state.defaultAmount + 1) * this.state.rulerWidth) + this.state.rulerWidth / 2;
+    this.refs.rulers.style.left = swipeLeft + 'px';
     this.setTextPosition();
   }
 
@@ -150,7 +149,6 @@ export default class Rulers extends Component {
   }
 
   setRulerState(point, type) {
-    console.log(point);
     let defaultValue = false;
     if (this.state.data[point] === this.state.defaultAmount) {
       defaultValue = true;
@@ -171,21 +169,13 @@ export default class Rulers extends Component {
   }
 
   render() {
-    const opt = {
-      distance: this.state.rulerWidth, // 每次移动的距离，卡片的真实宽度，需要计算
-      currentPoint: this.getCurrentPoint(),// 初始位置，默认从0即第一个元素开始
-      swTouchend: (ev) => {
-        //this.setRulerState(ev.newPoint);
-      }
-    };
-
     const ruler = (item, index) => {
       return (
         <div key={index} className="crf-ruler"></div>
       );
     };
 
-    const {title, amount, isDefault, disable} = this.state;
+    const {title, amount, isDefault, disable, data, rulerWidth} = this.state;
     const formatAmount = Numeral(amount).format('0, 0.00');
 
     return (
@@ -211,11 +201,9 @@ export default class Rulers extends Component {
             <div className="crf-swipes-axis-inner"></div>
           </div>
           <div className="crf-swipes-rulers">
-            {(this.state.data.length > 0) &&
-              <ReactSwipes ref="rulers" className="crf-rulers" options={opt}>
-                {this.state.data.map(ruler)}
-              </ReactSwipes>
-            }
+            <div ref="rulers" className="crf-rulers">
+              {(this.state.data.length > 0) && this.state.data.map(ruler)}
+            </div>
           </div>
         </div>
         <div className="crf-swipes-description">左右滑动调整还款金额, 调整以50为单位</div>

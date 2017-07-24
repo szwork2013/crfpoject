@@ -53,6 +53,7 @@ export default class Rulers extends Component {
 
     refWrap.on('touchstart',(e) => {
       let touch = e.touches[0];
+      console.log(dayEl.offsetLeft)
       let disX = touch.pageX - dayEl.offsetLeft;
 
       touchDoc.on('touchmove', (e) => {
