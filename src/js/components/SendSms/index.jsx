@@ -36,12 +36,14 @@ export default class SendSms extends Component {
     this.refs.smsText && this.refs.smsText.classList.remove(styles.error);
     if (!status) {
       if(this.props.pathname && this.props.pathname.indexOf('loanconfirm')>-1){
+        _paq.push(['trackEvent', 'C_LoanConfirm', 'E_LoanConfirm_sendMsg']);
         if(CONFIGS.loanData.isAgree){
           this.getVerification(0);
         }else{
           Toast.info('请勾选协议');
         }
       }else{
+        _paq.push(['trackEvent', 'C_RepayConfirm', 'E_RepayConfirm_sendMsg']);
         this.getVerification(0); //0 文本
       }
     }
@@ -53,8 +55,10 @@ export default class SendSms extends Component {
     this.refs.verificationNum && this.refs.verificationNum.classList.contains('click-disable');
 
     if(this.props.pathname&&this.props.pathname.indexOf('loanconfirm')>-1){
+      _paq.push(['trackEvent', 'C_LoanConfirm', 'E_LoanConfirm_sendMsgVoice']);
       CONFIGS.loanData.isAgree&&this.getVerification(1);
     }else{
+      _paq.push(['trackEvent', 'C_RepayConfirm', 'E_RepayConfirm_sendMsgVoice']);
       this.getVerification(1); // 1 声音
     }
   }

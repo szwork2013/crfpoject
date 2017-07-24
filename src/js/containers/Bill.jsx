@@ -14,6 +14,7 @@ class Bill extends Component {
   }
 
   componentDidMount() {
+    _paq.push(['trackEvent', 'C_Page', 'E_P_Bill']);
   }
 
   callback = (key) => {

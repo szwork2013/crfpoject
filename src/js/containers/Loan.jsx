@@ -15,9 +15,6 @@ class Repay extends Component {
       loanData: {},
       dayData: {},
     };
-    this.switch = {
-      isOff: false,
-    }
   }
 
   componentDidMount() {
@@ -63,16 +60,14 @@ class Repay extends Component {
           });
         }
       },() => {
-        //mock
-        /*let path = 'loan';
+        //location.reload();
+        let path = 'loan';
         hashHistory.push({
           pathname: path,
           query: {
             ssoId: CONFIGS.userId
           }
-        });*/
-
-        location.href=location.pathname+location.hash;
+        });
       });
     }
   }
@@ -146,8 +141,6 @@ class Repay extends Component {
 
     let loanSubmitPath = `${CONFIGS.loanPath}/fundsSource?loanAmount=${params.loanAmount}&loanDays=${params.loanDays}&loanProductNo=${params.loanProductNo}&kissoId=${params.kissoId}`;
 
-    this.switch.isOff = true;
-
     try {
       let fetchMethodPromise = CRFFetch.Get(loanSubmitPath);
       // 获取数据
@@ -162,11 +155,9 @@ class Repay extends Component {
          agreementName:"《信托贷款合同》、《服务协议》及其他相关授权文件"
         * */
         this.setMethodData(result);
-        this.switch.isOff = false;
       }
     } catch (error) {
       this.refs.loading.hide();
-      this.switch.isOff = false;
 
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
@@ -189,10 +180,8 @@ class Repay extends Component {
   handleClick() {
     if(!this.refs.refLoanSubmit.classList.contains('disabled')){
       this.refs.loading.show();
-
-      if(!this.switch.isOff){
-        this.loanSubmitFetch();
-      }
+      _paq.push(['trackEvent', 'C_Loan', 'E_Loan_submit']);
+      this.loanSubmitFetch();
     }
   }
 
@@ -210,7 +199,6 @@ class Repay extends Component {
   defaultData(periodResult){
     //let maxAmount = remainLimit/100;
     //这里规则要改，会出现2期
-
 
     let maxAmount = periodResult.productions.length;
 
@@ -264,13 +252,13 @@ class Repay extends Component {
       }
       dayArray = maxArray;
 
-      if(productData.dayArray === null){
+      /*if(productData.dayArray === null){
         //显示期数，只能拖动期数的范围，不能拖动天数
 
       }else{
         //有期数也有天数，拖动范围最大
 
-      }
+      }*/
     }
 
     CONFIGS.loanData.dragDay = dayArray.length;

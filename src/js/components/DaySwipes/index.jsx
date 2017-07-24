@@ -123,15 +123,13 @@ export default class DaySwipes extends Component {
           });
         }
       }, () => {
-        //mock
-        /*let path = 'loan';
+        let path = 'loan';
         hashHistory.push({
           pathname: path,
           query: {
             ssoId: CONFIGS.userId
           }
-        });*/
-        location.href=location.pathname+location.hash;
+        });
       });
 
     }

@@ -22,6 +22,11 @@ class ResultPage extends Component {
   }
 
   componentDidMount() {
+    if(this.props.location.state && this.props.location.state.currentPath === 'loanconfirm'){
+      _paq.push(['trackEvent', 'C_Page', 'E_P_ResultLoan']);
+    }else{
+      _paq.push(['trackEvent', 'C_Page', 'E_P_ResultRepay']);
+    }
     //_paq.push(['trackEvent', 'P_ConsumptionRecord', '借款记录']);
     this.getInitData();
     this.timer = setInterval(() => {
@@ -58,9 +63,14 @@ class ResultPage extends Component {
           });
         }
       }, () => {
-        let path = 'repay';
+        let hashPath;
+        if(path.indexOf(CONFIGS.loanPath)>-1){
+          hashPath = 'loan';
+        }else{
+          hashPath = 'repay';
+        }
         hashHistory.push({
-          pathname: path,
+          pathname: hashPath,
           query: {
             ssoId: CONFIGS.userId
           }

@@ -30,10 +30,11 @@ class RepayConfirm extends Component {
   }
 
   componentDidMount() {
+    _paq.push(['trackEvent', 'C_Page', 'E_P_LoanConfirm']);
 
     this.getInitData();
 
-    this.getActivityFetch();
+    //this.getActivityFetch();
   }
 
   async getActivityFetch(){
@@ -76,7 +77,7 @@ class RepayConfirm extends Component {
           });
         }
       }, () => {
-        let path = 'repay';
+        let path = 'loan';
         hashHistory.push({
           pathname: path,
           query: {
