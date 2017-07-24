@@ -228,7 +228,6 @@ class Contract extends React.Component {
       protocol = <p className="protocol">
         {
           this.state.ZJContractData.map((item,index)=>{
-            console.log(item);
             return (
               <a href="javascript:void(0)" key={index} onClick={this.showContractContent.bind(this,item)}>《{item.protocolName}》</a>
             )

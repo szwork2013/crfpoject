@@ -25,6 +25,12 @@ export default class Success extends Component {
 
     this.setFrameHeight();
 
+    if(this.state.id === 'digital'){
+      this.setState({
+        isLoading: false,
+      });
+    }
+
     if(this.state.isZJ){
       this.getContractContent(this.state.id);
     }

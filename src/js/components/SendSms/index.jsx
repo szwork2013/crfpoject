@@ -222,6 +222,12 @@ export default class SendSms extends Component {
   }
 
   async submitFetch(){
+    if (!this.sendFlag) return;
+    this.sendFlag = false;
+    this.setState({
+      isLoading: true
+    });
+    Toast.info(window.length++);
     //https://m-ci.crfchina.com/h5_dubbo/loan?kissoId=370486f0d16742b38138f3dc1839efcb
     let loanPath = `${CONFIGS.loanPath}?kissoId=${CONFIGS.ssoId}`;
 
@@ -259,18 +265,22 @@ export default class SendSms extends Component {
     let headers = {
       'Content-Type': 'application/json'
     };
-    console.log(params);
+
     try {
       let fetchPromise = CRFFetch.Put(loanPath, JSON.stringify(params), headers);
       // 获取数据
       let result = await fetchPromise;
       let path = 'result';
 
+      this.sendFlag = true;
+      this.setState({
+        isLoading: false
+      });
+
       result=result.json();
       result.then((data)=>{
         if (data && !data.response) {
-          console.log(data,'loan submit');
-          console.log(CONFIGS.method.repayTotalAmt,'CONFIGS.method.repayTotalAmt');
+          console.log(data,'loan submit',CONFIGS.method.repayTotalAmt,'CONFIGS.method.repayTotalAmt');
           //{status: 3, loanNo: "CRF01887603953490489344"}
           //hash
           hashHistory.push({
@@ -287,13 +297,28 @@ export default class SendSms extends Component {
           });
         }
       });
-    } catch (err) {
+    } catch (error) {
+      /*this.clearInput();
+
       CRFFetch.handleError(err,Toast,()=>{
         if(err.response.status==400){
           err.body.then(data => {
             Toast.info(data.message);
           });
         }
+      });*/
+      this.clearInput();
+      this.sendFlag = true;
+      this.setState({
+        isLoading: false
+      });
+      let errorStatus = {
+        status: error.response.status
+      };
+      let msg = error.body;
+      msg.then((data) => {
+        let res = Object.assign(data, errorStatus);
+        this.setVerificationBySubmit(res);
       });
     }
   }
@@ -387,7 +412,7 @@ export default class SendSms extends Component {
       <section className={styles.root}>
         <div className={`${styles.sendSmsContainer} hor`}>
           <div className={styles.sendSmsText} ref="smsText">{inputVerification}</div>
-          <div className={`${styles.sendSmsText} hide`} ref="smsSoundTextMain">收不到? 请尝试 <a onClick={this.sendSound}>语音验证</a></div>
+          <div className={`${styles.sendSmsText} hide`} ref="smsSoundTextMain">收不到? 请尝试 <a onClick={this.sendSound}>语音验证码</a></div>
           <div className={`${styles.sendSmsText} hide`} ref="smsSoundTextSub">验证电话即将发出, <span>请注意接听</span></div>
           <div className={styles.sendSmsAction}>
             <a ref="verificationNum" onClick={this.getVerificationNum}>{getVerification}</a>
