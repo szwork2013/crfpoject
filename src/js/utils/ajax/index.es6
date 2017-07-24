@@ -22,7 +22,7 @@ function parseJSON(response) {
 
 const FetchInterface = {
   // do get
-  Get(url: string, httpHeaders?: { [name: string]: any }) {
+  Get(url: string, httpHeaders?: { [name: string]: any }, parse=parseJSON) {
     let customHttpHeaders = Object.assign({}, httpHeaders);
     let defer = new Promise((resolve, reject) => {
       fetch(url, {
@@ -32,7 +32,7 @@ const FetchInterface = {
         mode: 'cors'
       })
       .then(checkStatus)
-      .then(parseJSON)
+      .then(parse)
       .then(data => {
         resolve(data)
       })

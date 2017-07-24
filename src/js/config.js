@@ -12,6 +12,7 @@ module.exports = {
   loanPath: CurrentPath + 'loan',
   ftsPath: CurrentPath +'fts',
   productPath: CurrentPath + 'product',
+  contractPath: CurrentPath + 'contract',
   userId: '',//用户ID
   userName:'',//用户名
   idNo:'',//身份证
