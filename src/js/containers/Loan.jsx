@@ -20,7 +20,6 @@ class Repay extends Component {
   componentDidMount() {
     _paq.push(['trackEvent', 'C_Page', 'E_P_Loan']);
     this.getQuotaFetch();//获取额度
-
     //窄的手机屏幕
     if(document.documentElement.clientWidth < 360){
       document.querySelector('body').classList.add('gray-bg');
@@ -69,13 +68,16 @@ class Repay extends Component {
           });
         }
       },() => {
-        let path = 'loan';
+        //mock
+        /*let path = 'loan';
         hashHistory.push({
           pathname: path,
           query: {
             ssoId: CONFIGS.userId
           }
-        });
+        });*/
+
+        location.href=location.pathname+location.hash;
       });
     }
   }
@@ -311,7 +313,7 @@ class Repay extends Component {
 
     let contentClassName = "loan-content gray-bg";
 
-    if(document.documentElement.clientWidth >= 360){
+    if(document.documentElement.clientWidth > 360){
       contentClassName += ' adaptTable';
     }
 

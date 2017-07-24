@@ -63,7 +63,7 @@ export default class SendSms extends Component {
     this.clearInput();
     let phoneNum = HandleRegex.hiddenMobile(CONFIGS.user.phone);
     this.refs.smsText && this.refs.smsText.classList.remove('hide');
-    this.setState({inputVerification: `已发送短信到${phoneNum}的手机`});
+    this.setState({inputVerification: `已发送短信到您${phoneNum}的手机`});
     let time = 60;
     clearInterval(this.state.timer);
     this.setState({getVerification: time + 's'});

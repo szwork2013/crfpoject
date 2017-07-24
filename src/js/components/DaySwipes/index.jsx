@@ -9,6 +9,7 @@ export default class DaySwipes extends Component {
     super(props, context);
     this.state = {
       rulerWidth:9,
+      miniRulerWidth:3,
       list: props.list,
       defaultDay: props.defaultDay,
     };
@@ -48,13 +49,14 @@ export default class DaySwipes extends Component {
       const refDayText = document.querySelector('.ref-day').innerText;
 
       let currentDay;
+      let defaultLeft;
       if(refDayText.indexOf('期') > -1){
         currentDay = parseFloat(refDayText) * 30;
+        defaultLeft = parseFloat(screenHalf) - ((currentDay - 30) * this.state.miniRulerWidth + this.state.rulerWidth * 30);
       }else{
         currentDay = parseFloat(refDayText);
+        defaultLeft = parseFloat(screenHalf) - (currentDay * this.state.rulerWidth);
       }
-
-      let defaultLeft = parseFloat(screenHalf) - (currentDay * this.state.rulerWidth);
 
       if(parseInt(refDaySwipes.style.left) !== defaultLeft){
         refDaySwipes.style.left =  defaultLeft + 'px';
@@ -70,7 +72,7 @@ export default class DaySwipes extends Component {
 
     let period;
     let periodDay;
-    console.log(defaultDay,remainLimit,CONFIGS.loanData.period,'----000000000000----');
+
     if(CONFIGS.loanData.period > 1 && defaultDay > 30){
       period = 'M';
       periodDay = CONFIGS.loanData.period;
@@ -121,13 +123,15 @@ export default class DaySwipes extends Component {
           });
         }
       }, () => {
-        let path = 'loan';
+        //mock
+        /*let path = 'loan';
         hashHistory.push({
           pathname: path,
           query: {
             ssoId: CONFIGS.userId
           }
-        });
+        });*/
+        location.href=location.pathname+location.hash;
       });
 
     }
@@ -171,18 +175,18 @@ export default class DaySwipes extends Component {
     const refDaySwipes = document.querySelector('.day-swipes');
     const refDay = document.querySelector('.ref-day');
 
-    let leftMax = this.el.halfClientWidth - this.el.halfRulerWidth;
-    const refDaySwipes50 = parseFloat(refDaySwipes.style.width) - this.el.halfClientWidth - this.el.halfRulerWidth;
+    const leftMax = this.el.halfClientWidth - this.el.halfRulerWidth;
+    const totalWidth = parseFloat(refDaySwipes.style.width);
+    const halfRefDaySwipes = totalWidth - this.el.halfClientWidth - this.el.halfRulerWidth;
 
-    if(swipeLeft <= -refDaySwipes50){
-      swipeLeft = -refDaySwipes50;
+    if(swipeLeft <= -halfRefDaySwipes){
+      swipeLeft = -halfRefDaySwipes;
     }
     if(swipeLeft > leftMax){
       swipeLeft = leftMax;
     }
 
-    let total = this.el.halfClientWidth - this.el.halfRulerWidth;
-    let dayIndex = Math.round((total - parseFloat(refDaySwipes.style.left)) / this.state.rulerWidth + 1);
+    let {dayIndex} = this.getCurrentDay(refDaySwipes,totalWidth);
 
     let resultDay;
     if(dayIndex <= 30){
@@ -193,6 +197,31 @@ export default class DaySwipes extends Component {
 
     refDay.innerHTML = resultDay;
     refDaySwipes.style.left = swipeLeft + 'px';
+  }
+
+  getCurrentDay(refDaySwipes,totalWidth,touchEndFlag){
+    const rulerWidth = this.state.rulerWidth;
+    const thirtyDayWidth = 30 * rulerWidth;
+    const periodWidth = parseFloat(thirtyDayWidth - this.el.halfClientWidth - this.el.halfRulerWidth);
+    const total = this.el.halfClientWidth - this.el.halfRulerWidth;
+
+    let dragLeft = parseFloat(refDaySwipes.style.left);
+    let dayIndex = Math.round((total - dragLeft) / rulerWidth + 1);
+    let dayLeft = total - (dayIndex - 1) * rulerWidth;
+    let roundDayIndex = Math.round(dayIndex/3) * 3;
+
+    if(totalWidth > thirtyDayWidth && roundDayIndex >= 33){
+      let period = (totalWidth - thirtyDayWidth) / 90 + 1;//加上默认的1期
+      let baseDay = (period - 1) * 30;//3期*60  2期*30
+      dayIndex = Math.round((Math.abs(dragLeft) - Math.abs(periodWidth)) / (totalWidth-thirtyDayWidth) * baseDay + 30);
+      touchEndFlag && (dayIndex = Math.round(dayIndex/3) * 3);
+      dayLeft = total - ((Math.round(dayIndex/3) * 3 - 30) * this.state.miniRulerWidth + 29 * rulerWidth);
+    }
+
+    return {
+      dayIndex,
+      dayLeft,
+    };
   }
 
   setListData(val){//val是最后拖动金额
@@ -224,7 +253,6 @@ export default class DaySwipes extends Component {
       resetDefault = true;
     }
 
-    console.log('default:'+defaultDay,'resetDay:'+resetDay,'dayArray.length:'+dayArray.length,'val:'+val);
     let resultObj = {
       defaultDay: defaultDay,//14 30 60 90
       remainLimit: val,//100-无穷
@@ -233,9 +261,6 @@ export default class DaySwipes extends Component {
       list: dayArray,//arr是计算出来的日期数组,dayArray是接口返回的日期数组
       defaultDay: defaultDay,
     });
-
-    //当最后拖拽结束的日期 大于 金额最大期限天数 则显示日期为最大期限天数
-    //const refDay = document.querySelector('.ref-day');
 
     /*
     * 当滑动借款金额 由大变小
@@ -257,7 +282,6 @@ export default class DaySwipes extends Component {
         //当CONFIGS.loanData.dragDay大于dayArray的时候
         CONFIGS.loanData.dragDay = dayArray.length;
       }else{
-        //console.log('最大期限，当前期限',CONFIGS.loanData.dragDay,defaultDay);
         if(resetDefault){
           endDay = defaultDay;
         }else{
@@ -266,7 +290,6 @@ export default class DaySwipes extends Component {
       }
 
     }
-    //console.log('val:'+val,'endDay:'+endDay,'*/*/*/*/*/*');
 
     this.setRefDay(endDay,dayArray,resetDay);
 
@@ -274,13 +297,7 @@ export default class DaySwipes extends Component {
   }
 
   maxDay(amount){
-    //console.log(CONFIGS.loanPeriod.productions,amount,'------');  //设置期限，设置count
-    //console.log(CONFIGS.loanPeriod.productions[amount/100-1]);
-    //{loanAmount: "1000", periodArray: null, dayArray: Array(30)}
-    //{loanAmount: "1000", periodArray: [2], dayArray: Array(30)}
-
     let maxDay;
-
     let productData = CONFIGS.loanPeriod.productions[amount/100-1];
 
     if(productData.periodArray === null){
@@ -293,17 +310,8 @@ export default class DaySwipes extends Component {
         maxDay = productData.dayArray.length;
       }
     }else{
-
-      //CONFIGS.loanData.period = productData.periodArray.length + 1;//数组为[2],表示2期；为[2,3]表示3期,问清楚以后是否为[2,3,4]
       CONFIGS.loanData.period = Math.max.apply(Math,productData.periodArray);
       maxDay = CONFIGS.loanData.period * 30;//2期为60天，3期90天
-      if(productData.dayArray === null){
-        //显示期数，只能拖动期数的范围，(30-60] || (30-90]
-
-      }else{
-        //有期数也有天数，拖动范围最大,大于30天，显示期数
-
-      }
     }
 
     return maxDay;
@@ -311,16 +319,12 @@ export default class DaySwipes extends Component {
 
   setTouchEnd(){
     const refDaySwipes = this.refs.refDaySwipes;
+    const totalWidth = parseFloat(refDaySwipes.style.width);
 
-    //this.touchEl.defaultLeft = 0;
-
-    let total = this.el.halfClientWidth - this.el.halfRulerWidth;
-    let dayIndex = Math.round((total - parseFloat(refDaySwipes.style.left)) / this.state.rulerWidth + 1);
-    let dayLeft = total - (dayIndex - 1) * 9;
-
+    let {dayIndex, dayLeft} = this.getCurrentDay(refDaySwipes,totalWidth,true);
+    console.log(refDaySwipes.style.left,totalWidth,'dayIndex:'+dayIndex, dayLeft,'touch end');
     CONFIGS.loanData.dragDay = dayIndex;
 
-    console.log(CONFIGS.currentAmount,'CONFIGS.currentAmount');
     let maxDay = this.maxDay(CONFIGS.currentAmount);
     if(dayIndex > maxDay){
       dayIndex = maxDay;
@@ -329,15 +333,13 @@ export default class DaySwipes extends Component {
     CONFIGS.loanData.touchEndDay = dayIndex;
 
     if(dayIndex === 1){
-      document.querySelector('.first-day').innerHTML='';
+      document.querySelector('.first-day').innerHTML = '';
     }else{
-      document.querySelector('.first-day').innerHTML='1天';
+      document.querySelector('.first-day').innerHTML = '1天';
     }
-    refDaySwipes.style.left = dayLeft+'px';
+    refDaySwipes.style.left = dayLeft + 'px';
 
     this.setRefDay(dayIndex);
-
-    //console.log(dayIndex,CONFIGS.loanData.touchEndDay,'-----------dayIndex-------------');
 
     let resultObj = {
       remainLimit: CONFIGS.currentAmount,
@@ -352,8 +354,12 @@ export default class DaySwipes extends Component {
 
     //console.log(day,dayArray.length,defaultDay,'*******----this.setRefDay----******');
     if(day > 30){
-      //console.log(Math.ceil(day/30));
+      /*
+      * 31
+      * */
+
       refDay.innerHTML = `${Math.ceil(day/30)}期`;
+
       CONFIGS.loanData.period = Math.ceil(day/30);
     }else{
       if(day){
@@ -370,34 +376,41 @@ export default class DaySwipes extends Component {
 
   }
 
-  render() {
-    const {list, defaultDay, rulerWidth} = this.state;
+  setRulerSize(list, defaultDay, rulerWidth, miniRulerWidth){
+    let totalWidth = list.length * rulerWidth;
+    let defaultWidth = defaultDay * rulerWidth - rulerWidth / 2;
 
-    //console.log(list);
+    if(list.length > 30){
+      totalWidth = (list.length - 30) * miniRulerWidth + 30 * rulerWidth;
+      defaultWidth = (defaultDay - 30) * miniRulerWidth + 30 * rulerWidth;
+    }
+
+    let defaultLeft = this.el.halfClientWidth - defaultWidth;
+
+    return {totalWidth, defaultLeft};
+  }
+
+  render() {
+    const {list, defaultDay, rulerWidth, miniRulerWidth} = this.state;
+
     const ruler = (item, index) => {
       if(index === 0){
         return (
           <div key={index} className="crf-ruler"><span className="first-day">{index+1}天</span><span className="under-line"></span></div>
         );
       }else{
-        /*if(index%5==4){
+        if(index > 29){
           return (
-            <div key={index} className="crf-ruler"><span className="first-day">{index+1}</span></div>
+            <div key={index} className="crf-ruler crf-ruler-period"></div>
           );
-        }*/
+        }
         return (
           <div key={index} className="crf-ruler"></div>
         );
       }
     };
 
-    let totalWidth = list.length * rulerWidth;
-    let defaultWidth = defaultDay * rulerWidth - rulerWidth / 2;
-    let defaultLeft = this.el.halfClientWidth - defaultWidth;
-
-    //this.touchEl.defaultLeft = defaultLeft;
-
-    console.log('defaultLeft:'+defaultLeft,'totalWidth:'+totalWidth,'length'+list.length,'defaultDay:'+defaultDay);
+    let {totalWidth, defaultLeft} = this.setRulerSize(list, defaultDay, rulerWidth, miniRulerWidth);
     let daySwipesStyle={
       width: totalWidth,
       height: '100%',

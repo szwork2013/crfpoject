@@ -169,6 +169,24 @@
     background-color: #646464;
   }
 
+
+
+  .crf-ruler-period{
+    width: 3px;
+  }
+  .crf-ruler-period:before{
+    opacity:0;
+    left: -2px;
+  }
+  .crf-ruler-period:nth-of-type(3n):before{
+    opacity:.3;
+  }
+  .crf-ruler-period:nth-of-type(5n):before{
+    height: 14px;
+    width: 1px;
+    bottom: 0;
+    background-color: #646464;
+  }
 }
 
 

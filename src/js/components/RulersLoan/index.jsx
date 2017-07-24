@@ -158,7 +158,6 @@ export default class Rulers extends Component {
     let defaultWidth = defaultAmount * rulerWidth - rulerWidth / 2;
     let defaultLeft = this.el.halfClientWidth - defaultWidth;
 
-    console.log(defaultWidth,data.length);
     let amountSwipesStyle={
       width: totalWidth,
       height: '100%',
