@@ -158,7 +158,12 @@ class Repay extends Component {
       if (result && !result.response) {
         this.refs.loading.hide();
 
-        //console.log(result);
+        console.log(result,'funds source');
+        /*
+        * agreementGroup:"zj"
+         agreementGroupVer:"1.0"
+         agreementName:"《信托贷款合同》、《服务协议》及其他相关授权文件"
+        * */
         this.setMethodData(result);
       }
     } catch (error) {

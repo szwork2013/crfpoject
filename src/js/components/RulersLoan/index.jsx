@@ -85,7 +85,9 @@ export default class Rulers extends Component {
     }
 
     this.el.amountIndex = Math.round((this.el.halfClientWidth - swipeLeft - this.el.halfRulerWidth) / this.state.rulerWidth);
-    this.refs.refAmount.innerHTML = `${(this.el.amountIndex+1)*100}元`;
+
+    this.refs.refAmount.innerHTML = `${Numeral((this.el.amountIndex+1)*100).format('0, 0')}元`;
+
 
     refDaySwipes.style.left = swipeLeft + 'px';
   }

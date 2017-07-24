@@ -1,18 +1,28 @@
 import React, {Component} from 'react';
 
-import {withRouter} from 'react-router';
+import {withRouter, hashHistory} from 'react-router';
 import {Toast} from 'antd-mobile';
 
 class Contract extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      contractData:this.contractList(props),
+      contractData: this.contractList(props),
+      ZJContractData: null,
     };
+    this.info = {
+      userName: '',
+      idNo: '',
+    }
   }
 
   componentWillMount() {
     this.getContractFetch();
+
+    if(this.props.curPath === 'loanconfirm'){
+      this.getUserNameNo();
+      this.getZJContractFetch();
+    }
   }
 
   componentDidMount() {
@@ -45,7 +55,7 @@ class Contract extends React.Component {
       type='LOAN_APPLY';
     }
 
-    let getContractUrl=CONFIGS.basePath+'contract/?contractEnum='+type;
+    let getContractUrl=CONFIGS.contractPath+'/?contractEnum='+type;
 
     try {
       let fetchPromise = CRFFetch.Get(getContractUrl);
@@ -59,6 +69,79 @@ class Contract extends React.Component {
         this.setState({
           contractData:result
         });
+      }
+    } catch (err) {
+
+      CRFFetch.handleError(err,Toast,()=>{
+
+        if(err.response.status==400){
+          err.body.then(data => {
+            if(CONFIGS.chineseCharRegx.test(data.message)){
+              Toast.info(data.message);
+            }else{
+              Toast.info('系统繁忙，请稍后再试！');
+            }
+          });
+        }
+
+      });
+    }
+  }
+
+  async getUserNameNo(){
+    //https://m-ci.crfchina.com/h5_dubbo/contract/agreement/certificate?kissoId=5e886c9c0baf4954965b38c81c99a1c0
+
+    let getUserNameUrl=`${CONFIGS.contractPath}/agreement/certificate?kissoId=${CONFIGS.ssoId}`;
+
+    try {
+      let fetchPromise = CRFFetch.Get(getUserNameUrl);
+      // 获取数据
+      let result = await fetchPromise;
+      if (result && !result.response) {
+        this.info.userName = result.userName;
+        this.info.idNo = result.idNo;
+      }
+    } catch (err) {
+
+      CRFFetch.handleError(err,Toast,()=>{
+
+        if(err.response.status==400){
+          err.body.then(data => {
+            if(CONFIGS.chineseCharRegx.test(data.message)){
+              Toast.info(data.message);
+            }else{
+              Toast.info('系统繁忙，请稍后再试！');
+            }
+          });
+        }
+
+      });
+    }
+  }
+
+  async getZJContractFetch(){
+    //https://m-ci.crfchina.com/h5_dubbo/contract/agreement?kissoId=5e886c9c0baf4954965b38c81c99a1c0&agreementGroup=p2p&agreementVersion=2.02
+    console.log(CONFIGS.method);
+    let getContractUrl=`${CONFIGS.contractPath}/agreement?kissoId=${CONFIGS.ssoId}&agreementGroup=${CONFIGS.method.agreementGroup}&agreementVersion=${CONFIGS.method.agreementGroupVer}`;
+
+    try {
+      let fetchPromise = CRFFetch.Get(getContractUrl);
+      // 获取数据
+      let result = await fetchPromise;
+      if (result && !result.response) {
+        if(result.length !== 0){
+          //默认加上数字证书协议
+          result.push({
+            id: 'digital',
+            protocolCode: 'Digital Certificate',
+            protocolName: '数字证书服务协议',
+            sequence: 999,
+          });
+
+          this.setState({
+            ZJContractData:result
+          });
+        }
       }
     } catch (err) {
 
@@ -110,6 +193,25 @@ class Contract extends React.Component {
     }
   }
 
+  showContractContent(item){
+    let isFrame = true;
+    let id = item.id;
+
+    if(item.id === 'digital'){
+      isFrame = false;
+    }
+
+    hashHistory.push({
+      pathname: 'contract',
+      state: {
+        isZJ: isFrame,
+        id: id,
+        userName: this.info.userName,
+        idNo: this.info.idNo,
+      },
+    });
+  }
+
   render() {
     let isAgree=CONFIGS.bindCard.isAgree;
     if(this.props.curPath === 'loanconfirm'){
@@ -121,19 +223,35 @@ class Contract extends React.Component {
       authClassName=authClassName+' '+this.props.className;
     }
 
+    let protocol;
+    if(this.state.ZJContractData){
+      protocol = <p className="protocol">
+        {
+          this.state.ZJContractData.map((item,index)=>{
+            console.log(item);
+            return (
+              <a href="javascript:void(0)" key={index} onClick={this.showContractContent.bind(this,item)}>《{item.protocolName}》</a>
+            )
+          })
+        }
+      </p>
+    }else{
+      protocol = <p className="protocol">
+        {
+          this.state.contractData.map((item,index)=>{
+            return (
+              <a href="javascript:void(0)" key={index} onClick={this.handleContractClick.bind(this,item)}>《{item.contractName}》</a>
+            )
+          })
+        }
+      </p>
+    }
+
     return (
       <div className={authClassName}>
         <span className={"agree "+(isAgree?"":"un-agree")} ref="refAgree">勾选</span>
         <span className="text">我已阅读并同意</span>
-        <p className="protocol">
-          {
-            this.state.contractData.map((item,index)=>{
-              return (
-                <a href="javascript:void(0)" key={index} onClick={this.handleContractClick.bind(this,item)}>《{item.contractName}》</a>
-              )
-            })
-          }
-        </p>
+        {protocol}
       </div>
     );
   }
