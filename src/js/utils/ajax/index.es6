@@ -107,7 +107,6 @@ const FetchInterface = {
 
           break;
         case 401:
-          console.log(fn,CRFLogin.initialize);
           CRFLogin.initialize(fn);
           break;
         case 403:
