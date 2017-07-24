@@ -89,30 +89,26 @@ export default class Rulers extends Component {
       currentPoint = 0;
     }
     this.setRulerState(currentPoint, 'move');
-    this.refs.rulers.style.left = swipeLeft + 'px';
   }
 
   setTouchEnd() {
     let currentPoint = this.getCurrentPoint();
-    let swipeLeft = parseFloat(document.documentElement.clientWidth / 2) - ((currentPoint + 1) * this.state.rulerWidth) + this.state.rulerWidth / 2;
     this.setRulerState(currentPoint);
-    this.refs.rulers.style.left = swipeLeft + 'px';
   }
 
   resetContainer() {
     let totalWidth = this.state.data.length * this.state.rulerWidth;
     let currentPoint = this.getCurrentPoint();
-    let rulerOffsetWidth = currentPoint * this.state.rulerWidth;
-    let rulerContainer = document.querySelector('.crf-rulers');
+    let rulerOffsetWidth = (currentPoint + 1) * this.state.rulerWidth;
     let offsetLeft = parseFloat(document.documentElement.clientWidth / 2) - (rulerOffsetWidth - this.state.rulerWidth / 2);
     CONFIGS.currentAmount = this.state.defaultAmount;
     let storage = window.localStorage;
     storage.setItem('currentAmount', CONFIGS.currentAmount);
     CONFIGS.realAmount = CONFIGS.currentAmount;
 
-    if (rulerContainer) {
-      rulerContainer.style.width = totalWidth + 'px';
-      rulerContainer.style.left = `-${offsetLeft}px`;
+    if (this.refs.rulers) {
+      this.refs.rulers.style.width = totalWidth + 'px';
+      this.refs.rulers.style.left = `${offsetLeft}px`;
       if (this.state.amount === this.state.defaultAmount) PubSub.publish('present:init', this.state.data[currentPoint]);
     }
   }
@@ -127,14 +123,8 @@ export default class Rulers extends Component {
   }
 
   handleReset() {
-    this.setState({
-      amount: this.state.defaultAmount,
-      title: CONFIGS.repayDefaultTitle,
-      isDefault: true
-    });
-    let swipeLeft = parseFloat(document.documentElement.clientWidth / 2) - ((this.state.defaultAmount + 1) * this.state.rulerWidth) + this.state.rulerWidth / 2;
-    this.refs.rulers.style.left = swipeLeft + 'px';
-    this.setTextPosition();
+    let defaultPoint = this.state.data.indexOf(this.state.defaultAmount);
+    this.setRulerState(defaultPoint);
   }
 
   showModal() {
@@ -165,6 +155,8 @@ export default class Rulers extends Component {
       storage.setItem('currentAmount', CONFIGS.currentAmount);
       PubSub.publish('present:init', this.state.data[point]);
     }
+    let swipeLeft = parseFloat(document.documentElement.clientWidth / 2) - ((point + 1) * this.state.rulerWidth) + this.state.rulerWidth / 2;
+    this.refs.rulers.style.left = swipeLeft + 'px';
     this.setTextPosition();
   }
 
