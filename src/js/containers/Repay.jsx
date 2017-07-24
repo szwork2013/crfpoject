@@ -91,7 +91,7 @@ class Repay extends Component {
       });
     }
     if(currentAmount > 0 && leftData.length === 0) {
-      leftData.push(CONFIGS.defaultScale);
+      leftData.push(Numeral(CONFIGS.defaultScale).divide(100).value());
     }
     let finalData = leftData.concat(rightData);
     return finalData;
