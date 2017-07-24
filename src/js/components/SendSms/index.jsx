@@ -227,7 +227,7 @@ export default class SendSms extends Component {
     this.setState({
       isLoading: true
     });
-    Toast.info(window.length++);
+
     //https://m-ci.crfchina.com/h5_dubbo/loan?kissoId=370486f0d16742b38138f3dc1839efcb
     let loanPath = `${CONFIGS.loanPath}?kissoId=${CONFIGS.ssoId}`;
 
@@ -265,7 +265,6 @@ export default class SendSms extends Component {
     let headers = {
       'Content-Type': 'application/json'
     };
-
     try {
       let fetchPromise = CRFFetch.Put(loanPath, JSON.stringify(params), headers);
       // 获取数据
