@@ -227,7 +227,7 @@ export default class SendSms extends Component {
     this.setState({
       isLoading: true
     });
-    console.log('send'+window.length++);
+    Toast.info(window.length++);
     //https://m-ci.crfchina.com/h5_dubbo/loan?kissoId=370486f0d16742b38138f3dc1839efcb
     let loanPath = `${CONFIGS.loanPath}?kissoId=${CONFIGS.ssoId}`;
 
