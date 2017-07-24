@@ -25,7 +25,7 @@ export default class Success extends Component {
 
     this.setFrameHeight();
 
-    if(this.state.id === 'digital'){
+    if(this.state.id === 'digital' || CONFIGS.currentPath === '/'){
       this.setState({
         isLoading: false,
       });

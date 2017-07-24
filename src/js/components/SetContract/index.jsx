@@ -188,11 +188,15 @@ class Contract extends React.Component {
       CONFIGS.loanData.contractUrl = item.contractUrl;
       CONFIGS.currentPath = '/loanconfirm';
 
+      _paq.push(['trackEvent', 'C_LoanConfirm', 'E_LoanConfirm_contract', item.contractName]);
+
       this.props.router.push('contract');
     }
   }
 
   showContractContent(item){
+    _paq.push(['trackEvent', 'C_LoanConfirm', 'E_LoanConfirm_contract', item.protocolName]);
+
     let isFrame = true;
     let id = item.id;
 
@@ -213,14 +217,14 @@ class Contract extends React.Component {
   }
 
   render() {
-    let isAgree=CONFIGS.bindCard.isAgree;
+    let isAgree = CONFIGS.bindCard.isAgree;
     if(this.props.curPath === 'loanconfirm'){
       isAgree = CONFIGS.loanData.isAgree;
     }
 
-    let authClassName='authorize';
+    let authClassName = 'authorize';
     if(this.props.className){
-      authClassName=authClassName+' '+this.props.className;
+      authClassName = authClassName+' '+this.props.className;
     }
 
     let protocol;
