@@ -204,7 +204,13 @@
   height: inherit;
 }
 
-
+.loan-contract{
+  .protocol{
+    a{
+      margin-bottom: .1rem;
+    }
+  }
+}
 
 .adaptTable{
   .loan-detail-list{
@@ -218,4 +224,29 @@
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
   padding: .2rem;
+  .all{
+    color: #000;
+    overflow: auto;
+    padding: 15px;
+  }
+  h3{
+    font-size: 16px;
+    font-weight: bold;
+  }
+  table{
+    border-collapse:collapse;
+    width:90%;
+    margin:0 auto;
+  }
+  table, td, th{
+    border:1px solid black;
+  }
+  div {
+    text-align:justify;
+    text-justify:inter-ideograph;
+    word-wrap:break-word;
+    word-break:break-all;
+    line-height: 2;
+  }
+
 }

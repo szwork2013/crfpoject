@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 
-import { Nav } from 'app/components';
+import { Nav, Loading } from 'app/components';
 import { WhiteSpace, Toast } from 'antd-mobile';
 
 export default class Success extends Component {
   constructor(props){
     super(props);
     this.state={
-      height:'100%',
+      height: '100%',
+      title: props.location.state && props.location.state.title,
       isZJ: props.location.state && props.location.state.isZJ,
       id: props.location.state && props.location.state.id,
       userName: props.location.state && props.location.state.userName,
       idNo: props.location.state && props.location.state.idNo,
+      isLoading: true,
     };
   }
 
@@ -32,14 +34,19 @@ export default class Success extends Component {
     //https://m-ci.crfchina.com/h5_dubbo/contract/agreement/content?kissoId=5e886c9c0baf4954965b38c81c99a1c0&protocolId=30&loanNo=342221199202044516
     let getContractUrl=`${CONFIGS.contractPath}/agreement/content?kissoId=${CONFIGS.ssoId}&protocolId=${protocolId}&loanNo=${CONFIGS.method.loanNo}`;
 
+    this.refs.loading.show();
+
     try {
       let fetchPromise = CRFFetch.Get(getContractUrl, {}, (response) => { return response.text() });
       // 获取数据
       let result = await fetchPromise;
+
       if (result && !result.response) {
         this.refs.refZJ.innerHTML=result;
+        this.refs.loading.hide();
       }
     } catch (err) {
+      this.refs.loading.hide();
 
       CRFFetch.handleError(err,Toast,()=>{
         if(err.response.status === 400){
@@ -68,11 +75,12 @@ export default class Success extends Component {
   }
 
   render() {
-    let props={ title:'合同' };
+    const {title, id, height, userName, idNo, isLoading} = this.state;
+    let props={ title: title || '合同' };
 
     let frameStyle={
       width:'100%',
-      height: this.state.height,
+      height: height,
       backgroundColor:'#fff'
     };
 
@@ -83,10 +91,8 @@ export default class Success extends Component {
       url = CONFIGS.loanData.contractUrl;
     }
 
-    if(this.state.id === 'digital'){
+    if(id === 'digital'){
       let idType = '身份证';
-      let userName = this.state.userName;
-      let idNo = this.state.idNo;
       url = `/contract/digitalCertificate_agreement.html?${userName}&idNo=${idNo}&idType=${idType}`;
     }
 
@@ -95,6 +101,7 @@ export default class Success extends Component {
         <Nav data={props} />
         <WhiteSpace />
         {this.state.isZJ ? <div className="ZJContent" style={frameStyle} ref="refZJ"></div> : <iframe src={url} style={frameStyle}></iframe>}
+        <Loading ref="loading" show={isLoading} />
       </div>
     )
   }
