@@ -39,7 +39,6 @@ class Contract extends React.Component {
 
       if(this.props.curPath === 'loanconfirm'){
         CONFIGS.loanData.isAgree=!CONFIGS.loanData.isAgree;
-
       }
     };
 
@@ -208,6 +207,7 @@ class Contract extends React.Component {
         id: id,
         userName: this.info.userName,
         idNo: this.info.idNo,
+        title: item.protocolName,
       },
     });
   }

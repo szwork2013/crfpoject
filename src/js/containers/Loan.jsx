@@ -15,6 +15,9 @@ class Repay extends Component {
       loanData: {},
       dayData: {},
     };
+    this.switch = {
+      isOff: false,
+    }
   }
 
   componentDidMount() {
@@ -143,6 +146,8 @@ class Repay extends Component {
 
     let loanSubmitPath = `${CONFIGS.loanPath}/fundsSource?loanAmount=${params.loanAmount}&loanDays=${params.loanDays}&loanProductNo=${params.loanProductNo}&kissoId=${params.kissoId}`;
 
+    this.switch.isOff = true;
+
     try {
       let fetchMethodPromise = CRFFetch.Get(loanSubmitPath);
       // 获取数据
@@ -157,9 +162,11 @@ class Repay extends Component {
          agreementName:"《信托贷款合同》、《服务协议》及其他相关授权文件"
         * */
         this.setMethodData(result);
+        this.switch.isOff = false;
       }
     } catch (error) {
       this.refs.loading.hide();
+      this.switch.isOff = false;
 
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
@@ -182,7 +189,10 @@ class Repay extends Component {
   handleClick() {
     if(!this.refs.refLoanSubmit.classList.contains('disabled')){
       this.refs.loading.show();
-      this.loanSubmitFetch();
+
+      if(!this.switch.isOff){
+        this.loanSubmitFetch();
+      }
     }
   }
 

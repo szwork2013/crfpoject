@@ -387,7 +387,7 @@ export default class SendSms extends Component {
       <section className={styles.root}>
         <div className={`${styles.sendSmsContainer} hor`}>
           <div className={styles.sendSmsText} ref="smsText">{inputVerification}</div>
-          <div className={`${styles.sendSmsText} hide`} ref="smsSoundTextMain">收不到? 试试 <a onClick={this.sendSound}>语音验证</a></div>
+          <div className={`${styles.sendSmsText} hide`} ref="smsSoundTextMain">收不到? 请尝试 <a onClick={this.sendSound}>语音验证</a></div>
           <div className={`${styles.sendSmsText} hide`} ref="smsSoundTextSub">验证电话即将发出, <span>请注意接听</span></div>
           <div className={styles.sendSmsAction}>
             <a ref="verificationNum" onClick={this.getVerificationNum}>{getVerification}</a>
