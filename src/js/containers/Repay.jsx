@@ -56,6 +56,7 @@ class Repay extends Component {
         data: repay
       });
     } else {
+      PubSub.publish('present:init', Numeral(repayData.curr_amt).divide(100).value());
       this.setState({
         disable: false,
         isLoading: false,
