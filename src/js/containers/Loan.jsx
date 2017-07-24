@@ -36,17 +36,9 @@ class Repay extends Component {
       let periodResult = await periodFetchPromise;
 
       if (periodResult && !periodResult.response) {
-        /*
-        * {
-         "code": "000000",
-         "errorMsg": null,
-         "crfuid": "7358fea6fd4d1eea975536423c1f3fb5",
-         "vipLevel": "14",
-         "totalLimit": 140000,
-         "remainLimit": 140000,
-         "usedLimit": 0
-         }
-        * */
+        //mock
+        /*periodResult = {"productions":[{"loanAmount":"100","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},
+          {"loanAmount":"200","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"300","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"400","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"500","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"600","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"700","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"800","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"900","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"1000","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"1100","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]}],"contractName":"信而富现金贷借款服务协议","contractVersion":"0.01","result":"0","message":"成功","contractUrl":"https://app-uat.crfchina.com/h5/contract/loanContract/0.01.html"};*/
 
         Object.assign(CONFIGS.loanPeriod,periodResult);//借款金额对应的数组
 
@@ -220,6 +212,9 @@ class Repay extends Component {
     let curAmount = maxAmount<16 ? maxAmount : 15;
 
     CONFIGS.loanData.currentAmountCount = curAmount-1;
+
+    //暂时写死
+    curAmount === 11 && (CONFIGS.loanData.currentAmountCount = curAmount);
 
     curAmount = curAmount * 100;
     let loanList = {

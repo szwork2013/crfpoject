@@ -99,9 +99,11 @@ export default class Rulers extends Component {
 
     //金额是5的倍数则隐藏
     let crfRulerEle = document.querySelectorAll('.crf-loan-swipes .crf-ruler');
+
     if(CONFIGS.loanData.currentAmountCount < 5){
       crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>&nbsp;${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
     }else{
+      console.log(CONFIGS.loanData.currentAmountCount);
       if(CONFIGS.loanData.currentAmountCount%5 === 0 || CONFIGS.loanData.currentAmountCount%5 === 4){
         crfRulerEle[CONFIGS.loanData.currentAmountCount].innerHTML = `<span>${(CONFIGS.loanData.currentAmountCount+1)*100}</span>`;
       }
