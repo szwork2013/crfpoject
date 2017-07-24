@@ -222,6 +222,12 @@ export default class SendSms extends Component {
   }
 
   async submitFetch(){
+    if (!this.sendFlag) return;
+    this.sendFlag = false;
+    this.setState({
+      isLoading: true
+    });
+    
     //https://m-ci.crfchina.com/h5_dubbo/loan?kissoId=370486f0d16742b38138f3dc1839efcb
     let loanPath = `${CONFIGS.loanPath}?kissoId=${CONFIGS.ssoId}`;
 
@@ -287,13 +293,28 @@ export default class SendSms extends Component {
           });
         }
       });
-    } catch (err) {
+    } catch (error) {
+      /*this.clearInput();
+
       CRFFetch.handleError(err,Toast,()=>{
         if(err.response.status==400){
           err.body.then(data => {
             Toast.info(data.message);
           });
         }
+      });*/
+      this.clearInput();
+      this.sendFlag = true;
+      this.setState({
+        isLoading: false
+      });
+      let errorStatus = {
+        status: error.response.status
+      };
+      let msg = error.body;
+      msg.then((data) => {
+        let res = Object.assign(data, errorStatus);
+        this.setVerificationBySubmit(res);
       });
     }
   }
