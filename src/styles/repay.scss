@@ -10,6 +10,7 @@
 }
 
 .crf-swipes-title {
+  position: relative;
   font-size: .28rem;
   margin-bottom: 1.5rem;
 }
@@ -19,6 +20,8 @@
 }
 
 .crf-swipes-title-link {
+  position: absolute;
+  bottom: 3px;
   display: inline-block;
   > a {
     display: block;
