@@ -190,7 +190,14 @@ class Contract extends React.Component {
 
       _paq.push(['trackEvent', 'C_LoanConfirm', 'E_LoanConfirm_contract', item.contractName]);
 
-      this.props.router.push('contract');
+      //this.props.router.push('contract');
+      hashHistory.push({
+        pathname: 'contract',
+        state: {
+          id: 'loan',
+          title: item.contractName,
+        },
+      });
     }
   }
 
