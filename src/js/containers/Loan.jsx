@@ -148,7 +148,7 @@ class Repay extends Component {
       if (result && !result.response) {
         this.refs.loading.hide();
 
-        console.log(result,'funds source');
+        //console.log(result,'funds source');
         /*
         * agreementGroup:"zj"
          agreementGroupVer:"1.0"
@@ -289,7 +289,7 @@ class Repay extends Component {
     /*
     *
     * */
-    //console.log(CONFIGS.method,'CONFIGS.method');
+    console.log(CONFIGS.loanData.amount,'loan.jsx 提交的时候的金额');
     this.refs.loading.hide();
     let path = 'loanconfirm';
     hashHistory.push({
