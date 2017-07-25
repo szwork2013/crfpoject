@@ -99,7 +99,7 @@ export default class Success extends Component {
 
     if(id === 'digital'){
       let idType = '身份证';
-      url = `https://m-uat.crfchina.com/contract/digitalCertificate_agreement.html?userName=${userName}&idNo=${idNo}&idType=${idType}`;
+      url = `/contract/digitalCertificate_agreement.html?userName=${userName}&idNo=${idNo}&idType=${idType}`;
     }
 
     return (
