@@ -124,7 +124,7 @@ export default class Rulers extends Component {
 
   handleReset() {
     let defaultPoint = this.state.data.indexOf(this.state.defaultAmount);
-    this.setRulerState(defaultPoint);
+    this.setRulerState(defaultPoint, '', 'reset');
   }
 
   showModal() {
@@ -138,14 +138,18 @@ export default class Rulers extends Component {
     container.style.marginLeft = marginLeft;
   }
 
-  setRulerState(point, type) {
+  setRulerState(point, type, title) {
     let defaultValue = false;
+    let currentTitle = CONFIGS.repayChangedTitle;
     if (this.state.data[point] === this.state.defaultAmount) {
       defaultValue = true;
     }
+    if (title === 'reset') {
+      currentTitle = CONFIGS.repayDefaultTitle;
+    }
     this.setState({
       amount: this.state.data[point],
-      title: CONFIGS.repayChangedTitle,
+      title: currentTitle,
       isDefault: defaultValue
     });
     CONFIGS.currentAmount = this.state.data[point];
