@@ -109,7 +109,7 @@ class Repay extends Component {
       // 获取数据
       let methodResult = await fetchMethodPromise;
       if (methodResult && !methodResult.response) {
-        _paq.push(['trackEvent', 'C_Repay', 'E_ImmediateRepay', '立即还款']);
+        _paq.push(['trackEvent', 'C_Repay', 'E_Immediate_Repay', '立即还款']);
         this.setMethodData(methodResult);
       }
     } catch (error) {

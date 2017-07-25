@@ -26,6 +26,7 @@ class RepayConfirm extends Component {
   }
 
   componentDidMount() {
+    _paq.push(['trackEvent', 'C_Page', 'E_P_RepayConfirm']);
     this.getInitData();
   }
 
