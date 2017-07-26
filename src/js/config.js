@@ -13,6 +13,7 @@ module.exports = {
   ftsPath: CurrentPath +'fts',
   productPath: CurrentPath + 'product',
   contractPath: CurrentPath + 'contract',
+  couponPath: '/campaign/award/',
   userId: '',//用户ID
   userName:'',//用户名
   idNo:'',//身份证

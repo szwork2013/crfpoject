@@ -89,6 +89,11 @@ button {
   width: 100px;
   border-radius: .1rem 0 0 .1rem;
   text-align: center;
+  background: linear-gradient(-90deg, #fd767a 0%, #fa454b 100%);
+  background: -moz-linear-gradient(-90deg, #fd767a 0%, #fa454b 100%);
+  background: -webkit-linear-gradient(-90deg, #fd767a 0%, #fa454b 100%);
+  background: -o-linear-gradient(-90deg, #fd767a 0%, #fa454b 100%);
+  color: #fff;
 }
 
 .coupon-inner {
@@ -112,11 +117,10 @@ button {
   left: 50%;
   width: 100%;
   transform: translate(-50%,-50%);
-  font-family: "FontAwesome";
   font-weight: bold;
   font-size: .28rem;
-  color: #FA4548;
   > .amount {
+    font-family: "Helvetica Neue";
     font-size: .6rem;
   }
 }
@@ -152,7 +156,7 @@ button {
   height: 100%;
   width: 6px;
   position: absolute;
-  left: -5px;
+  left: -6px;
   z-index: 1;
   .circular-top {
     top: -6px;
@@ -164,7 +168,7 @@ button {
     position: absolute;
     left: 4px;
     display: block;
-    border-right: 1px dashed #909090;
+    border-right: 1px dashed #fd767a;
     width: 0;
     height: 100%;
   }
