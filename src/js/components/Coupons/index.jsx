@@ -30,11 +30,12 @@ export default class Coupons extends Component {
       let obj = {
         id: item.id,
         index: index,
-        originAmount: item.awardValue,
-        amount: Numeral(item.awardValue).divide(100).value(),
+        awardValue: item.awardValue,
         loanDate: item.effectiveDate,
         repayDate: item.expiredTime,
-        note: item.note.split('</br> ')
+        freeFeeFlag: item.freeFeeFlag,
+        discountValue: item.discountValue,
+        note: item.note.split('<br> ')
       };
       return obj;
     });
@@ -65,20 +66,12 @@ export default class Coupons extends Component {
 
   async getFee(index) {
     let currentAmount = Numeral(CONFIGS.currentAmount).multiply(100).value();
-    let path = `${CONFIGS.repayPath}/coupon?kissoId=${CONFIGS.userId}&repaymentAmount=${currentAmount}`;
     let paramData = this.state.dataSource.getRowData(0, index);
+    let path = `${CONFIGS.couponPath}${CONFIGS.userId}/coupon/calc?repaymentAmount=${currentAmount}&awardRecordId=${paramData.id}`;
     CONFIGS.selectCoupon = paramData;
-    let params = {
-      amt_type: 1,
-      coupon_id: paramData.id,
-      coupon_price: paramData.originAmount
-    };
-    let headers = {
-      'Content-Type': 'application/json'
-    };
 
     try {
-      let fetchPromise = CRFFetch.Post(path, JSON.stringify(params), headers);
+      let fetchPromise = CRFFetch.Get(path);
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
@@ -99,7 +92,7 @@ export default class Coupons extends Component {
     this.closeCoupons();
     CONFIGS.selectCoupon.offsetedCouponPrice = result.offsetedCouponPrice;
     let realFee = Numeral(CONFIGS.selectCoupon.offsetedCouponPrice).divide(100).value();
-    let totalFee = Numeral(CONFIGS.selectCoupon.originAmount).divide(100).value();
+    let totalFee = Numeral(CONFIGS.selectCoupon.awardValue).divide(100).value();
     let coupos = {
       real: realFee,
       total: totalFee
@@ -144,15 +137,47 @@ export default class Coupons extends Component {
       );
     };
 
+    let coupon = (item) => {
+      if (item.freeFeeFlag === 'Y' && item.discountValue === '1') {
+        return (
+          <div className="coupon-middle">
+            <span className="amount">免</span>
+          </div>
+        );
+      } else if (item.freeFeeFlag === 'Y' && item.discountValue !== '1') {
+        return (
+          <div className="coupon-middle">
+            <span className="amount">{Numeral(item.discountValue).multiply(10).value()}</span><span>折</span>
+          </div>
+        );
+      } else {
+        return (
+          <div className="coupon-middle">
+            <span>￥</span>
+            <span className="amount">{Numeral(item.awardValue).divide(100).value()}</span>
+          </div>
+        );
+      }
+    };
+
+    let couponDetail = (item) => {
+      let detail = '';
+      if (item.freeFeeFlag === 'Y' && item.discountValue === '1') {
+        detail = '免手续费券';
+      } else if (item.freeFeeFlag === 'Y' && item.discountValue !== '1') {
+        detail = `手续费${Numeral(item.discountValue).multiply(10).value()}折券`;
+      } else {
+        detail = `${Numeral(item.awardValue).divide(100).value()}元抵扣券`;
+      }
+      return detail;
+    };
+
     let row = (rowData) => {
       return (
         <div key={rowData.id} id={`row_${rowData.id}`}>
           <div className="coupon-row">
             <div className="coupon-left">
-              <div className="coupon-middle">
-                <span>￥</span>
-                <span className="amount">{rowData.amount}</span>
-              </div>
+              {coupon(rowData)}
             </div>
             <div className="coupon-right">
               <div className="triangle-border-right">
@@ -161,7 +186,7 @@ export default class Coupons extends Component {
                 <i className="border"></i>
               </div>
               <div className="coupon-inner">
-                <div className="coupon-text">{rowData.amount}元抵扣券</div>
+                <div className="coupon-text">{couponDetail(rowData)}</div>
                 <div className="coupon-date">{rowData.loanDate} ~ {rowData.repayDate}有效</div>
                 <div className="coupon-accordion">
                   <a className="accordion" data-id={rowData.id} onClick={this.handleToggle.bind(this)}>

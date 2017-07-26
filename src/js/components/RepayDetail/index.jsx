@@ -70,42 +70,6 @@ export default class RepayDetail extends Component {
         }
       });
     });
-
-    // let data = {
-    //   0: {
-    //     billDate: '到期日 : 06-01',
-    //     offsetPenalty: '延迟还款服务费 : 5.00元',
-    //     list: [
-    //       {
-    //         amt: '1,016.00',
-    //         principal: '1,000.00',
-    //         fees: '5.00',
-    //         interest: '6.00',
-    //         flag: '可结清'
-    //       }
-    //     ]
-    //   },
-    //   1: {
-    //     billDate: '到期日 : 06-03',
-    //     offsetPenalty: '',
-    //     list: [
-    //       {
-    //         amt: '1,016.00',
-    //         principal: '1,000.00',
-    //         fees: '5.00',
-    //         interest: '6.00',
-    //         flag: '可结清'
-    //       },
-    //       {
-    //         amt: '1,016.00',
-    //         principal: '1,000.00',
-    //         fees: '5.00',
-    //         interest: '6.00',
-    //         flag: '部分结清'
-    //       }
-    //     ]
-    //   }
-    // }
     return data;
   }
 

@@ -215,7 +215,6 @@ export default class SendSms extends Component {
       this.refs.smsNum.blur();
       currentValue = currentStr.substring(0, 6);
       setTimeout(() => {
-        //console.log(currentValue);
         if(this.props.pathname && this.props.pathname.indexOf('loanconfirm')>-1){
           this.submitFetch();
         }else{
@@ -235,7 +234,6 @@ export default class SendSms extends Component {
     //https://m-ci.crfchina.com/h5_dubbo/loan?kissoId=370486f0d16742b38138f3dc1839efcb
     let loanPath = `${CONFIGS.loanPath}?kissoId=${CONFIGS.ssoId}`;
 
-    console.log(CONFIGS.method.loanNo,'CONFIGS.method.loanNo');
     let params = {
       "agreementGroup": CONFIGS.method.agreementGroup,
       "agreementName": CONFIGS.method.agreementName,
@@ -283,8 +281,6 @@ export default class SendSms extends Component {
       result=result.json();
       result.then((data)=>{
         if (data && !data.response) {
-          console.log(data,'loan submit',CONFIGS.method.repayTotalAmt,'CONFIGS.method.repayTotalAmt');
-          //{status: 3, loanNo: "CRF01887603953490489344"}
           //hash
           hashHistory.push({
             pathname: path,
