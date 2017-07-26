@@ -120,7 +120,7 @@ class Contract extends React.Component {
 
   async getZJContractFetch(){
     //https://m-ci.crfchina.com/h5_dubbo/contract/agreement?kissoId=5e886c9c0baf4954965b38c81c99a1c0&agreementGroup=p2p&agreementVersion=2.02
-    console.log(CONFIGS.method);
+    //console.log(CONFIGS.method);
     let getContractUrl=`${CONFIGS.contractPath}/agreement?kissoId=${CONFIGS.ssoId}&agreementGroup=${CONFIGS.method.agreementGroup}&agreementVersion=${CONFIGS.method.agreementGroupVer}`;
 
     try {
@@ -190,7 +190,14 @@ class Contract extends React.Component {
 
       _paq.push(['trackEvent', 'C_LoanConfirm', 'E_LoanConfirm_contract', item.contractName]);
 
-      this.props.router.push('contract');
+      //this.props.router.push('contract');
+      hashHistory.push({
+        pathname: 'contract',
+        state: {
+          id: 'loan',
+          title: item.contractName,
+        },
+      });
     }
   }
 

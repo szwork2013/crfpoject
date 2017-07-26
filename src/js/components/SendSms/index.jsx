@@ -287,7 +287,7 @@ export default class SendSms extends Component {
             query: {
               ssoId: CONFIGS.userId,
               contractNo: data.loanNo,
-              cash: CONFIGS.method.repayTotalAmt,
+              cash: CONFIGS.loanData.amount,
               type: CONFIGS.sendSmsType,
             },
             state: {

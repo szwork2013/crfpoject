@@ -25,7 +25,7 @@ export default class Success extends Component {
 
     this.setFrameHeight();
 
-    if(this.state.id === 'digital' || CONFIGS.currentPath === '/'){
+    if(this.state.id === 'digital' || CONFIGS.currentPath === '/' || this.state.id === 'loan'){
       this.setState({
         isLoading: false,
       });
@@ -99,7 +99,7 @@ export default class Success extends Component {
 
     if(id === 'digital'){
       let idType = '身份证';
-      url = `/contract/digitalCertificate_agreement.html?${userName}&idNo=${idNo}&idType=${idType}`;
+      url = `/contract/digitalCertificate_agreement.html?userName=${userName}&idNo=${idNo}&idType=${idType}`;
     }
 
     return (
