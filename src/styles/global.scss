@@ -25,6 +25,10 @@ button {
   opacity: 0;
 }
 
+.crf-credit-item {
+  padding: 0 0 0 10px;
+}
+
 .coupons-container {
   display: none;
   position: absolute;
@@ -275,7 +279,8 @@ button {
   margin-right: .1rem;
 }
 
-.result-content {
+.result-content,
+.full-wrap {
   height: 100%;
   background: #fff;
   .am-icon-md {
@@ -775,7 +780,8 @@ button {
   align-items: center;
 }
 
-.p {
+.p,
+.s {
   background: url(../images/loan-icon.png) no-repeat 0 center;
   background-size: .58rem .58rem;
 }
@@ -800,23 +806,43 @@ button {
 }
 
 .row-cash {
-  font-size: 0.36rem;
+  font-size: .36rem;
   color: #323232;
+  .text,
+  .icon {
+    display: inline-block;
+    margin-right: .1rem;
+    vertical-align: middle;
+  }
+  .icon {
+    width: .45rem;
+    height: .45rem;
+  }
   &.HF {
-    background: url(../images/expenses-small-icon.png) no-repeat 1.1rem center;
-    background-size: 0.4rem 0.4rem;
+    .icon {
+      background: url(../images/expenses-small-icon.png) no-repeat;
+      background-size: 100% 100%;
+    }
   }
   &.LL {
-    background: url(../images/rate-small-icon.png) no-repeat 1.1rem center;
+    .icon {
+      background: url(../images/rate-small-icon.png) no-repeat;
+      background-size: 100% 100%;
+    }
+
     background-size: 0.4rem 0.4rem;
   }
   &.YX {
-    background: url(../images/game-small-icon.png) no-repeat 1.1rem center;
-    background-size: 0.4rem 0.4rem;
+    .icon {
+      background: url(../images/game-small-icon.png) no-repeat;
+      background-size: 100% 100%;
+    }
   }
-  &.QQ {
-    background: url(../images/qq-small-icon.png) no-repeat 1.1rem center;
-    background-size: 0.4rem 0.4rem;
+  &.QB {
+    .icon {
+      background: url(../images/qq-small-icon.png) no-repeat;
+      background-size: 100% 100%;
+    }
   }
 }
 
@@ -832,4 +858,87 @@ button {
   white-space: nowrap;
   font-size: .2rem;
   color: #909090;
+}
+
+.blank-border {
+  margin: 0.2rem 0;
+  border-top: 1px solid #E1E1E1;
+}
+
+.detail-content {
+  .form {
+    padding-top: .8rem;
+    font-size: .28rem;
+    border-bottom: 0;
+  }
+  .loan-amount {
+    font-size: .9rem;
+    color: #323232;
+    line-height: 1rem;
+    padding-bottom: 1rem;
+  }
+  colgroup {
+    col {
+      text-align: right;
+      &:first-child {
+        text-align: left;
+      }
+    }
+  }
+  .am-table {
+    padding-bottom: 0.5rem;
+  }
+}
+
+.form {
+  padding: .5rem .5rem .2rem .5rem;
+  border-top: 1px solid #D6D7DC;
+  border-bottom: 1px solid #E1E1E1;
+  color: #646464;
+  font-size: .24rem;
+}
+
+.loan-title, .loan-amount, .loan-period {
+  padding: .05rem 0;
+  text-align: center;
+  line-height: .23rem;
+}
+
+.loan-amount {
+  padding: .15rem 0 .1rem;
+  font-size: .36rem;
+  color: #323232;
+  line-height: .36rem;
+}
+
+.loan-period {
+  padding-bottom: .5rem;
+  span {
+    color: #141414;
+  }
+}
+
+.loan-list {
+  line-height: .53rem;
+  font-size: .22rem;
+}
+
+.loan-list-title {
+  color: #909090;
+}
+
+.load-list-info {
+  flex: 1;
+  margin-left: 0.1rem;
+  text-align: right;
+  color: #323232;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  font-size: 0.2rem;
+  color: #909090;
+  line-height: 0.4rem;
+  text-align: center;
 }

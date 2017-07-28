@@ -9,12 +9,13 @@ export default class Result extends Component {
     super(props, context);
     this.state = {
       status: 'default',
-      cash: props.data.cash,
+      cash: '-',
       type: props.data.type,
       name: props.data.name,
       title: props.data.title,
       modal: false,
-      showPhone: 1
+      showPhone: 1,
+      creditType: null
     }
   }
 
@@ -38,16 +39,24 @@ export default class Result extends Component {
   }
 
   render() {
-    let { status, cash, type, name, title } = this.state;
+    let { status, cash, type, name, title, creditType } = this.state;
     let modalStyle = {width: '90%'};
-    let formatCash = Numeral(cash).divide(100).format('0, 0.00');
+    let formatCash = '-';
+    if (cash !== '-') {
+      formatCash = `${Numeral(cash).divide(100).format('0, 0.00')}元`;
+    }
     return (
       <div className={styles.root}>
         <div className={`${styles.resultStatus} ${styles[status]}`}></div>
         <div className={styles.resultTitle}>{title}</div>
-        <div className={`${styles.resultCash} number`}>{formatCash}元</div>
+        <div className={`${styles.resultCash} number`}>{formatCash}</div>
         <div className={styles.resultMessage}>
-          <span className={styles.resultMessageText}>{CONFIGS.resultDetail[type][status]}</span>
+          {(type === 's' && creditType) &&
+            <span className={styles.resultMessageText}>{CONFIGS.resultDetail[type][creditType][status]}</span>
+          }
+          {(type === 'p' || type === 'r') &&
+            <span className={styles.resultMessageText}>{CONFIGS.resultDetail[type][status]}</span>
+          }
           {(type === 'r') && (status !== 'failed') &&
             <span className={styles.resultMessageWarning} onClick={this.showModal('modal')}></span>
           }

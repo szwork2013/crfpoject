@@ -287,8 +287,8 @@ export default class SendSms extends Component {
             query: {
               ssoId: CONFIGS.userId,
               contractNo: data.loanNo,
-              cash: CONFIGS.loanData.amount,
               type: CONFIGS.sendSmsType,
+              source: 'loan'
             },
             state: {
               currentPath: 'loanconfirm',
@@ -374,7 +374,6 @@ export default class SendSms extends Component {
             query: {
               ssoId: CONFIGS.userId,
               contractNo: data.rcs_repay_no,
-              cash: CONFIGS.method.repayTotalAmt,
               type: CONFIGS.sendSmsType
             }
           });

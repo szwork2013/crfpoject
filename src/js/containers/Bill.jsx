@@ -22,7 +22,6 @@ class Bill extends Component {
   }
 
   handleTabClick = (key) => {
-
     if (key === '1') {
       this.setState({
         type: 'loan'

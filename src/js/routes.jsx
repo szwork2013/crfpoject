@@ -15,6 +15,8 @@ import {
   Result,
   Channel,
   Bill,
+  Index,
+  Detail,
   NotFoundPage,
 } from './containers';
 
@@ -31,7 +33,9 @@ export default (
     <Route path="result" component={Result} />
     <Route path="channel" component={Channel} />
     <Route path="bill" component={Bill} />
-    <Route path="contract" component={Contract} />
+    <Route path="index" component={Index} />
+    <Route path="contract" component={Index} />
+    <Route path="detail" component={Detail} />
     <Route path="*" component={NotFoundPage} />
   </Route>
 );

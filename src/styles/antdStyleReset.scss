@@ -64,6 +64,14 @@
   }
 }
 
+.crf-credit {
+  .am-list-body {
+    &:after {
+      border: 0;
+    }
+  }
+}
+
 .crf-present.am-list-item {
   .am-list-line {
     .am-list-extra {
@@ -71,6 +79,18 @@
     }
   }
 }
+
+.crf-credit-item.am-list-item {
+  .am-list-line {
+    .am-list-extra {
+      padding: 0;
+      font-size: .22rem;
+      color: #818C9E;
+      flex-basis: 60%;
+    }
+  }
+}
+
 .am-list-body {
   border-top: 0;
 }

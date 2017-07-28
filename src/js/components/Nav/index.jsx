@@ -34,7 +34,6 @@ export default class Nav extends Component {
       couponsContainer.classList.remove('show');
       couponsContainer.classList.add('hide');
     } else {
-
       let refUrl=CONFIGS.referrerUrl;
       let lnHash=location.hash;
 
@@ -52,7 +51,7 @@ export default class Nav extends Component {
           refUrl=CONFIGS.referrerUrl.replace('#/loan?','#/recharge?');
         }
         location.href=refUrl;
-      } else { //首页
+      } else {
         if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/rebindcard?')>-1 || lnHash.indexOf('#/success?')>-1){
           location.href=refUrl;
         } else if (lnHash.indexOf('#/result?') > -1) { //结果页
@@ -63,24 +62,32 @@ export default class Nav extends Component {
           } else {
             hashHistory.goBack();
           }
-        } else{
-          hashHistory.goBack();
+        } else {
+          // 通常情况
+          if (this.state.stage === 'index') {
+            hashHistory.go();
+          } else {
+            hashHistory.goBack();
+          }
         }
       }
-
-
     }
   }
 
   handleGoHome() {
-    let path = '/?ssoId=' + CONFIGS.userId;
-    hashHistory.push(path);
+    let path = 'index';
+    hashHistory.push({
+      pathname: path,
+      query: {
+        ssoId: CONFIGS.userId
+      }
+    });
   }
 
   handleDetail() {
-    // let category = 'C_ConsumptionRecord';
-    // let eventName = 'E_ConsumptionRecord';
-    // _paq.push(['trackEvent', category, eventName, '借款记录']);
+    let category = 'C_ConsumptionRecord';
+    let eventName = 'E_ConsumptionRecord';
+    _paq.push(['trackEvent', category, eventName, '借款记录']);
     let path = 'detail';
     hashHistory.push({
       pathname: path,
@@ -99,16 +106,16 @@ export default class Nav extends Component {
       rootClass = styles.child;
     }*/
     let rightEle = null;
-    // if (status === 2) { //2 show
-    //   rightEle = <span className={styles.dark} onClick={this.handleDetail}>明细</span>
-    // }
-    let leftEle = null;
     if (from === 'loan') { //from loan show finish
-      leftEle = <span className={styles.dark} onClick={this.handleGoHome}>完成</span>
+      rightEle = <span className={styles.dark} onClick={this.handleGoHome}>完成</span>
     } else {
-      leftEle = <span className={styles.navbarLeftIcon}><button className="trs-btn" onClick={this.handleBack}></button></span>;
-      //if(contractNo) title = CONFIGS.billType[type] + '动态';
+      if (status === 2 && type !== 'r') { //2 show
+        rightEle = <span className={styles.dark} onClick={this.handleDetail}>明细</span>
+      }
     }
+    let leftEle = null;
+    leftEle = <span className={styles.navbarLeftIcon}><button className="trs-btn" onClick={this.handleBack}></button></span>;
+    //if(contractNo) title = CONFIGS.billType[type] + '动态';
     return (
       CONFIGS.isWeChat
       ?

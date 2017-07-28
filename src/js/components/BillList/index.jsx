@@ -24,10 +24,6 @@ export default class BillList extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-  }
-
   handleVisibleChange = (visible) => {
     setTimeout(() => {
       this.setState({
@@ -47,8 +43,13 @@ export default class BillList extends Component {
   componentDidMount() {
     this.getMonth();
     this.pubsub_token = PubSub.subscribe('loan:show', function(topic, type) {
-      this.setHeight(type);
+      this.setHeight();
     }.bind(this));
+  }
+
+  componentWillUnmount() {
+    //销毁监听的事件
+    PubSub.unsubscribe(this.pubsub_token);
   }
 
   async getMonth() {
@@ -67,7 +68,14 @@ export default class BillList extends Component {
         this.getInitData(mounth);
       }
     } catch (error) {
-      let msgs = error.body;
+      this.setHeight();
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      });
     }
   }
 
@@ -90,9 +98,6 @@ export default class BillList extends Component {
       // 获取数据
       let result = await fetchPromise;
       if (result && !result.response) {
-        this.setState({
-          fromRemote: true
-        });
         PubSub.publish('loading:hide');
         this.setData(result.loan_repay_list);
       }
@@ -100,8 +105,15 @@ export default class BillList extends Component {
       this.setState({
         fromRemote: true
       });
+      this.setHeight();
       PubSub.publish('loading:hide');
-      let msgs = error.body;
+      CRFFetch.handleError(error, Toast, () => {
+        if (error.response.status === 400) {
+          error.body.then(data => {
+            Toast.info(data.message);
+          });
+        }
+      });
     }
   }
 
@@ -116,9 +128,18 @@ export default class BillList extends Component {
           date: item.trxn_date.substring(5),
           repayDate: item.repay_date.substring(5),
           creditType: item.credit_type || '',
-          repayType: CONFIGS.repayType[item.repay_type],
+          details: '',
           status: item.status
         };
+        if (this.state.type === 'repay') {
+          obj.details = CONFIGS.repayType[item.repay_type];
+        } else {
+          if (item.order_type === 's') {
+            obj.details = item.loan_desc;
+          } else {
+            obj.details = '提现';
+          }
+        }
         return obj;
       });
     }
@@ -128,32 +149,26 @@ export default class BillList extends Component {
     this.setHeight();
   }
 
-  setHeight(type) {
+  setHeight() {
     document.body.scrollTop = 0;
     let topHeight = document.querySelector('nav').offsetHeight;
-    let tabHeight = document.getElementsByClassName('am-tabs-bar')[0].offsetHeight;
+    let tabHeight = document.querySelector('.am-tabs-bar').offsetHeight;
     let headerHeight = this.refs.billListHeader.offsetHeight;
     let noticeHeight = 0;
-    if (type === 'loan') {
-      noticeHeight = document.getElementsByClassName('bill-notice')[0].offsetHeight + 10;
+    if (document.querySelector('.bill-notice')) {
+      noticeHeight = document.querySelector('.bill-notice').offsetHeight + 10;
     }
     let containerHeight = (document.documentElement.clientHeight - topHeight - tabHeight - noticeHeight - 20) + 'px';
     this.refs.billList && (this.refs.billList.style.height = containerHeight);
     let contentHeight = (document.documentElement.clientHeight - topHeight - tabHeight - headerHeight - noticeHeight - 20) + 'px';
-    let billContainer = document.getElementsByClassName('bill-list-content')[0];
+    let billContainer = document.querySelector('.bill-list-content');
     billContainer && (billContainer.style.height = contentHeight);
-  }
-
-  componentWillUnmount() {
-    //销毁监听的事件
-    PubSub.unsubscribe(this.pubsub_token);
   }
 
   handleClick(e) {
     e.stopPropagation();
     let ele = e.currentTarget;
     let contractNo = ele.dataset.no;
-    let cash = ele.dataset.amount;
     let type = ele.dataset.type;
     // let category = 'C_ConsumptionBorrowResult';
     // let eventName = 'E_ConsumptionBorrowResult';
@@ -173,7 +188,6 @@ export default class BillList extends Component {
       query: {
         ssoId: CONFIGS.ssoId,
         contractNo: contractNo,
-        cash: cash,
         type: type
       }
     });
@@ -184,10 +198,13 @@ export default class BillList extends Component {
       let status = CONFIGS.billStatus[item.status];
       let currentAmount = Numeral(item.amount).divide(100).format('0, 0.00');
       return (
-        <div key={item.orderNo} onClick={this.handleClick} className={`am-flexbox bill-list-row ${item.orderType}`} data-type={item.orderType} data-no={item.orderNo} data-amount={item.amount}>
+        <div key={item.orderNo} onClick={this.handleClick} className={`am-flexbox bill-list-row ${item.orderType}`} data-type={item.orderType} data-no={item.orderNo}>
           <div className="am-flexbox-item bill-list-row-left">
-            <div className={`row-cash ${item.creditType}`}>{currentAmount}</div>
-            <div className="row-detail">{item.repayType}</div>
+            <div className={`row-cash ${item.creditType}`}>
+              <span className="text">{currentAmount}</span>
+              <span className="icon"></span>
+            </div>
+            <div className="row-detail">{item.details}</div>
           </div>
           <div className="am-flexbox-item bill-list-row-right">
             <div className="row-status">{status}</div>

@@ -14,20 +14,21 @@ class ResultPage extends Component {
       contractNo: this.props.location.query.contractNo,
       type: this.props.location.query.type || 'p',
       from: this.props.location.query.source || '',
-      cash: this.props.location.query.cash || 0,
+      cash: '-',
       isLoading: true,
       dataList: [],
-      title: ''
+      title: '',
+      creditType: null,
+      fromRemote: false
     };
   }
 
   componentDidMount() {
-    if(this.props.location.state && this.props.location.state.currentPath === 'loanconfirm'){
+    if (this.state.type !== 'r') {
       _paq.push(['trackEvent', 'C_Page', 'E_P_ResultLoan']);
-    }else{
+    } else {
       _paq.push(['trackEvent', 'C_Page', 'E_P_ResultRepay']);
     }
-    //_paq.push(['trackEvent', 'P_ConsumptionRecord', '借款记录']);
     this.getInitData();
     this.timer = setInterval(() => {
       this.getInitData();
@@ -35,11 +36,12 @@ class ResultPage extends Component {
   }
 
   async getInitData() {
-
+    this.setState({
+      fromRemote: false
+    });
     let path = `${CONFIGS.repayPath}/dynamics?kissoId=${CONFIGS.userId}&repayNo=${this.state.contractNo}`;
-
-    if(this.props.location.state && this.props.location.state.currentPath === 'loanconfirm'){
-      path = `${CONFIGS.loanPath}/dynamics?kissoId=${CONFIGS.ssoId}&loanNo=${this.state.contractNo}`;
+    if (this.state.type !== 'r') {
+      path = `${CONFIGS.loanPath}/dynamics?kissoId=${CONFIGS.ssoId}&loanNo=${this.state.contractNo}&trxnType=${this.state.type}`;
     }
 
     try {
@@ -48,13 +50,13 @@ class ResultPage extends Component {
       let result = await fetchPromise;
       if (result && !result.response) {
         this.setState({
-          isLoading: false
+          isLoading: false, fromRemote: true
         });
         this.setStatus(result);
       }
     } catch (error) {
       this.setState({
-        isLoading: false
+        isLoading: false, fromRemote: true
       });
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
@@ -79,18 +81,19 @@ class ResultPage extends Component {
     }
   }
 
-  setStatus(result) {
+  setStatus(data) {
+    let result = data.trace_list;
     if(result.length !== 0) {
       if (result[result.length - 1].process_status === 's') {
-        this.setState({dataList: result, status: 2, title: result[result.length - 1].trace_content});
+        this.setState({dataList: result, status: 2, title: result[result.length - 1].trace_content, cash: data.loan_pay_amt, creditType: data.credit_type});
         clearInterval(this.timer);
         _paq.push(['trackEvent', 'C_RepayResult', 'E_P_Repay_Successed', '还款成功']);
       } else if (result[result.length - 1].process_status === 'f' || result[result.length - 1].process_status === 'p' || result[result.length - 1].process_status === 'n') {
-        this.setState({dataList: result, status: 1, title: result[result.length - 1].trace_content});
+        this.setState({dataList: result, status: 1, title: result[result.length - 1].trace_content, cash: data.loan_pay_amt, creditType: data.credit_type});
         clearInterval(this.timer);
         _paq.push(['trackEvent', 'C_RepayResult', 'E_SubmitRepay_Failed', '还款失败']);
       } else {
-        this.setState({dataList: result, title: result[result.length - 1].trace_content});
+        this.setState({dataList: result, title: result[result.length - 1].trace_content, cash: data.loan_pay_amt, creditType: data.credit_type});
       }
     }
   }
@@ -99,7 +102,8 @@ class ResultPage extends Component {
     let data = {
       cash: this.state.cash,
       type: this.state.type,
-      title: this.state.title
+      title: this.state.title,
+      creditType: this.state.creditType
     };
     if (this.state.source === 'loan') {
       data.name = '交易';
@@ -116,7 +120,7 @@ class ResultPage extends Component {
       data.status = 'success';
     }
 
-    if(this.props.location.state&&this.props.location.state.currentPath === 'loanconfirm'){
+    if (this.state.type !== 'r') {
       data.isLoanConfirm = true;
     }
     return data;
@@ -127,21 +131,31 @@ class ResultPage extends Component {
     let props = {title: `${data.name}动态`, status: this.state.status, contractNo: this.state.contractNo, from: this.state.from, type: this.state.type};
 
     let loanClassName = '';
-    if(this.props.location.state&&this.props.location.state.currentPath === 'loanconfirm'){
-      props.status = 3;//借款暂不显示
+    if (this.state.type !== 'r') {
+      //props.status = 3; //借款暂不显示
       loanClassName = 'loan-text-color';
     }
 
-    const {isLoading} = this.state;
-
+    const {isLoading, fromRemote} = this.state;
+    let resultContent = null;
+    if (fromRemote) {
+      resultContent = (
+        <div>
+          <Result data={data} />
+          <ResultSteps data={this.state} loanClassName={loanClassName} />
+        </div>
+      );
+    } else {
+      resultContent = <div></div>
+    }
     return (
       <section className="result-content">
         <Nav data={props} />
         <WhiteSpace />
-        <Result data={data} />
-        <ResultSteps data={this.state} loanClassName={loanClassName} />
+        {resultContent}
         <Loading show={isLoading} />
       </section>
+
     )
   }
 }

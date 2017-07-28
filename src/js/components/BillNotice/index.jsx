@@ -8,19 +8,25 @@ export default class BillNotice extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      showNotice: false
+      showNotice: false,
+      type: props.type
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.type === 'loan') {
-      this.getInitData();
-    }
+    this.setState({
+      type: nextProps.type
+    });
   }
 
   componentDidMount() {
     this.getInitData();
   }
+
+  componentDidUpdate() {
+    PubSub.publish('loan:show', this.state.type);
+  }
+
 
   async getInitData() {
     let path = `${CONFIGS.loanPath}/creditLimit?kissoId=${CONFIGS.ssoId}`;
@@ -28,11 +34,16 @@ export default class BillNotice extends Component {
       let fetchPromise = CRFFetch.Get(path);
       // 获取数据
       let result = await fetchPromise;
-      if (result && result.repaying_flag !== 0 && !result.response) {
+      if (result && result.loan_flag === 1) {
         this.setState({
           showNotice: true
         });
-        PubSub.publish('loan:show', 'loan');
+        PubSub.publish('loan:show', this.state.type);
+      } else if (result && result.loan_flag === 2 && result.repaying_flag === 2) {
+        this.setState({
+          showNotice: true
+        });
+        PubSub.publish('loan:show', this.state.type);
       }
     } catch (error) {
       let msgs = error.body;
@@ -51,15 +62,17 @@ export default class BillNotice extends Component {
   }
 
   render() {
-    if (this.state.showNotice) {
+    if (this.state.showNotice && this.state.type === 'repay') {
       return (
         <div className="bill-notice">
           <div className={styles.root}>
             <div className={styles.noticeBarLeft}>
-              您有1笔借款待还清
+              <span>您有借款待还清</span>
             </div>
             <div className={styles.noticeBarRight}>
-              <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即还款</button>
+              {this.state.type === 'repay' &&
+                <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即还款</button>
+              }
             </div>
           </div>
           <WhiteSpace />

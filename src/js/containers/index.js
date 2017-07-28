@@ -34,6 +34,12 @@ export { default as Channel } from './Channel.jsx';
 //Bill
 export { default as Bill } from './Bill.jsx';
 
+//Index
+export { default as Index } from './Index.jsx';
+
+//Detail
+export { default as Detail } from './Detail.jsx';
+
 // 404
 export { default as NotFoundPage } from './404.jsx';
 

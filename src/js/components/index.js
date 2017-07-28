@@ -18,3 +18,5 @@ export { default as SetContract } from './SetContract/index.jsx';
 export { default as NoRecord } from './NoRecord/index.jsx';
 export { default as BillList } from './BillList/index.jsx';
 export { default as BillNotice } from './BillNotice/index.jsx';
+export { default as Credit } from './Credit/index.jsx';
+export { default as BillDetail } from './BillDetail/index.jsx';
