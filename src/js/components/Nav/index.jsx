@@ -35,6 +35,9 @@ export default class Nav extends Component {
       couponsContainer.classList.add('hide');
     } else {
       let refUrl=CONFIGS.referrerUrl;
+      if (this.state.stage === 'index') {
+        refUrl = Common.returnReferrerUrl();
+      }
       let lnHash=location.hash;
 
       if (refUrl.indexOf('#/loan?') > -1) {  //话费页

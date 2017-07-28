@@ -2,6 +2,7 @@
 let Common={
   returnReferrerUrl:function(){
     let localHref=location.href;
+    console.log(localHref.substring(localHref.indexOf('?')+1));
     return localHref.substring(localHref.indexOf('?')+1);
   },
   returnKissoID:function(){
