@@ -112,9 +112,9 @@ export default class Nav extends Component {
     if (from === 'loan') { //from loan show finish
       rightEle = <span className={styles.dark} onClick={this.handleGoHome}>完成</span>
     } else {
-      if (status === 2 && type !== 'r') { //2 show
-        rightEle = <span className={styles.dark} onClick={this.handleDetail}>明细</span>
-      }
+      // if (status === 2 && type !== 'r') { //2 show
+      //   rightEle = <span className={styles.dark} onClick={this.handleDetail}>明细</span>
+      // }
     }
     let leftEle = null;
     leftEle = <span className={styles.navbarLeftIcon}><button className="trs-btn" onClick={this.handleBack}></button></span>;

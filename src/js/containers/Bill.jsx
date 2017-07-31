@@ -48,7 +48,7 @@ class Bill extends Component {
         <Loading />
         <Nav data={props} />
         <WhiteSpace />
-        <Tabs defaultActiveKey="2" animated={false} onChange={this.callback} onTabClick={this.handleTabClick}>
+        <Tabs defaultActiveKey="1" animated={false} onChange={this.callback} onTabClick={this.handleTabClick}>
           <TabPane tab="借款" key="1">
             <WhiteSpace />
             <BillNotice type={type} />
