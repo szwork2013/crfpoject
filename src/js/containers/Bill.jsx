@@ -23,11 +23,14 @@ class Bill extends Component {
   }
 
   handleTabClick = (key) => {
+    let storage = window.localStorage;
     if (key === '1') {
+      storage.setItem('billType', 'loan');
       this.setState({
         type: 'loan'
       });
     } else {
+      storage.setItem('billType', 'repay');
       this.setState({
         type: 'repay'
       });

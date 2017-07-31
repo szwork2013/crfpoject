@@ -62,16 +62,21 @@ export default class BillNotice extends Component {
   }
 
   render() {
-    if (this.state.showNotice && this.state.type === 'repay') {
+    if (this.state.showNotice) {
       return (
         <div className="bill-notice">
           <div className={styles.root}>
             <div className={styles.noticeBarLeft}>
-              <span>您有借款待还清</span>
+              {this.state.type === 'repay' &&
+                <span>您有借款待还清</span>
+              }
             </div>
             <div className={styles.noticeBarRight}>
               {this.state.type === 'repay' &&
                 <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即还款</button>
+              }
+              {this.state.type === 'loan' &&
+                <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即借款</button>
               }
             </div>
           </div>
@@ -80,19 +85,7 @@ export default class BillNotice extends Component {
       )
     } else {
       return (
-        <div className="bill-notice">
-          <div className={styles.root}>
-            <div className={styles.noticeBarLeft}>
-              <span></span>
-            </div>
-            <div className={styles.noticeBarRight}>
-              {this.state.type === 'loan' &&
-                <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即借款</button>
-              }
-            </div>
-          </div>
-          <WhiteSpace />
-        </div>
+        <div></div>
       )
     }
   }
