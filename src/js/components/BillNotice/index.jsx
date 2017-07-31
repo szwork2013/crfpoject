@@ -52,7 +52,7 @@ export default class BillNotice extends Component {
 
   handleClick(e) {
     e.stopPropagation();
-    let path = 'repay';
+    let path = this.state.type;
     hashHistory.push({
       pathname: path,
       query: {
@@ -62,7 +62,7 @@ export default class BillNotice extends Component {
   }
 
   render() {
-    if (this.state.showNotice && this.state.type === 'loan') {
+    if (this.state.showNotice && this.state.type === 'repay') {
       return (
         <div className="bill-notice">
           <div className={styles.root}>
@@ -70,7 +70,7 @@ export default class BillNotice extends Component {
               <span>您有借款待还清</span>
             </div>
             <div className={styles.noticeBarRight}>
-              {this.state.type === 'loan' &&
+              {this.state.type === 'repay' &&
                 <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即还款</button>
               }
             </div>
@@ -80,7 +80,19 @@ export default class BillNotice extends Component {
       )
     } else {
       return (
-        <div></div>
+        <div className="bill-notice">
+          <div className={styles.root}>
+            <div className={styles.noticeBarLeft}>
+              <span></span>
+            </div>
+            <div className={styles.noticeBarRight}>
+              {this.state.type === 'loan' &&
+                <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即借款</button>
+              }
+            </div>
+          </div>
+          <WhiteSpace />
+        </div>
       )
     }
   }
