@@ -92,13 +92,16 @@ export default class BillList extends Component {
     } else {
       type = 'r';
     }
+    alert(1);
     let path = `${CONFIGS.repayPath}/record?kissoId=${CONFIGS.ssoId}&pageNo=-1&pageSize=-1&queryYearMonth=${currentMounth}&orderType=${type}`;
     try {
       let fetchPromise = CRFFetch.Get(path);
       // 获取数据
       let result = await fetchPromise;
+      alert(2);
       if (result && !result.response) {
         PubSub.publish('loading:hide');
+        alert(3);
         this.setData(result.loan_repay_list);
       }
     } catch (error) {
