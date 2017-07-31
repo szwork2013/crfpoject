@@ -58,14 +58,16 @@ export default class BillList extends Component {
       let fetchPromise = CRFFetch.Post(path);
       // 获取数据
       let result = await fetchPromise;
-      if (result && !result.response) {
-        let date = new Date(result[0]);
-        let mounth = dateFormat(date, 'yyyy/mm');
-        this.selected = mounth;
+      if (result && result[0] && !result.response) {
+        let mounth = result[0][1];
+        if (result[0][1] < 10) {
+          mounth = '0' + mounth;
+        }
+        this.selected = `${result[0][0]}${mounth}`;
         this.setState({
           dateList: result
         });
-        this.getInitData(mounth);
+        this.getInitData(this.selected);
       }
     } catch (error) {
       this.setHeight();
@@ -84,24 +86,20 @@ export default class BillList extends Component {
       fromRemote: false
     });
     PubSub.publish('loading:show');
-    let date = new Date(mounth);
-    let currentMounth = dateFormat(date, 'yyyymm');
+    let currentMounth = mounth;
     let type = '';
     if (this.state.type === 'loan') {
       type = 'c';
     } else {
       type = 'r';
     }
-    alert(1);
     let path = `${CONFIGS.repayPath}/record?kissoId=${CONFIGS.ssoId}&pageNo=-1&pageSize=-1&queryYearMonth=${currentMounth}&orderType=${type}`;
     try {
       let fetchPromise = CRFFetch.Get(path);
       // 获取数据
       let result = await fetchPromise;
-      alert(2);
       if (result && !result.response) {
         PubSub.publish('loading:hide');
-        alert(3);
         this.setData(result.loan_repay_list);
       }
     } catch (error) {
@@ -226,10 +224,12 @@ export default class BillList extends Component {
     };
 
     const dateList = (item, i) => {
-      let date = new Date(item);
-      let mouthVaule = dateFormat(date, 'yyyy/mm');
-      let year = dateFormat(date, 'yyyy');
-      let mounth = dateFormat(date, 'mm');
+      let year = item[0];
+      let mounth = item[1];
+      if (mounth < 10) {
+        mounth = '0' + mounth;
+      }
+      let mouthVaule = `${year}${mounth}`;
       return (
         <Item key={i} value={mouthVaule}>{`${year}年${mounth}月`}</Item>
       );
