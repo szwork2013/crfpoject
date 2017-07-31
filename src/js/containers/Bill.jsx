@@ -7,9 +7,10 @@ const TabPane = Tabs.TabPane;
 class Bill extends Component {
   constructor(props) {
     super(props);
+    let storage = window.localStorage;
     this.state = {
       title: '借还款记录',
-      type: 'repay'
+      type: storage.getItem('billType') || 'loan'
     }
   }
 
@@ -36,11 +37,14 @@ class Bill extends Component {
   render() {
     const props = {title: this.state.title, stage: ''};
     let {type} = this.state,
+        activeKey = '1',
         billListByLoan = null,
         billListByRepay = null;
         if (type === 'repay') {
+          activeKey = '2';
           billListByRepay = <BillList type={type} />
         } else {
+          activeKey = '1';
           billListByLoan = <BillList type={type} />
         }
     return (
@@ -48,7 +52,7 @@ class Bill extends Component {
         <Loading />
         <Nav data={props} />
         <WhiteSpace />
-        <Tabs defaultActiveKey="1" animated={false} onChange={this.callback} onTabClick={this.handleTabClick}>
+        <Tabs defaultActiveKey={activeKey} animated={false} onChange={this.callback} onTabClick={this.handleTabClick}>
           <TabPane tab="借款" key="1">
             <WhiteSpace />
             <BillNotice type={type} />

@@ -62,7 +62,7 @@ export default class BillNotice extends Component {
   }
 
   render() {
-    if (this.state.showNotice && this.state.type === 'repay') {
+    if (this.state.showNotice && this.state.type === 'loan') {
       return (
         <div className="bill-notice">
           <div className={styles.root}>
@@ -70,7 +70,7 @@ export default class BillNotice extends Component {
               <span>您有借款待还清</span>
             </div>
             <div className={styles.noticeBarRight}>
-              {this.state.type === 'repay' &&
+              {this.state.type === 'loan' &&
                 <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即还款</button>
               }
             </div>
