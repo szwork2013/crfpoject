@@ -2,7 +2,7 @@
   position: relative;
   width: 89%;
   height: 30%;
-  min-height: 200px;
+  min-height: 4.2rem;
   margin: 30px auto 10px;
   color: #fff;
   font-size: .28rem;
@@ -10,18 +10,26 @@
   background-size: 100% 100%;
 }
 
-.remain,
-.total {
-  position: absolute;
-}
-.remain {
-  top: 35%;
-  left: .3rem;
-  .title {
-    opacity: .6;
+@media screen {
+  .remain,
+  .total {
+    position: absolute;
+    @media (max-device-width: 480px) {
+      font-size: .26rem;
+    }
   }
-  .amount {
-    font-size: .6rem;
+  .remain {
+    top: 35%;
+    left: .3rem;
+    .title {
+      opacity: .6;
+    }
+    .amount {
+      font-size: .6rem;
+      @media (max-device-width: 480px) {
+        font-size: .53rem;
+      }
+    }
   }
 }
 
