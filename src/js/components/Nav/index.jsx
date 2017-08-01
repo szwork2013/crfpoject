@@ -55,7 +55,7 @@ export default class Nav extends Component {
         }
         location.href=refUrl;
       } else {
-        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/rebindcard?')>-1 || lnHash.indexOf('#/success?')>-1){
+        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/success?')>-1){
           let storge = window.localStorage;
           if (storge.getItem('crf-origin-url') !== '') {
             location.href = storge.getItem('crf-origin-url');
@@ -70,6 +70,8 @@ export default class Nav extends Component {
           } else {
             hashHistory.goBack();
           }
+        } else if (lnHash.indexOf('#/rebindcard?') > -1) { //结果页
+          location.href = CONFIGS.referrerUrl;
         } else {
           // 通常情况
           if (this.state.stage === 'index') {

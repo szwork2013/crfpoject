@@ -55,7 +55,6 @@ class Index extends Component {
   handleBindCard() {
     let currentPath = window.location.href;
     let path = `/?${currentPath}`;
-    console.log(path);
     let storge = window.localStorage;
     storge.setItem('crf-origin-url', currentPath);
     hashHistory.push(path);

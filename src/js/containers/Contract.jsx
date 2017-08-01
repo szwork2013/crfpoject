@@ -65,7 +65,13 @@ export default class Success extends Component {
       return parseFloat(getComputedStyle(obj,null)["height"]);
     };
 
-    let frameHeight = document.documentElement.clientHeight - getHeight(document.querySelector('.am-whitespace')) - getHeight(document.querySelector('nav'));
+    let nav = document.querySelector('nav');
+    let navHeight = 0;
+    if (nav) {
+      navHeight = getHeight(nav);
+    }
+
+    let frameHeight = document.documentElement.clientHeight - getHeight(document.querySelector('.am-whitespace')) - navHeight;
 
     this.setState({
       height:frameHeight+'px'

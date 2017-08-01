@@ -26,15 +26,7 @@ export default class Rebind extends Component {
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '点击重新绑定按钮']);
-
-    let storge = window.localStorage;
-    if (storge.getItem('crf-origin-url') !== '') {
-      location.href = storge.getItem('crf-origin-url');
-    } else {
-      location.href = CONFIGS.referrerUrl;
-    }
-
-
+    location.href = CONFIGS.referrerUrl;
   }
   render() {
     let props={ title:'绑卡结果'};

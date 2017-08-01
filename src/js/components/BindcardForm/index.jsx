@@ -16,6 +16,7 @@ import { hashHistory } from 'react-router';
 
 class Form extends Component {
   constructor(props, context) {
+    CONFIGS.referrerUrl = window.location.href;
     super(props, context);
     this.state = {
       userName:'',
