@@ -172,7 +172,6 @@ class Contract extends React.Component {
   }
 
   handleContractClick(item){
-
     if(this.props.curPath === '/') {
       CONFIGS.bindCard.contractName = item.contractName;
       CONFIGS.bindCard.contractUrl = item.contractUrl;
@@ -180,7 +179,12 @@ class Contract extends React.Component {
 
       _paq.push(['trackEvent', 'C_BindCard', 'E_BindCard_contract', item.contractName]);
 
-      this.props.router.push('contract');
+      hashHistory.push({
+        pathname: 'contract',
+        state: {
+          title: item.contractName,
+        },
+      });
     }
 
     if(this.props.curPath === 'loanconfirm'){
