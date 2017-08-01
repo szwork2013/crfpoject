@@ -35,7 +35,7 @@ export default class Nav extends Component {
       couponsContainer.classList.add('hide');
     } else {
       let refUrl=CONFIGS.referrerUrl;
-      if (this.state.stage === 'index') {
+      if (this.state.stage === 'home') {
         refUrl = Common.returnReferrerUrl();
       }
       let lnHash=location.hash;

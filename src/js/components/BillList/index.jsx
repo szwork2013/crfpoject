@@ -63,7 +63,7 @@ export default class BillList extends Component {
         if (result[0][1] < 10) {
           mounth = '0' + mounth;
         }
-        this.selected = `${result[0][0]}${mounth}`;
+        this.selected = `${result[0][0]}/${mounth}`;
         this.setState({
           dateList: result
         });
@@ -86,7 +86,7 @@ export default class BillList extends Component {
       fromRemote: false
     });
     PubSub.publish('loading:show');
-    let currentMounth = mounth;
+    let currentMounth = mounth.replace('/', '');
     let type = '';
     if (this.state.type === 'loan') {
       type = 'c';
@@ -152,7 +152,8 @@ export default class BillList extends Component {
 
   setHeight() {
     document.body.scrollTop = 0;
-    let topHeight = document.querySelector('nav').offsetHeight;
+    let topHeight = 0;
+    if (document.querySelector('nav')) topHeight = document.querySelector('nav').offsetHeight;
     let tabHeight = document.querySelector('.am-tabs-bar').offsetHeight;
     let headerHeight = this.refs.billListHeader.offsetHeight;
     let noticeHeight = 0;
@@ -229,7 +230,7 @@ export default class BillList extends Component {
       if (mounth < 10) {
         mounth = '0' + mounth;
       }
-      let mouthVaule = `${year}${mounth}`;
+      let mouthVaule = `${year}/${mounth}`;
       return (
         <Item key={i} value={mouthVaule}>{`${year}年${mounth}月`}</Item>
       );
