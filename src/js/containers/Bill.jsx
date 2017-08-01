@@ -19,10 +19,6 @@ class Bill extends Component {
   }
 
   callback = (key) => {
-    //console.log('onChange', key);
-  }
-
-  handleTabClick = (key) => {
     let storage = window.localStorage;
     if (key === '1') {
       storage.setItem('billType', 'loan');
@@ -35,6 +31,10 @@ class Bill extends Component {
         type: 'repay'
       });
     }
+  }
+
+  handleTabClick = (key) => {
+    
   }
 
   render() {

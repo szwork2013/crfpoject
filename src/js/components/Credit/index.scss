@@ -14,7 +14,7 @@
   .remain,
   .total {
     position: absolute;
-    @media (max-device-width: 480px) {
+    @media (max-device-width: 320px) {
       font-size: .26rem;
     }
   }
@@ -26,7 +26,7 @@
     }
     .amount {
       font-size: .6rem;
-      @media (max-device-width: 480px) {
+      @media (max-device-width: 320px) {
         font-size: .53rem;
       }
     }
