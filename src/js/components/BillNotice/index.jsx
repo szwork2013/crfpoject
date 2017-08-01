@@ -47,7 +47,7 @@ export default class BillNotice extends Component {
 
   handleClick(e) {
     e.stopPropagation();
-    let path = this.state.type;
+    let path = 'repay';
     hashHistory.push({
       pathname: path,
       query: {
