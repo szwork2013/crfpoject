@@ -53,6 +53,8 @@ class Index extends Component {
   }
 
   handleBindCard() {
+    _paq.push(['trackEvent', 'C_H5_homepage', 'E_H5_homepage_tie']);
+    CONFIGS.isFromCredit = true;
     let currentPath = window.location.href;
     let path = `/?${currentPath}`;
     let storge = window.localStorage;
@@ -61,7 +63,9 @@ class Index extends Component {
   }
 
   handleLoan() {
-    let currentPath = `index?ssoId=${CONFIGS.userId}`;
+    _paq.push(['trackEvent', 'C_H5_homepage', 'E_H5_homepage_loan']);
+    CONFIGS.isFromCredit = true;
+    let currentPath = window.location.href;
     let path = 'loan';
     let storge = window.localStorage;
     storge.setItem('crf-origin-url', currentPath);
@@ -74,7 +78,9 @@ class Index extends Component {
   }
 
   handleRepay() {
-    let currentPath = `index?ssoId=${CONFIGS.userId}`;
+    _paq.push(['trackEvent', 'C_H5_homepage', 'E_H5_homepage_repayment']);
+    CONFIGS.isFromCredit = true;
+    let currentPath = window.location.href;
     let path = 'repay';
     let storge = window.localStorage;
     storge.setItem('crf-origin-url', currentPath);
@@ -87,7 +93,9 @@ class Index extends Component {
   }
 
   handleBill() {
-    let currentPath = `index?ssoId=${CONFIGS.userId}`;
+    _paq.push(['trackEvent', 'C_H5_homepage', 'E_H5_homepage_bill']);
+    CONFIGS.isFromCredit = true;
+    let currentPath = window.location.href;
     let path = 'bill';
     let storge = window.localStorage;
     storge.setItem('crf-origin-url', currentPath);
@@ -100,6 +108,8 @@ class Index extends Component {
   }
 
   handleDownload() {
+    _paq.push(['trackEvent', 'C_H5_homepage', 'E_H5_homepage_download']);
+    CONFIGS.isFromCredit = true;
     if (/(Android)/i.test(navigator.userAgent)) {
       // 判断是否是腾讯浏览器中打开
       if (/MQQBrowser/i.test(navigator.userAgent)) {

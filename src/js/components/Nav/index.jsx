@@ -42,29 +42,50 @@ export default class Nav extends Component {
 
       if (refUrl.indexOf('#/loan?') > -1) {  //话费页
         if(lnHash.indexOf('supportcard')>-1||lnHash.indexOf('contract')>-1){
-
           /*let path = '/?' + CONFIGS.referrerUrl;
 
           hashHistory.push(path);*/
           hashHistory.goBack();
           return;
         }
-        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/rebindcard?')>-1){
+        if(lnHash.indexOf('#/?')>-1){
+          // 从轻消费过来的情况
           // /credit_loan/#/?https://m-ci.crfchina.com/consumption/#/recharge?ssoId=f9c36b0f4c034c0bb723fd67019dfdd0
           refUrl=CONFIGS.referrerUrl.replace('#/loan?','#/recharge?');
         }
+        if(lnHash.indexOf('#/rebindcard?')>-1){
+          location.href = `/credit_loan/#/?${CONFIGS.referrerUrl}`;
+          return;
+        }
         location.href=refUrl;
       } else {
-        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/rebindcard?')>-1 || lnHash.indexOf('#/success?')>-1){
-          location.href=refUrl;
+        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/success?')>-1){
+          if (!CONFIGS.isFromCredit) {
+            location.href = CONFIGS.referrerUrl;
+          } else {
+            let storge = window.localStorage;
+            if (storge.getItem('crf-origin-url') !== '') {
+              location.href = storge.getItem('crf-origin-url');
+            } else {
+              let path = 'index';
+              hashHistory.push({
+                pathname: path,
+                query: {
+                  ssoId: CONFIGS.userId
+                }
+              });
+            }
+          }
         } else if (lnHash.indexOf('#/result?') > -1) { //结果页
           let storge = window.localStorage;
           let url = storge.getItem('crf-origin-url');
           if (url && url !== '') {
-            window.location.href = url;
+            location.href = url;
           } else {
             hashHistory.goBack();
           }
+        } else if (lnHash.indexOf('#/rebindcard?') > -1) { //结果页
+          location.href = `/credit_loan/#/?${CONFIGS.referrerUrl}`;
         } else {
           // 通常情况
           if (this.state.stage === 'index') {
@@ -108,7 +129,9 @@ export default class Nav extends Component {
     } else {
       rootClass = styles.child;
     }*/
+    let leftEle = null;
     let rightEle = null;
+    leftEle = <span className={styles.navbarLeftIcon}><button className="trs-btn" onClick={this.handleBack}></button></span>;
     if (from === 'loan') { //from loan show finish
       rightEle = <span className={styles.dark} onClick={this.handleGoHome}>完成</span>
     } else {
@@ -116,8 +139,7 @@ export default class Nav extends Component {
       //   rightEle = <span className={styles.dark} onClick={this.handleDetail}>明细</span>
       // }
     }
-    let leftEle = null;
-    leftEle = <span className={styles.navbarLeftIcon}><button className="trs-btn" onClick={this.handleBack}></button></span>;
+
     //if(contractNo) title = CONFIGS.billType[type] + '动态';
     return (
       CONFIGS.isWeChat

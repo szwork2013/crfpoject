@@ -170,12 +170,12 @@ export default class DaySwipes extends Component {
   }
 
   setTouchMove(swipeLeft){
-    const refDaySwipes = document.querySelector('.day-swipes');
-    const refDay = document.querySelector('.ref-day');
+    let refDaySwipes = document.querySelector('.day-swipes');
+    let refDay = document.querySelector('.ref-day');
 
-    const leftMax = this.el.halfClientWidth - this.el.halfRulerWidth;
-    const totalWidth = parseFloat(refDaySwipes.style.width);
-    const halfRefDaySwipes = totalWidth - this.el.halfClientWidth - this.el.halfRulerWidth;
+    let leftMax = this.el.halfClientWidth - this.el.halfRulerWidth;
+    let totalWidth = parseFloat(refDaySwipes.style.width);
+    let halfRefDaySwipes = totalWidth - this.el.halfClientWidth - this.el.halfRulerWidth;
 
     if(swipeLeft <= -halfRefDaySwipes){
       swipeLeft = -halfRefDaySwipes;
@@ -375,6 +375,7 @@ export default class DaySwipes extends Component {
   }
 
   setRulerSize(list, defaultDay, rulerWidth, miniRulerWidth){
+    if (!list) list = [];
     let totalWidth = list.length * rulerWidth;
     let defaultWidth = defaultDay * rulerWidth - rulerWidth / 2;
 
@@ -417,7 +418,7 @@ export default class DaySwipes extends Component {
 
     return (
       <div className="day-swipes" style={daySwipesStyle} ref="refDaySwipes">
-        {(list.length > 0) && list.map(ruler)}
+        {list && (list.length > 0) && list.map(ruler)}
       </div>
     )
   }

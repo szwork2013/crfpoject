@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
-
+import { hashHistory } from 'react-router';
 import { Nav } from 'app/components';
 import { WhiteSpace } from 'antd-mobile';
 
@@ -8,23 +7,37 @@ export default class Success extends Component {
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Success']);
 
-    if(Common.isWeChat()) {
-      Common.customPopState(this.popUrlFn);
-    }
+    // if(Common.isWeChat()) {
+    //   Common.customPopState(this.popUrlFn);
+    // }
   }
   componentWillUnmount(){
-    if(Common.isWeChat()) {
-      window.removeEventListener('popstate', this.popUrlFn);
-    }
+    // if(Common.isWeChat()) {
+    //   window.removeEventListener('popstate', this.popUrlFn);
+    // }
   }
   popUrlFn(refUrl){
     location.href=refUrl;
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Success', 'E_Success_button', '成功页面按钮']);
-    let refUrl = localStorage.getItem('crf-origin-url') || CONFIGS.referrerUrl;
-    
-    location.href=refUrl;
+
+    if (!CONFIGS.isFromCredit) {
+      location.href = CONFIGS.referrerUrl;
+    } else {
+      let storge = window.localStorage;
+      if (storge.getItem('crf-origin-url') !== '') {
+        location.href = storge.getItem('crf-origin-url');
+      } else {
+        let path = 'index';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      }
+    }
   }
   render() {
 

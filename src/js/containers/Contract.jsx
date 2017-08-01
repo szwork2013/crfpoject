@@ -14,7 +14,7 @@ export default class Success extends Component {
       id: props.location.state && props.location.state.id,
       userName: props.location.state && props.location.state.userName,
       idNo: props.location.state && props.location.state.idNo,
-      isLoading: true,
+      isLoading: false,
     };
   }
 
@@ -24,13 +24,6 @@ export default class Success extends Component {
     document.body.scrollTop=0;//屏幕下拉后点击跳转页面顶部也跟着下拉
 
     this.setFrameHeight();
-
-    if(this.state.id === 'digital' || CONFIGS.currentPath === '/' || this.state.id === 'loan' || CONFIGS.currentPath === '/'){
-      this.setState({
-        isLoading: false,
-      });
-    }
-
     if(this.state.isZJ){
       this.getContractContent(this.state.id);
     }
@@ -39,8 +32,7 @@ export default class Success extends Component {
   async getContractContent(protocolId){
     //https://m-ci.crfchina.com/h5_dubbo/contract/agreement/content?kissoId=5e886c9c0baf4954965b38c81c99a1c0&protocolId=30&loanNo=342221199202044516
     let getContractUrl=`${CONFIGS.contractPath}/agreement/content?kissoId=${CONFIGS.ssoId}&protocolId=${protocolId}&loanNo=${CONFIGS.method.loanNo}`;
-
-    this.refs.loading.show();
+    this.setState({isLoading: true});
 
     try {
       let fetchPromise = CRFFetch.Get(getContractUrl, {}, (response) => { return response.text() });
@@ -49,10 +41,10 @@ export default class Success extends Component {
 
       if (result && !result.response) {
         this.refs.refZJ.innerHTML=result;
-        this.refs.loading.hide();
+        this.setState({isLoading: false});
       }
     } catch (err) {
-      this.refs.loading.hide();
+      this.setState({isLoading: false});
 
       CRFFetch.handleError(err,Toast,()=>{
         if(err.response.status === 400){
@@ -73,7 +65,13 @@ export default class Success extends Component {
       return parseFloat(getComputedStyle(obj,null)["height"]);
     };
 
-    let frameHeight = document.documentElement.clientHeight - getHeight(document.querySelector('.am-whitespace')) - getHeight(document.querySelector('nav'));
+    let nav = document.querySelector('nav');
+    let navHeight = 0;
+    if (nav) {
+      navHeight = getHeight(nav);
+    }
+
+    let frameHeight = document.documentElement.clientHeight - getHeight(document.querySelector('.am-whitespace')) - navHeight;
 
     this.setState({
       height:frameHeight+'px'
@@ -83,7 +81,7 @@ export default class Success extends Component {
   render() {
     const {title, id, height, userName, idNo, isLoading} = this.state;
     let props={ title: title || '合同' };
-    
+
     let frameStyle={
       width:'100%',
       height: height,

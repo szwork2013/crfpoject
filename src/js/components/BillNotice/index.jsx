@@ -34,12 +34,7 @@ export default class BillNotice extends Component {
       let fetchPromise = CRFFetch.Get(path);
       // 获取数据
       let result = await fetchPromise;
-      if (result && result.loan_flag === 1) {
-        this.setState({
-          showNotice: true
-        });
-        PubSub.publish('loan:show', this.state.type);
-      } else if (result && result.loan_flag === 2 && result.repaying_flag === 2) {
+      if (result && result.loan_flag === 2 && result.repaying_flag === 2) {
         this.setState({
           showNotice: true
         });
@@ -52,7 +47,7 @@ export default class BillNotice extends Component {
 
   handleClick(e) {
     e.stopPropagation();
-    let path = this.state.type;
+    let path = 'repay';
     hashHistory.push({
       pathname: path,
       query: {
@@ -63,21 +58,15 @@ export default class BillNotice extends Component {
 
   render() {
     if (this.state.showNotice) {
+      console.log(this.state.type)
       return (
         <div className="bill-notice">
           <div className={styles.root}>
             <div className={styles.noticeBarLeft}>
-              {this.state.type === 'repay' &&
-                <span>您有借款待还清</span>
-              }
+              <span>您有借款待还清</span>
             </div>
             <div className={styles.noticeBarRight}>
-              {this.state.type === 'repay' &&
-                <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即还款</button>
-              }
-              {this.state.type === 'loan' &&
-                <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即借款</button>
-              }
+              <button className="normal-btn" onClick={this.handleClick.bind(this)}>立即还款</button>
             </div>
           </div>
           <WhiteSpace />

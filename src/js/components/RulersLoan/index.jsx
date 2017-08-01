@@ -154,10 +154,10 @@ export default class Rulers extends Component {
       );
     };
 
-    const {title, amount, data, defaultAmount, rulerWidth} = this.state;
+    let {title, amount, data, defaultAmount, rulerWidth} = this.state;
 
     const formatAmount = Numeral(amount).format('0, 0');
-
+    if (!data) data = [];
     let totalWidth = data.length * rulerWidth;
     let defaultWidth = defaultAmount * rulerWidth - rulerWidth / 2;
     let defaultLeft = this.el.halfClientWidth - defaultWidth;

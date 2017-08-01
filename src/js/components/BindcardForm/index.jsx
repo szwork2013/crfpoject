@@ -16,6 +16,9 @@ import { hashHistory } from 'react-router';
 
 class Form extends Component {
   constructor(props, context) {
+    if (CONFIGS.isFromCredit) {
+      CONFIGS.referrerUrl = window.location.href;
+    }
     super(props, context);
     this.state = {
       userName:'',
