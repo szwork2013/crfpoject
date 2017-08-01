@@ -34,7 +34,7 @@ export default (
     <Route path="channel" component={Channel} />
     <Route path="bill" component={Bill} />
     <Route path="index" component={Index} />
-    <Route path="contract" component={Index} />
+    <Route path="contract" component={Contract} />
     <Route path="detail" component={Detail} />
     <Route path="*" component={NotFoundPage} />
   </Route>

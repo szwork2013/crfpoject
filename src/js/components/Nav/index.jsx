@@ -35,7 +35,7 @@ export default class Nav extends Component {
       couponsContainer.classList.add('hide');
     } else {
       let refUrl=CONFIGS.referrerUrl;
-      if (this.state.stage === 'index') {
+      if (this.state.stage === 'home') {
         refUrl = Common.returnReferrerUrl();
       }
       let lnHash=location.hash;
@@ -109,6 +109,7 @@ export default class Nav extends Component {
       rootClass = styles.child;
     }*/
     let rightEle = null;
+    rightEle = <span className={styles.dark} onClick={this.handleGoHome}>完成</span>
     if (from === 'loan') { //from loan show finish
       rightEle = <span className={styles.dark} onClick={this.handleGoHome}>完成</span>
     } else {
