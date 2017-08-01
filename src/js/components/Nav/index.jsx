@@ -59,7 +59,7 @@ export default class Nav extends Component {
         }
         location.href=refUrl;
       } else {
-        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/success?')>-1){
+        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/success')>-1){
           if (!CONFIGS.isFromCredit) {
             location.href = CONFIGS.referrerUrl;
           } else {
@@ -84,7 +84,7 @@ export default class Nav extends Component {
           } else {
             hashHistory.goBack();
           }
-        } else if (lnHash.indexOf('#/rebindcard?') > -1) { //结果页
+        } else if (lnHash.indexOf('#/rebindcard') > -1) { //结果页
           location.href = `/credit_loan/#/?${CONFIGS.referrerUrl}`;
         } else {
           // 通常情况
