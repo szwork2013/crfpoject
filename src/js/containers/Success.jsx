@@ -22,7 +22,9 @@ export default class Success extends Component {
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Success', 'E_Success_button', '成功页面按钮']);
-    location.href=CONFIGS.referrerUrl;
+    let refUrl = localStorage.getItem('crf-origin-url') || CONFIGS.referrerUrl;
+    
+    location.href=refUrl;
   }
   render() {
 

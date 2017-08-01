@@ -31,7 +31,8 @@ export default class Rebind extends Component {
     //this.props.router.push('/');
     //hashHistory.goBack();
 
-    let path = '/?' + CONFIGS.referrerUrl;
+    let refUrl = localStorage.getItem('crf-origin-url') || CONFIGS.referrerUrl;
+    let path = '/?' + refUrl;
 
     hashHistory.push(path);
 
