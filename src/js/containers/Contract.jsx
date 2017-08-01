@@ -25,7 +25,7 @@ export default class Success extends Component {
 
     this.setFrameHeight();
 
-    if(this.state.id === 'digital' || CONFIGS.currentPath === '/' || this.state.id === 'loan'){
+    if(this.state.id === 'digital' || CONFIGS.currentPath === '/' || this.state.id === 'loan' || CONFIGS.currentPath === '/'){
       this.setState({
         isLoading: false,
       });
@@ -83,7 +83,7 @@ export default class Success extends Component {
   render() {
     const {title, id, height, userName, idNo, isLoading} = this.state;
     let props={ title: title || '合同' };
-
+    
     let frameStyle={
       width:'100%',
       height: height,
@@ -101,7 +101,6 @@ export default class Success extends Component {
       let idType = '身份证';
       url = `/contract/digitalCertificate_agreement.html?userName=${userName}&idNo=${idNo}&idType=${idType}`;
     }
-
     return (
       <div className="bind-card-main sub-page-wrap">
         <Nav data={props} />
