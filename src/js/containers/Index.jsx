@@ -55,13 +55,14 @@ class Index extends Component {
   handleBindCard() {
     let currentPath = window.location.href;
     let path = `/?${currentPath}`;
+    console.log(path);
     let storge = window.localStorage;
     storge.setItem('crf-origin-url', currentPath);
     hashHistory.push(path);
   }
 
   handleLoan() {
-    let currentPath = `index?ssoId=${CONFIGS.userId}`;
+    let currentPath = window.location.href;
     let path = 'loan';
     let storge = window.localStorage;
     storge.setItem('crf-origin-url', currentPath);
@@ -74,7 +75,7 @@ class Index extends Component {
   }
 
   handleRepay() {
-    let currentPath = `index?ssoId=${CONFIGS.userId}`;
+    let currentPath = window.location.href;
     let path = 'repay';
     let storge = window.localStorage;
     storge.setItem('crf-origin-url', currentPath);
@@ -87,7 +88,7 @@ class Index extends Component {
   }
 
   handleBill() {
-    let currentPath = `index?ssoId=${CONFIGS.userId}`;
+    let currentPath = window.location.href;
     let path = 'bill';
     let storge = window.localStorage;
     storge.setItem('crf-origin-url', currentPath);

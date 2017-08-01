@@ -56,7 +56,12 @@ export default class Nav extends Component {
         location.href=refUrl;
       } else {
         if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/rebindcard?')>-1 || lnHash.indexOf('#/success?')>-1){
-          location.href=refUrl;
+          let storge = window.localStorage;
+          if (storge.getItem('crf-origin-url') !== '') {
+            location.href = storge.getItem('crf-origin-url');
+          } else {
+            location.href = refUrl;
+          }
         } else if (lnHash.indexOf('#/result?') > -1) { //结果页
           let storge = window.localStorage;
           let url = storge.getItem('crf-origin-url');
@@ -108,7 +113,9 @@ export default class Nav extends Component {
     } else {
       rootClass = styles.child;
     }*/
+    let leftEle = null;
     let rightEle = null;
+    leftEle = <span className={styles.navbarLeftIcon}><button className="trs-btn" onClick={this.handleBack}></button></span>;
     if (from === 'loan') { //from loan show finish
       rightEle = <span className={styles.dark} onClick={this.handleGoHome}>完成</span>
     } else {
@@ -116,8 +123,7 @@ export default class Nav extends Component {
       //   rightEle = <span className={styles.dark} onClick={this.handleDetail}>明细</span>
       // }
     }
-    let leftEle = null;
-    leftEle = <span className={styles.navbarLeftIcon}><button className="trs-btn" onClick={this.handleBack}></button></span>;
+
     //if(contractNo) title = CONFIGS.billType[type] + '动态';
     return (
       CONFIGS.isWeChat

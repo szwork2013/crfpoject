@@ -10,16 +10,16 @@ export default class Rebind extends Component {
   }
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Fail']);
-    console.log(Common.isWeChat());
-    if(Common.isWeChat()){
-      Common.customPopState(this.popUrlFn);
-      CONFIGS.bindCard.status=false;
-    }
+    //console.log(Common.isWeChat());
+    // if(Common.isWeChat()){
+    //   Common.customPopState(this.popUrlFn);
+    //   CONFIGS.bindCard.status=false;
+    // }
   }
   componentWillUnmount(){
-    if(Common.isWeChat()){
-      window.removeEventListener('popstate',this.popUrlFn);
-    }
+    // if(Common.isWeChat()){
+    //   window.removeEventListener('popstate',this.popUrlFn);
+    // }
   }
   popUrlFn(refUrl){
     location.href=refUrl;
@@ -27,20 +27,12 @@ export default class Rebind extends Component {
   handleClick(){
     _paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '点击重新绑定按钮']);
 
-    //if(Common.isIos()){
-    //this.props.router.push('/');
-    //hashHistory.goBack();
-
-    let path = '/?' + CONFIGS.referrerUrl;
-
-    hashHistory.push(path);
-
-
-    /*}else{
-      let ln=location;
-
-      location.href=ln.origin+ln.pathname+'#/';//自动加上了问号后面的参数
-    }*/
+    let storge = window.localStorage;
+    if (storge.getItem('crf-origin-url') !== '') {
+      location.href = storge.getItem('crf-origin-url');
+    } else {
+      location.href = CONFIGS.referrerUrl;
+    }
 
 
   }

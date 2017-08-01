@@ -8,21 +8,26 @@ export default class Success extends Component {
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Success']);
 
-    if(Common.isWeChat()) {
-      Common.customPopState(this.popUrlFn);
-    }
+    // if(Common.isWeChat()) {
+    //   Common.customPopState(this.popUrlFn);
+    // }
   }
   componentWillUnmount(){
-    if(Common.isWeChat()) {
-      window.removeEventListener('popstate', this.popUrlFn);
-    }
+    // if(Common.isWeChat()) {
+    //   window.removeEventListener('popstate', this.popUrlFn);
+    // }
   }
   popUrlFn(refUrl){
     location.href=refUrl;
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Success', 'E_Success_button', '成功页面按钮']);
-    location.href=CONFIGS.referrerUrl;
+    let storge = window.localStorage;
+    if (storge.getItem('crf-origin-url') !== '') {
+      location.href = storge.getItem('crf-origin-url');
+    } else {
+      location.href = CONFIGS.referrerUrl;
+    }
   }
   render() {
 
