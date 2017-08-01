@@ -53,6 +53,7 @@ class Index extends Component {
   }
 
   handleBindCard() {
+    CONFIGS.isFromCredit = true;
     let currentPath = window.location.href;
     let path = `/?${currentPath}`;
     let storge = window.localStorage;
@@ -61,6 +62,7 @@ class Index extends Component {
   }
 
   handleLoan() {
+    CONFIGS.isFromCredit = true;
     let currentPath = window.location.href;
     let path = 'loan';
     let storge = window.localStorage;
@@ -74,6 +76,7 @@ class Index extends Component {
   }
 
   handleRepay() {
+    CONFIGS.isFromCredit = true;
     let currentPath = window.location.href;
     let path = 'repay';
     let storge = window.localStorage;
@@ -87,6 +90,7 @@ class Index extends Component {
   }
 
   handleBill() {
+    CONFIGS.isFromCredit = true;
     let currentPath = window.location.href;
     let path = 'bill';
     let storge = window.localStorage;
@@ -100,6 +104,7 @@ class Index extends Component {
   }
 
   handleDownload() {
+    CONFIGS.isFromCredit = true;
     if (/(Android)/i.test(navigator.userAgent)) {
       // 判断是否是腾讯浏览器中打开
       if (/MQQBrowser/i.test(navigator.userAgent)) {

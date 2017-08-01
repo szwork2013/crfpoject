@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
-
+import { hashHistory } from 'react-router';
 import { Nav } from 'app/components';
 import { WhiteSpace } from 'antd-mobile';
 
@@ -22,11 +21,21 @@ export default class Success extends Component {
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Success', 'E_Success_button', '成功页面按钮']);
-    let storge = window.localStorage;
-    if (storge.getItem('crf-origin-url') !== '') {
-      location.href = storge.getItem('crf-origin-url');
-    } else {
+    if (!CONFIGS.isFromCredit) {
       location.href = CONFIGS.referrerUrl;
+    } else {
+      let storge = window.localStorage;
+      if (storge.getItem('crf-origin-url') !== '') {
+        location.href = storge.getItem('crf-origin-url');
+      } else {
+        let path = 'index';
+        hashHistory.push({
+          pathname: path,
+          query: {
+            ssoId: CONFIGS.userId
+          }
+        });
+      }
     }
   }
   render() {

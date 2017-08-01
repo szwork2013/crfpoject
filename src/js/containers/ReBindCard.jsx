@@ -26,7 +26,7 @@ export default class Rebind extends Component {
   }
   handleClick(){
     _paq.push(['trackEvent', 'C_Fail', 'E_Fail_button', '点击重新绑定按钮']);
-    location.href = CONFIGS.referrerUrl;
+    location.href = `/credit_loan/#/?${CONFIGS.referrerUrl}`;
   }
   render() {
     let props={ title:'绑卡结果'};
