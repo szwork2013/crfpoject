@@ -6,7 +6,7 @@ import { hashHistory } from 'react-router';
 import PubSub from 'pubsub-js';
 
 class Repay extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     CONFIGS.userId = this.props.location.query.ssoId;
     this.state = {
@@ -21,7 +21,7 @@ class Repay extends Component {
     _paq.push(['trackEvent', 'C_Page', 'E_P_Loan']);
     this.getQuotaFetch();//获取额度
     //窄的手机屏幕
-    if(document.documentElement.clientWidth < 360){
+    if (document.documentElement.clientWidth < 360) {
       document.querySelector('body').classList.add('gray-bg');
     }
   }
@@ -40,7 +40,7 @@ class Repay extends Component {
         /*periodResult = {"productions":[{"loanAmount":"100","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},
           {"loanAmount":"200","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"300","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"400","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"500","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14]},{"loanAmount":"600","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"700","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"800","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"900","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"1000","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]},{"loanAmount":"1100","periodArray":null,"dayArray":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]}],"contractName":"信而富现金贷借款服务协议","contractVersion":"0.01","result":"0","message":"成功","contractUrl":"https://app-uat.crfchina.com/h5/contract/loanContract/0.01.html"};*/
 
-        Object.assign(CONFIGS.loanPeriod,periodResult);//借款金额对应的数组
+        Object.assign(CONFIGS.loanPeriod, periodResult);//借款金额对应的数组
 
         //let defaultData = this.defaultData(quotaResult.remainLimit/100);//设置标尺，传入可用额度
         let defaultData = this.defaultData(periodResult);//考虑2期3期
@@ -59,7 +59,7 @@ class Repay extends Component {
             Toast.info(data.message);
           });
         }
-      },() => {
+      }, () => {
         //location.reload();
         let path = 'loan';
         hashHistory.push({
@@ -79,11 +79,11 @@ class Repay extends Component {
     CONFIGS.loanData.amount = remainLimit * 100;//分为单位
     CONFIGS.loanData.day = defaultDay;
 
-    const params={
+    const params = {
       productNo: 'P2001002',//未动态传入
       loanAmount: remainLimit,//金额只能是100-1500
       loanPeriod: defaultDay,//日期只能是14 or 30 or null
-      startTime: `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`,
+      startTime: `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`,
       periodUnit: 'D',//D是短期，M是分期，因为默认值是14跟30天，所以一定是短期
       kissoId: CONFIGS.ssoId,
     };
@@ -130,9 +130,9 @@ class Repay extends Component {
     }
   }
 
-  async loanSubmitFetch(){
+  async loanSubmitFetch() {
     //console.log(CONFIGS.loanData.amount,'以分');
-    const params={
+    const params = {
       loanAmount: CONFIGS.loanData.amount,//金额
       loanDays: CONFIGS.loanData.day,//借款天数
       loanProductNo: 'P2001002',//产品
@@ -162,7 +162,17 @@ class Repay extends Component {
       CRFFetch.handleError(error, Toast, () => {
         if (error.response.status === 400) {
           error.body.then(data => {
-            Toast.info(data.message);
+            if (data.code === 'BFTSUSER007') {
+              CONFIGS.isFromCredit = true;
+              let currentPath = window.location.href;
+              let targetPath = `${window.location.origin}${window.location.pathname}#/loanconfirm?ssoId=${CONFIGS.userId}` ;
+              let path = `/?${currentPath}`;
+              let storge = window.localStorage;
+              storge.setItem('crf-origin-url', targetPath);
+              hashHistory.push(path);
+            } else {
+              Toast.info(data.message);
+            }
           });
         }
       }, () => {
@@ -178,10 +188,11 @@ class Repay extends Component {
   }
 
   handleClick() {
-    if(!this.refs.refLoanSubmit.classList.contains('disabled')){
+    if (!this.refs.refLoanSubmit.classList.contains('disabled')) {
       this.refs.loading.show();
       _paq.push(['trackEvent', 'C_Loan', 'E_Loan_submit']);
       this.loanSubmitFetch();
+      
     }
   }
 
@@ -196,7 +207,7 @@ class Repay extends Component {
     });
   }*/
 
-  defaultData(periodResult){
+  defaultData(periodResult) {
     //let maxAmount = remainLimit/100;
     //这里规则要改，会出现2期
 
@@ -204,12 +215,12 @@ class Repay extends Component {
 
     //生成借款数组
     let loanData = [];
-    for(let i=1;i<=maxAmount;i++){
-      loanData.push(i*100);
+    for (let i = 1; i <= maxAmount; i++) {
+      loanData.push(i * 100);
     }
-    let curAmount = maxAmount<16 ? maxAmount : 15;
+    let curAmount = maxAmount < 16 ? maxAmount : 15;
 
-    CONFIGS.loanData.currentAmountCount = curAmount-1;
+    CONFIGS.loanData.currentAmountCount = curAmount - 1;
 
     //暂时写死
     curAmount === 11 && (CONFIGS.loanData.currentAmountCount = curAmount);
@@ -221,33 +232,33 @@ class Repay extends Component {
     };//当max大于15时，data跟currentAmount不会对应，data.length大于currentAmount
 
     let maxDay;
-    let defaultDay = maxAmount<=5 ? 14 : 30;//金额是一定有的
+    let defaultDay = maxAmount <= 5 ? 14 : 30;//金额是一定有的
 
-    let productData = periodResult.productions[curAmount/100-1];
+    let productData = periodResult.productions[curAmount / 100 - 1];
 
     let dayArray;
     //mock
     //productData = {loanAmount: "1000", periodArray: [2], dayArray: null};
 
 
-    if(productData.periodArray === null){
-      if(productData.dayArray === null){
+    if (productData.periodArray === null) {
+      if (productData.dayArray === null) {
         //默认显示30天，天数不能拖动，显示错误信息，不能提交
         maxDay = 30;
         dayArray = new Array(30);
-      }else{
+      } else {
         //一般情况，只有1期，拖动dayArray的天数
         CONFIGS.loanData.period = 1;
         maxDay = productData.dayArray.length;
         dayArray = productData.dayArray;
       }
-    }else{
+    } else {
       //CONFIGS.loanData.period = productData.periodArray.length + 1;//数组为[2],表示2期；为[2,3]表示3期,问清楚以后是否为[2,3,4]
-      CONFIGS.loanData.period = Math.max.apply(Math,productData.periodArray);
+      CONFIGS.loanData.period = Math.max.apply(Math, productData.periodArray);
       maxDay = CONFIGS.loanData.period * 30;
 
       let maxArray = [];
-      for(let i = 0; i < maxDay; i++){
+      for (let i = 0; i < maxDay; i++) {
         maxArray.push(i);
       }
       dayArray = maxArray;
@@ -289,7 +300,7 @@ class Repay extends Component {
     /*
     *
     * */
-    console.log(CONFIGS.loanData.amount,'loan.jsx 提交的时候的金额');
+    console.log(CONFIGS.loanData.amount, 'loan.jsx 提交的时候的金额');
     this.refs.loading.hide();
     let path = 'loanconfirm';
     hashHistory.push({
@@ -299,19 +310,19 @@ class Repay extends Component {
         type: 'p'
       },
       state: {
-        realAmount:CONFIGS.loanData.amount,
+        realAmount: CONFIGS.loanData.amount,
       }
     });
   }
 
   render() {
-    let props = { title: this.state.title};
-    let {isLoading, loanData, dayData} = this.state;
+    let props = { title: this.state.title ,stage: 'loan'};
+    let { isLoading, loanData, dayData } = this.state;
     //console.log(window.length++,'------------------------detail');
 
     let contentClassName = "loan-content gray-bg";
 
-    if(document.documentElement.clientWidth > 360){
+    if (document.documentElement.clientWidth > 360) {
       contentClassName += ' adaptTable';
     }
 

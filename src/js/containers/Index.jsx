@@ -11,6 +11,7 @@ class Index extends Component {
     CONFIGS.userId = this.props.location.query.ssoId;
     this.state = {
       isLoading: true,
+      isBindCard: false,
       isShow: false,
       creditData: {
         remainLimit: '-',
@@ -26,18 +27,29 @@ class Index extends Component {
 
   async getInitData() {
     let creditPath = `${CONFIGS.loanPath}/quota?kissoId=${CONFIGS.userId}`;
-
+    let creditLoanPath = `${CONFIGS.ftsPath}/${CONFIGS.ssoId}/borrower_open_account`;
+    
     try {
       let fetchPromise = CRFFetch.Get(creditPath);
-      // 获取数据
+      let fetchCreditLoanPromise = CRFFetch.Get(creditLoanPath);
+    
+      // 获取数据并确定是否已经绑卡
       let result = await fetchPromise;
+      let resultCreditLoan = await fetchCreditLoanPromise;
       if (result && !result.response) {
         this.setState({
           isLoading: false,
           isShow: true,
           creditData: result
         });
+        if (resultCreditLoan && !resultCreditLoan.response) {
+          this.setState({
+            isBindCard:true,
+            creditData:resultCreditLoan
+          });
+        }
       }
+        
     } catch (error) {
       this.setState({
         isLoading: false
@@ -124,14 +136,16 @@ class Index extends Component {
 
   render() {
     let props = {title: '信而富', stage: 'index'};
-    let {isLoading, isShow, creditData} = this.state;
+    let {isLoading, isShow, creditData, isBindCard} = this.state;
     return (
       <section className="full-wrap">
         <Nav data={props} />
         <Credit data={creditData} />
         {isShow &&
           <List className="crf-list crf-credit">
-            <Item arrow="horizontal" className='crf-credit-item' extra="绑卡成功才可进行借款操作" onClick={this.handleBindCard.bind(this)}>立即绑卡</Item>
+            {
+              isBindCard && <Item arrow="horizontal" className='crf-credit-item' extra="绑卡成功才可进行借款操作" onClick={this.handleBindCard.bind(this)}>立即绑卡</Item>
+            }
             <Item arrow="horizontal" className='crf-credit-item' onClick={this.handleLoan.bind(this)}>我要借款</Item>
             <Item arrow="horizontal" className='crf-credit-item' onClick={this.handleRepay.bind(this)}>我要还款</Item>
             <Item arrow="horizontal" className='crf-credit-item' onClick={this.handleBill.bind(this)}>查看账单</Item>

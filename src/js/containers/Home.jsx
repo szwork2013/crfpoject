@@ -7,29 +7,29 @@ class Home extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      loadingShowStatus:false,
-      showTopTips:props.location.hash.indexOf('loan')>-1,
+      loadingShowStatus: false,
+      showTopTips: props.location.hash.indexOf('loan') > -1,
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     _paq.push(['trackEvent', 'C_Page', 'E_P_BindCard']);
     //alert( .showTopTips&&Common.showTopTips());
   }
 
-  setLoading(status){
+  setLoading(status) {
     this.setState({
-      loadingShowStatus:status
+      loadingShowStatus: status
     });
   }
 
   render() {
-    let props = {title: '绑定银行卡', stage: 'home'};
+    let props = { title: '绑定银行卡', stage: 'home' };
     return (
       <section className="bind-card-wrap">
         <article>
           <Nav data={props} />
-          {this.state.showTopTips?<div className="topTips"><span>提交申请成功, 但未绑卡, 请先绑定银行卡。</span></div>:<WhiteSpace />}
+          {this.state.showTopTips ? <div className="topTips"><span>提交申请成功, 但未绑卡, 请先绑定银行卡。</span></div> : <WhiteSpace />}
           <BindcardForm setLoading={this.setLoading.bind(this)} />
         </article>
         <Loading show={this.state.loadingShowStatus} />

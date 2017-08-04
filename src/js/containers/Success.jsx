@@ -4,6 +4,10 @@ import { Nav } from 'app/components';
 import { WhiteSpace } from 'antd-mobile';
 
 export default class Success extends Component {
+   constructor(props, context) {
+    super(props);
+    CONFIGS.userId = this.props.location.query.ssoId;
+  }
   componentDidMount(){
     _paq.push(['trackEvent', 'C_Page', 'E_P_Success']);
 
@@ -41,7 +45,7 @@ export default class Success extends Component {
   }
   render() {
 
-    let props={ title:'绑定结果' };
+    let props={ title:'绑定结果',stage: 'success' };
     return (
       <div className="bind-card-main sub-page-wrap">
         <Nav data={props} />
@@ -54,7 +58,7 @@ export default class Success extends Component {
           </div>
         </div>
         <div className="next-page">
-            <button onClick={this.handleClick.bind(this)}>确定</button>
+            <button onClick={this.handleClick.bind(this)}>确认</button>
         </div>
       </div>
     )

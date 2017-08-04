@@ -34,70 +34,105 @@ export default class Nav extends Component {
       couponsContainer.classList.remove('show');
       couponsContainer.classList.add('hide');
     } else {
-      let refUrl=CONFIGS.referrerUrl;
-      if (this.state.stage === 'home') {
-        refUrl = Common.returnReferrerUrl();
-      }
-      let lnHash=location.hash;
+      if (this.state.stage === 'loan') {
 
-      if (refUrl.indexOf('#/loan?') > -1) {  //话费页
-        if(lnHash.indexOf('supportcard')>-1||lnHash.indexOf('contract')>-1){
-          /*let path = '/?' + CONFIGS.referrerUrl;
+      } else if (this.state.stage === 'success') {
+        let path = 'loan';
+        let storage = window.localStorage;
+        storage.setItem('loanUrl', path)
+        let loanUrl = storage.getItem('loanUrl');
+        if (loanUrl && this.state.stage === 'success') {
+          hashHistory.push({
+            pathname: path,
+            query: {
+              ssoId: CONFIGS.userId,
+            }
+          });
 
-          hashHistory.push(path);*/
-          hashHistory.goBack();
-          return;
-        }
-        if(lnHash.indexOf('#/?')>-1){
-          // 从轻消费过来的情况
-          // /credit_loan/#/?https://m-ci.crfchina.com/consumption/#/recharge?ssoId=f9c36b0f4c034c0bb723fd67019dfdd0
-          refUrl=CONFIGS.referrerUrl.replace('#/loan?','#/recharge?');
-        }
-        if(lnHash.indexOf('#/rebindcard?')>-1){
-          location.href = `/credit_loan/#/?${CONFIGS.referrerUrl}`;
-          return;
-        }
-        location.href=refUrl;
-      } else {
-        if(lnHash.indexOf('#/?')>-1 || lnHash.indexOf('#/success')>-1){
-          if (!CONFIGS.isFromCredit) {
-            location.href = CONFIGS.referrerUrl;
+        } else if (this.state.stage === 'rebindCard') {
+
+        } else if (this.state.stage === 'loanConfirm') {
+          let path = 'loan';
+          let storage = window.localStorage;
+          storage.setItem('loanUrl', path)
+          let loanUrl = storage.getItem('loanUrl');
+          if (loanUrl) {
+            hashHistory.push({
+              pathname: path,
+              query: {
+                ssoId: CONFIGS.userId,
+              }
+            });
+          }
+
+        } else {
+          //old code
+          let refUrl = CONFIGS.referrerUrl;
+          if (this.state.stage === 'home') {
+            refUrl = Common.returnReferrerUrl();
+          }
+          let lnHash = location.hash;
+
+          if (refUrl.indexOf('#/loan?') > -1) {  //话费页
+            if (lnHash.indexOf('supportcard') > -1 || lnHash.indexOf('contract') > -1) {
+              /*let path = '/?' + CONFIGS.referrerUrl;
+    
+              hashHistory.push(path);*/
+              hashHistory.goBack();
+              return;
+            }
+            if (lnHash.indexOf('#/?') > -1) {
+              // 从轻消费过来的情况
+              // /credit_loan/#/?https://m-ci.crfchina.com/consumption/#/recharge?ssoId=f9c36b0f4c034c0bb723fd67019dfdd0
+              refUrl = CONFIGS.referrerUrl.replace('#/loan?', '#/recharge?');
+            }
+            if (lnHash.indexOf('#/rebindcard?') > -1) {
+              location.href = `/credit_loan/#/?${CONFIGS.referrerUrl}`;
+              return;
+            }
+            location.href = refUrl;
           } else {
-            let storge = window.localStorage;
-            if (storge.getItem('crf-origin-url') !== '') {
-              location.href = storge.getItem('crf-origin-url');
-            } else {
-              let path = 'index';
-              hashHistory.push({
-                pathname: path,
-                query: {
-                  ssoId: CONFIGS.userId
+            if (lnHash.indexOf('#/?') > -1 || lnHash.indexOf('#/success') > -1) {
+              if (!CONFIGS.isFromCredit) {
+                location.href = CONFIGS.referrerUrl;
+              } else {
+                let storge = window.localStorage;
+                if (storge.getItem('crf-origin-url') !== '') {
+                  location.href = storge.getItem('crf-origin-url');
+                } else {
+                  let path = 'index';
+                  hashHistory.push({
+                    pathname: path,
+                    query: {
+                      ssoId: CONFIGS.userId
+                    }
+                  });
                 }
-              });
+              }
+            } else if (lnHash.indexOf('#/result?') > -1) { //结果页
+              let storge = window.localStorage;
+              let url = storge.getItem('crf-origin-url');
+              if (url && url !== '') {
+                location.href = url;
+              } else {
+                hashHistory.goBack();
+              }
+            } else if (lnHash.indexOf('#/rebindcard') > -1) { //结果页
+              location.href = `/credit_loan/#/?${CONFIGS.referrerUrl}`;
+            } else {
+              // 通常情况
+              if (this.state.stage === 'index') {
+                hashHistory.go();
+              } else {
+                hashHistory.goBack();
+              }
             }
           }
-        } else if (lnHash.indexOf('#/result?') > -1) { //结果页
-          let storge = window.localStorage;
-          let url = storge.getItem('crf-origin-url');
-          if (url && url !== '') {
-            location.href = url;
-          } else {
-            hashHistory.goBack();
-          }
-        } else if (lnHash.indexOf('#/rebindcard') > -1) { //结果页
-          location.href = `/credit_loan/#/?${CONFIGS.referrerUrl}`;
-        } else {
-          // 通常情况
-          if (this.state.stage === 'index') {
-            hashHistory.go();
-          } else {
-            hashHistory.goBack();
-          }
+
         }
       }
     }
   }
-
   handleGoHome() {
     let path = 'index';
     hashHistory.push({
@@ -143,18 +178,18 @@ export default class Nav extends Component {
     //if(contractNo) title = CONFIGS.billType[type] + '动态';
     return (
       CONFIGS.isWeChat
-      ?
-      (<div></div>)
-      :
-      (<nav className={styles.root}>
-        <div className={styles.navbarLeft}>
-          {leftEle}
-        </div>
-        <div className={styles.navbarTitle}>{title}</div>
-        <div className={styles.navbarRight}>
-          {rightEle}
-        </div>
-      </nav>)
+        ?
+        (<div></div>)
+        :
+        (<nav className={styles.root}>
+          <div className={styles.navbarLeft}>
+            {leftEle}
+          </div>
+          <div className={styles.navbarTitle}>{title}</div>
+          <div className={styles.navbarRight}>
+            {rightEle}
+          </div>
+        </nav>)
     )
   }
 }

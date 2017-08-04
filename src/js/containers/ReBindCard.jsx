@@ -30,7 +30,7 @@ export default class Rebind extends Component {
     location.href = `/credit_loan/#/?${CONFIGS.referrerUrl}`;
   }
   render() {
-    let props={ title:'绑卡结果'};
+    let props={ title:'绑卡结果' , stage: 'rebindCard'};
     console.log(this.props.location.state);
     let failReason='';//暂时不展示错误原因
     /*if(this.props.location.state){

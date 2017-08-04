@@ -37,9 +37,9 @@ class RepayConfirm extends Component {
     //this.getActivityFetch();
   }
 
-  async getActivityFetch(){
+  async getActivityFetch() {
     //https://m-ci.crfchina.com/h5_dubbo/loan/activity?kissoId=370486f0d16742b38138f3dc1839efcb
-    let activityPath=`${CONFIGS.loanPath}/activity?kissoId=${CONFIGS.ssoId}`;
+    let activityPath = `${CONFIGS.loanPath}/activity?kissoId=${CONFIGS.ssoId}`;
     try {
       let fetchAccountPromise = CRFFetch.Get(activityPath);
       // 获取数据
@@ -65,7 +65,7 @@ class RepayConfirm extends Component {
 
       if (userResult && !userResult.response && accountResult && !accountResult.response) {
         this.refs.loading.hide();
-        this.setData(accountResult,userResult);
+        this.setData(accountResult, userResult);
       }
     } catch (error) {
       this.refs.loading.hide();
@@ -88,7 +88,7 @@ class RepayConfirm extends Component {
     }
   }
 
-  setData(accountData,userResult) {
+  setData(accountData, userResult) {
     Object.assign(CONFIGS.account, accountData);
     Object.assign(CONFIGS.user, userResult);
     let way = `${accountData.bankName}卡(${accountData.bankCardNo.slice(-4)})`;
@@ -100,8 +100,8 @@ class RepayConfirm extends Component {
   }
 
   render() {
-    let props = { title: this.state.title};
-    let {way, amount, isLoading, details} = this.state;
+    let props = { title: this.state.title, stage: 'loanConfirm' };
+    let { way, amount, isLoading, details } = this.state;
 
     let totalAmount = () => {
       let formatTotalAmount = Numeral(amount).format('0, 0.00');
@@ -124,7 +124,7 @@ class RepayConfirm extends Component {
           <Item extra={way}>到账银行卡</Item>
         </List>
         <WhiteSpace />
-        <SendSms show={isLoading} pathname="loanconfirm"/>
+        <SendSms show={isLoading} pathname="loanconfirm" />
         <SetContract className="loan-contract" curPath="loanconfirm" />
         <ReactTooltip id='description' place="bottom" className="crf-tooltips" effect='solid'>
           <span>{details}</span>
