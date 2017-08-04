@@ -34,9 +34,7 @@ export default class Nav extends Component {
       couponsContainer.classList.remove('show');
       couponsContainer.classList.add('hide');
     } else {
-      if (this.state.stage === 'loan') {
-
-      } else if (this.state.stage === 'success') {
+      if (this.state.stage === 'success') {
         let path = 'loan';
         let storage = window.localStorage;
         storage.setItem('loanUrl', path)
@@ -48,23 +46,7 @@ export default class Nav extends Component {
               ssoId: CONFIGS.userId,
             }
           });
-
-        } else if (this.state.stage === 'rebindCard') {
-
-        } else if (this.state.stage === 'loanConfirm') {
-          let path = 'loan';
-          let storage = window.localStorage;
-          storage.setItem('loanUrl', path)
-          let loanUrl = storage.getItem('loanUrl');
-          if (loanUrl) {
-            hashHistory.push({
-              pathname: path,
-              query: {
-                ssoId: CONFIGS.userId,
-              }
-            });
-          }
-
+          storage.removeItem('loanUrl');
         } else {
           //old code
           let refUrl = CONFIGS.referrerUrl;
