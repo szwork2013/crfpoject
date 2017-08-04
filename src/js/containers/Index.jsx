@@ -35,7 +35,7 @@ class Index extends Component {
     
       // 获取数据并确定是否已经绑卡
       let result = await fetchPromise;
-      let resultCreditLoan = await fetchCreditLoanPromise;
+      let resultCreditLoan = await fetchCreditLoanPromise; 
       if (result && !result.response) {
         this.setState({
           isLoading: false,
